@@ -1,0 +1,86 @@
+/* --- 全局样式 --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    line-height: 1.6;
+    background-color: #f4f7f6; /* 非常浅的灰色背景 */
+    color: #333; /* 深灰色文字 */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 900px; /* 网站最大宽度 */
+    margin: 20px auto; /* 页面居中 */
+    padding: 20px;
+    background-color: #ffffff; /* 内容区白色背景 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* 柔和的阴影 */
+    border-radius: 10px; /* 圆角 */
+}
+
+/* --- 头部样式 --- */
+header {
+    text-align: center; /* 头部内容居中 */
+    padding-bottom: 20px;
+    border-bottom: 2px solid #eee;
+}
+
+/* 🎯 照片样式 */
+.profile-photo {
+    width: 150px; /* 照片宽度 */
+    height: 150px; /* 照片高度 */
+    border-radius: 50%; /* 关键：让照片变圆形 */
+    object-fit: cover; /* 确保照片不变形 */
+    border: 4px solid #ffffff; /* 白色边框 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 照片小阴影 */
+}
+
+h1 {
+    color: #1a1a1a;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #555;
+    font-weight: 300;
+}
+
+/* --- 内容区样式 --- */
+h2 {
+    color: #0056b3; /* 标题使用主题蓝色 */
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 5px;
+}
+
+/* --- 链接与按钮样式 --- */
+.links {
+    text-align: center; /* 按钮居中 */
+    padding-top: 20px;
+}
+
+/* 🎯 简历按钮样式 */
+.button {
+    display: inline-block;
+    padding: 12px 20px;
+    margin: 8px;
+    background-color: #007bff; /* 按钮的蓝色 */
+    color: #ffffff; /* 按钮文字白色 */
+    text-decoration: none; /* 去掉下划线 */
+    font-weight: bold;
+    border-radius: 5px; /* 按钮圆角 */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* 过渡动画 */
+}
+
+.button:hover {
+    background-color: #0056b3; /* 鼠标悬停时变深蓝 */
+    transform: translateY(-2px); /* 鼠标悬停时轻微上浮 */
+}
+
+/* --- 页脚 --- */
+footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #888;
+}
