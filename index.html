@@ -3,39 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Siyu Zeng - 个人主页</title>
-    <link rel="stylesheet" href="style.css">
+    
+    <title>Siyu Zeng 的个人主页</title>
+    
+    <style>
+        /* --- 全局和字体 --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background-color: #f0f2f5; /* 柔和的背景灰 */
+            color: #333;
+            line-height: 1.7;
+            scroll-behavior: smooth; /* 支持平滑滚动 */
+        }
+
+        /* --- 动画：内容淡入 --- */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- 容器 --- */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* --- 1. 欢迎区 (Hero) --- */
+        .hero {
+            height: 100vh; /* 占满整个屏幕高度 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white; /* 默认白字 */
+            
+            /* 🎯 替换点 2: 您的背景照片 */
+            /* 确保您上传了一张名为 'background-photo.jpg' 的照片 */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('background-photo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* 视差滚动效果 */
+        }
+
+        .hero h1 {
+            font-size: 4rem; /* 大标题 */
+            margin: 0;
+            font-weight: 700;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin: 10px 0 30px;
+            font-weight: 300;
+        }
+
+        /* 导航按钮 (跳转到内容区) */
+        .hero-nav a {
+            margin: 0 10px;
+            padding: 12px 25px;
+            border: 2px solid white;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 50px; /* 圆角胶囊按钮 */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .hero-nav a:hover {
+            background-color: white;
+            color: #333;
+        }
+
+        /* --- 2. 内容区 (卡片式) --- */
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            padding: 30px 40px;
+            overflow: hidden; /* 配合动画 */
+        }
+        
+        .card h2 {
+            font-size: 2rem;
+            color: #0056b3; /* 主题蓝色 */
+            border-bottom: 3px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        /* 个人头像 (在"关于我"卡片里) */
+        .profile-pic-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-pic {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%; /* 圆形 */
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* --- 3. 按钮 (简历/联系) --- */
+        .button-link {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 10px 5px;
+            background-color: #007bff; /* 亮蓝色 */
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .button-link:hover {
+            background-color: #0056b3; /* 深蓝色 */
+            transform: translateY(-2px);
+        }
+        .button-link.secondary {
+            background-color: #6c757d; /* 灰色 */
+        }
+        .button-link.secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* --- 4. 页脚 --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+    </style>
 </head>
 <body>
 
-    <header class="container">
-        <img src="profile-photo.jpg" alt="我的头像" class="profile-photo">
-        <h1>Siyu Zeng</h1>
-        <p class="subtitle">供应链分析师  | 全球物流运营 | 供应链策划师</p>
+    <header class="hero">
+        <h1 class="fade-in">您好, 我是曾思宇</h1>
+        <p class="fade-in" style="transition-delay: 0.2s;">[供应链分析师  | 全球物流运营 | 供应链策划师]</p>
+        
+        <nav class="hero-nav fade-in" style="transition-delay: 0.4s;">
+            <a href="#about">关于我</a>
+            <a href="#contact">联系我</a>
+        </nav>
     </header>
 
     <main class="container">
-        <section class="about-me">
+
+        <section id="about" class="card fade-in">
             <h2>关于我</h2>
+
+            <div class="profile-pic-container">
+                <img src="profile-avatar.jpg" alt="我的头像" class="profile-pic">
+            </div>
+            
             <p>
                 我是曾思宇，一名香港中文大学（深圳）的供应链与环球物流管理专业学生。目前大二。
             </p>
+            <p>
+                试着分几段来写，让内容更清晰易读。您也可以谈谈您的职业目标或兴趣爱好。
+            </p>
         </section>
 
-        <section class="links">
-            <h2>我的简历与链接</h2>
+        <section id="contact" class="card fade-in">
+            <h2>简历与联系</h2>
+            <p>
+                我对新的机会持开放态度。您可以通过以下方式联系我，或下载我的完整简历。
+            </p>
             
-            <a href="My_Resume.docx" class="button" target="_blank">
-                下载我的简历 (PDF)
-            </a>
-            <a href="https://www.linkedin.com/in/您的领英ID" class="button" target="_blank">我的领英 (LinkedIn)</a>
-            <a href="mailto:124020429@link.cuhk.edu.cn" class="button">联系我 (Email)</a>
+            <div style="text-align: center;">
+                <a href="My_Resume.pdf" class="button-link" target="_blank">
+                    下载我的简历 (PDF)
+                </a>
+                
+                <a href="mailto:[124090349@link.cuhk.edu.cn]" class="button-link secondary">
+                    发送邮件
+                </a>
+
+                </div>
         </section>
+
     </main>
 
     <footer>
-        <p>© 2025 Siyu Zeng. 保留所有权利。</p>
+        <p>© 2025 [您的名字].</p>
     </footer>
+
+    <script>
+        // JS 1: 页面加载时，给第一个 .fade-in 元素添加 'visible' 类
+        window.addEventListener('load', () => {
+            const heroElements = document.querySelectorAll('.hero .fade-in');
+            heroElements.forEach(el => {
+                el.classList.add('visible');
+            });
+        });
+
+        // JS 2: 页面滚动时，给进入视窗的 .fade-in 元素添加 'visible' 类
+        const fadeInElements = document.querySelectorAll('.container .fade-in');
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1 // 元素进入视窗 10% 时触发
+        });
+
+        fadeInElements.forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 
 </body>
 </html>
