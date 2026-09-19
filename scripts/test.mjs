@@ -1,9 +1,11 @@
 // 文件用途：从全新构建验证静态路由、双语互链、原文完整性、奖项及全部站内链接。
 import assert from "node:assert/strict";
+import vm from "node:vm";
 import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { execFileSync } from "node:child_process";
+import { social } from "../content/social.js";
 import { notes, projects } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
 import { introduction, localizedProjects, localizedJourney, localizedEducation, ui } from "../content/locales.js";
@@ -24,6 +26,7 @@ for (const lang of languages) {
     assert.ok(html.includes(`<html lang="${lang === "en" ? "en" : "zh-CN"}">`));
     assert.ok(html.includes(`rel="canonical" href="${origin}${route}"`));
     assert.ok(html.includes(`href="${pathFor(key, lang === "en" ? "zh" : "en")}"`), `Language counterpart: ${route}`);
+    assert.ok(!/GPA|3\.571/i.test(html), `No GPA published: ${route}`);
     assert.ok(!html.includes("undefined"), `No missing translated values: ${route}`);
     assert.ok(html.includes("/assets/fonts/livenest-sans-sc.woff2"), `Self-hosted UI font: ${route}`);
     assert.ok(!html.includes("work-card"), `No old project cards: ${route}`);
@@ -49,24 +52,53 @@ assert.equal(createHash("sha256").update(font).digest("hex"), "f1121e7ef2838d3cb
 await access("dist/assets/fonts/OFL.txt");
 assert.equal(honors.length, 8);
 assert.equal(new Set(honors.map((item) => item.id)).size, 8);
-assert.deepEqual(honors.map((item) => item.date).sort(), ["2024-10", "2025-04", "2025-11", "2025-12", "2026-04", "2026-04", "2026-05", "2026-09"]);
+assert.deepEqual(honors.map((item) => item.date).sort(), ["2024-10", "2025-04", "2025-04", "2025-11", "2025-12", "2026-04", "2026-05", "2026-09"]);
 assert.deepEqual(["academic", "creative", "sport"].map((category) => honors.filter((item) => item.category === category).length), [3, 2, 3]);
 assert.equal(createHash("sha256").update(JSON.stringify(notes[0].paragraphs)).digest("hex"), "efc0b689af68ecf9257f3edca852db4a8d6c52b1db5229b6b586f6b89dd749b0", "Chinese literary original must remain unchanged");
 for (const lang of languages) {
   assert.deepEqual(Object.keys(ui[lang]).sort(), Object.keys(ui.zh).sort());
-  assert.equal(localizedProjects(lang).length, 4);
-  assert.equal(localizedJourney(lang).length, 5);
+  assert.equal(localizedProjects(lang).length, 5);
+  assert.equal(localizedJourney(lang).length, 8);
   assert.equal(localizedEducation(lang).length, 2);
+  for (const key of ["", "projects/llm-pcb"]) {
+    const html = pages.get(pathFor(key, lang));
+    assert.ok(html.includes(social.linkedin), `LinkedIn reachable: ${key}`);
+    assert.ok(html.includes("AAAI 2027"), `Submission status: ${key}`);
+  }
+  const home = pages.get(pathFor("", lang));
+  assert.ok(home.includes('id="shengtu"'), "Teaching experience survives the page merge");
+  for (const year of [2026, 2025, 2024]) assert.ok(home.includes(`id="year-${year}"`) && home.includes(`href="#year-${year}"`));
+  assert.ok(home.indexOf('id="year-2026"') < home.indexOf('id="year-2025"') && home.indexOf('id="year-2025"') < home.indexOf('id="year-2024"'), "Year groups newest first");
+  for (const html of pages.values()) assert.ok(!/href="(?:\/en)?\/journey\//.test(html), "No links to the retired page");
+  const redirect = await readFile(join("dist", pathFor("journey", lang), "index.html"), "utf8");
+  assert.ok(redirect.includes('name="robots" content="noindex"') && redirect.includes(pathFor("", lang) + "#life-timeline") && redirect.includes('/src/redirect.js'));
+  for (const suffix of ["/", "/index.html", ""]) {
+    assert.equal(legacyDestination(new URL(origin + pathFor("journey", lang).replace(/\/$/, "") + suffix)), pathFor("", lang) + "#life-timeline");
+    assert.equal(legacyDestination(new URL(origin + pathFor("journey", lang).replace(/\/$/, "") + suffix + "#year-2025")), pathFor("", lang) + "#year-2025");
+  }
+  assert.ok(!home.includes('class="profile-links"'), "No duplicate social row under homepage introduction");
+  assert.ok(home.includes('id="life-timeline"') && !home.includes('class="editorial-section"'), "Homepage uses one chronology after the introduction");
+  assert.ok(!/^GRACE/i.test(localizedProjects(lang).find((item) => item.id === "grace").title), "Research title explains the topic before the acronym");
+  const about = pages.get(pathFor("about", lang));
+  for (const value of ["92689179314", "2026-09-18", "douyin-profile-code.jpg"]) assert.ok(about.includes(value));
+  assert.ok(!about.includes("profile-prose") && !about.includes("experience-row") && !about.includes("education-row"), "About contains supplementary content only");
+  assert.ok(about.includes('class="volunteer-certificate"') && about.includes('class="creator-gallery"') && !about.includes("<details"), "Evidence and scan code shown inline");
+  assert.ok(home.includes(lang === "en" ? "2026.06 — present" : "2026.06 — 至今"), "Internship remains ongoing");
+  assert.ok(home.includes("/assets/organizations/robomaster.png") && home.includes("/assets/organizations/berkeley.png") && home.includes("/assets/organizations/itso.png"), "Official marks in homepage chronology");
+  assert.ok(!home.includes('id="writing-award"'), "Writing award lives in recognition archive");
+  assert.ok(!pages.get(pathFor("", lang)).includes("hero-paper-link"), "No new paper button in the opening");
   const awardsHtml = pages.get(pathFor("honors", lang));
   for (const honor of honors) {
     assert.equal((awardsHtml.match(new RegExp(`id="${honor.id}"`, "g")) || []).length, 1);
     assert.ok(awardsHtml.includes(escape(honor.title[lang])));
     assert.ok(awardsHtml.includes(escape(honor.result[lang])));
   }
+  assert.ok(awardsHtml.includes("lingyu-2025-cover.png"), "Magazine artwork in recognition archive");
+  assert.ok(awardsHtml.indexOf('id="honors-2026"') < awardsHtml.indexOf('id="honors-2025"'), "Recognition ordered newest first");
   const story = pages.get(pathFor("notes/unselected-road", lang));
   for (const paragraph of notes[0].paragraphs) assert.ok(story.includes(`<p>${escape(paragraph)}</p>`));
   assert.ok(story.includes('datetime="2025-01"'));
-  assert.ok(story.includes("2026.04"));
+  assert.ok(story.includes("2025.04"));
   assert.ok(story.includes('lang="zh-CN"'));
   for (const key of ["", "notes", "notes/unselected-road"]) assert.ok(pages.get(pathFor(key, lang)).includes(pathFor("honors", lang) + "#lingyu"));
   assert.ok(pages.get(pathFor("about", lang)).includes("81.50"));
@@ -79,29 +111,42 @@ for (const lang of languages) {
     for (const project of projects) assert.equal(section.includes(pathFor(`projects/${project.id}`, lang)), project.group === group);
   }
   assert.ok(portfolio.includes("33.06%") && portfolio.includes("54.34%"), "Research evidence visible before opening details");
-  for (const key of ["", "about"]) {
-    const profile = pages.get(pathFor(key, lang)).match(/<div class="profile-prose">([\s\S]*?)<div class="profile-links">/)?.[1];
+  for (const key of [""]) {
+    const profile = pages.get(pathFor(key, lang)).match(/<div class="profile-prose">((?:<p[^>]*>[\s\S]*?<\/p>)+)/)?.[1];
     assert.ok(profile, `Readable personal introduction: ${key} / ${lang}`);
     assert.equal(profile.replace(/<[^>]*>/g, "").replace(/\s/g, ""), escape(introduction[lang]).replace(/\s/g, ""));
   }
   for (const project of projects) {
     const html = pages.get(pathFor(`projects/${project.id}`, lang));
-    assert.ok(html.includes(`datetime="${project.period.start}"`), `Project dates in details: ${project.id}`);
-    assert.ok(portfolio.includes(`datetime="${project.period.start}"`), `Project dates in index: ${project.id}`);
+    if (project.period.start) assert.ok(html.includes(`datetime="${project.period.start}"`), `Project dates in details: ${project.id}`);
+    if (project.period.start) assert.ok(portfolio.includes(`datetime="${project.period.start}"`), `Project dates in index: ${project.id}`);
     if (project.link) assert.ok(html.includes(escape(project.link)));
     if (project.secondaryLink) assert.ok(html.includes(escape(project.secondaryLink)));
   }
 }
 assert.equal(legacyDestination(new URL(`${origin}/?note=unselected-road#top`)), "/notes/unselected-road/");
 assert.equal(legacyDestination(new URL(`${origin}/en/?note=unselected-road#top`)), "/en/notes/unselected-road/");
-for (const [hash, route] of [["work", "projects/"], ["notes", "notes/"], ["journey", "journey/"], ["about", "about/"], ["contact", "about/#contact"], ["grace", "projects/grace/"]]) {
+for (const [hash, route] of [["work", "projects/"], ["notes", "notes/"], ["journey", "#life-timeline"], ["about", "about/"], ["contact", "about/#contact"], ["grace", "projects/grace/"]]) {
   assert.equal(legacyDestination(new URL(`${origin}/#${hash}`)), `/${route}`);
 }
 assert.equal(legacyDestination(new URL(`${origin}/#top`)), null);
 assert.equal(legacyDestination(new URL(`${origin}/honors/#lingyu`)), null);
 assert.equal(legacyDestination(new URL(`${origin}/?note=unknown`)), null);
 assert.ok((await readFile("dist/rss.xml", "utf8")).includes("/notes/unselected-road/"));
+// Exercise the dependency-free redirect that old browsers actually load, not only the shared routing helper.
+const redirectCode = await readFile("dist/src/redirect.js", "utf8");
+for (const lang of languages) {
+  for (const hash of ["", "#year-2024", "#year-2025", "#year-2026", "#unknown"]) {
+    let destination;
+    const location = { pathname: pathFor("journey", lang), hash, replace(value) { destination = value; } };
+    vm.runInNewContext(redirectCode, { location });
+    assert.equal(destination, pathFor("", lang) + (hash.startsWith("#year-") ? hash : "#life-timeline"));
+  }
+}
 const sitemap = await readFile("dist/sitemap.xml", "utf8");
+assert.ok(!sitemap.includes("/journey/"), "Retired pages excluded from sitemap");
 assert.equal((sitemap.match(/<loc>/g) || []).length, 22);
 assert.ok((await readFile("dist/404.html", "utf8")).includes("Page not found"));
 console.log(`tests passed: ${pages.size} static pages, ${checkedLinks} internal references, 8 honors, original-text digest, language parity, and legacy URLs`);
+
+execFileSync(process.execPath, ["scripts/motion-test.mjs"], { stdio: "inherit" });

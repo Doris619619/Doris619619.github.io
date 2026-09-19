@@ -16,11 +16,12 @@ export const site = {
 export const projects = [
   {
     id: "grace",
+    pdfUrl: null, // Set only after the author supplies a public full-text PDF.
     group: "research",
     period: { start: "2025-09", end: "2025-12" },
     index: "01",
     eyebrow: "EDA Research · DAC 2026",
-    title: "GRACE",
+    title: "电路板接地铜面与布线协同优化",
     subtitle: "面向地平面生成与重布线协同设计引擎",
     statement: "让地平面生成不再只是布线后的被动填充，而成为与重布线共同求解的优化问题。",
     detail: "独立开发 KiCad 7.0 PCB 布局解析器、局部区域切分和重布线模块，并封装从解析、优化到回写评测的一键流水线。",
@@ -33,13 +34,32 @@ export const projects = [
     group: "research",
     period: { start: "2025-12", ongoing: true },
     index: "02",
-    eyebrow: "LLM Research · Ongoing",
-    title: "LLM × PCB",
+    eyebrow: "LLM Research · Submitted to AAAI 2027",
+    title: "大语言模型辅助电路板布局布线",
     subtitle: "大语言模型驱动的 PCB 布局布线优化",
     statement: "探索如何让大语言模型进入工程优化流程，并在真实布局布线约束下接受验证。",
     detail: "完成 LoRA / QLoRA 大模型 SFT 微调全流程；研究 PPO、GRPO、GSPO 在训练机制与适用场景上的差异。",
     result: "建立从数据预处理、训练配置到实验验证的完整研究工作流。",
     stack: ["SFT", "LoRA", "QLoRA", "RL" ]
+  },
+  {
+    id: "threadline",
+    group: "practice",
+    period: { ongoing: true },
+    index: "05",
+    eyebrow: "Personal software · Web / PWA / Windows",
+    title: "Threadline · 个人任务与时间工作台",
+    subtitle: "把任务、日常习惯与时间规划放在一起",
+    statement: "把待办、日程和实际投入连起来：既能安排今天要做的事，也能回顾时间花在哪里。",
+    detail: "围绕今日执行构建任务、Daily、待安排与每日收尾流程，结合日历、习惯记录和投入洞察；使用同一套前端支持浏览器、iPhone PWA 与 Windows，并通过 Supabase 同步业务数据。",
+    result: "提供可下载的 Windows 版本，支持桌面工作站与自动更新；代码公开维护，可按仓库文档自行部署 Web 版本。",
+    stack: ["Next.js", "React", "TypeScript", "Supabase", "Electron"],
+    link: "https://github.com/Doris619619/Threadline",
+    linkLabel: { zh: "GitHub 仓库", en: "GitHub repository" },
+    secondaryLink: "https://github.com/Doris619619/Threadline/releases/latest",
+    secondaryLinkLabel: { zh: "下载 Windows 版", en: "Download for Windows" },
+    screenshot: "/assets/projects/threadline-workspace.png",
+    screenshotCaption: { zh: "Threadline 今日工作台 · 项目演示数据", en: "Threadline daily workspace · Demo data" }
   },
   {
     id: "robomaster",
@@ -73,15 +93,14 @@ export const projects = [
 ];
 
 export const journey = [
-  { time: "2026.01 — 至今", title: "学生助理 · CUHK-Shenzhen ITSO", text: "参与校内 AI 平台接口测试；完成 /chat/completions、/responses、流式返回与权限校验的覆盖，验证 64 个参数字段兼容性，并测试 Cherry Studio 多模型接入。" },
-  { time: "2025.12 — 至今", title: "研究项目 · LLM 驱动的 PCB 布局布线优化", text: "搭建 LoRA / QLoRA SFT 微调全流程，研究强化学习方法在工程优化任务中的训练机制与潜在效果。" },
-  { time: "2025.09 — 2025.12", title: "研究项目 · GRACE", text: "DAC 2026 Accepted，第 5 作者；开发 PCB 解析、局部重布线与优化回写模块。" },
+  { time: "2025.12 — 至今", title: "研究项目 · LLM 驱动的 PCB 布局布线优化", text: "AAAI 2027 在投。搭建 LoRA / QLoRA SFT 微调全流程，研究强化学习方法在工程优化任务中的训练机制与潜在效果。" },
+  { time: "2025.09 — 2025.12", title: "研究项目 · 电路板接地铜面与布线协同优化", text: "DAC 2026 Accepted，第 5 作者；开发 PCB 解析、局部重布线与优化回写模块。" },
   { time: "2025.07 — 至今", title: "RoboMaster 视觉组 · CUHK-Shenzhen", text: "围绕 ROS2 视频链路、OpenCV 目标识别、串口稳定性和实时画面状态叠加开展工程工作。" },
-  { time: "2025.06", title: "讲师 & 授课教师 · 升途教育科技", text: "承担高三物理教学，并围绕观点构建、结构化表达和临场演讲开展英文辩论训练。" }
+  { id: "shengtu", time: "2025.06 — 至今", title: "讲师 & 授课教师 · 升途教育科技", text: "承担高三物理教学，并围绕观点构建、结构化表达和临场演讲开展英文辩论训练。" }
 ];
 
 export const education = [
-  { time: "2024.09 — 至今", title: "香港中文大学（深圳）", detail: "计算机工程 · GPA 3.571" },
+  { time: "2024.09 — 至今", title: "香港中文大学（深圳）", detail: "电子与计算机工程（计算机方向）" },
   { time: "2025.06 — 2025.08", title: "UC Berkeley Summer Session", detail: "CS70 离散数学与概率论 · CS184 计算机图形学" }
 ];
 

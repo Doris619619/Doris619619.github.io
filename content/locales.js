@@ -1,9 +1,10 @@
 // 文件用途：为原有事实资料提供英文表达，并维护全站中英文界面和简介。
+import { localizedExperience } from "./experience.js";
 import { projects, journey, education, notes } from "./site-data.js";
 
 export const introduction = {
-  zh: "我是梁彦诗，目前就读于香港中文大学（深圳）计算机工程专业。我关注电子设计自动化、人工智能与机器人视觉，做过 PCB 优化、三维场景重建，也参与 RoboMaster 视觉系统开发。我喜欢顺着一个具体问题钻进去，再把学到的东西用在实际项目里。研究和代码之外，我也打乒乓球、写故事，参加校园活动。这里记录我的作品，也记录这些探索留下的片段。",
-  en: "I’m Doris Liang, a Computer Engineering student at The Chinese University of Hong Kong, Shenzhen. My interests span electronic design automation, AI, and robot vision. I’ve worked on PCB optimization, 3D scene reconstruction, and vision systems for RoboMaster. I enjoy digging into a concrete problem and putting what I learn into practice. Outside research and coding, I play table tennis, write stories, and take part in campus life. This is a place for my projects and the experiences along the way."
+  zh: "我是梁彦诗，也可以叫我 Doris。目前在香港中文大学（深圳）学习计算机工程，喜欢顺着一个具体问题钻进去，再把想法做成能运行的东西。我关注电子设计自动化、人工智能与机器人视觉：研究过电路板优化，在伯克利做过三维场景重建，也在 RoboMaster 校队调试机器人。研究和代码之外，我在抖音做「每天认识一个Github用户」，介绍开源世界里的创作者；也打乒乓球、写故事。这里放着我的作品，也记下一路走来的尝试。",
+  en: "I’m Yanshi Liang — you can call me Doris. I study Computer Engineering at CUHK-Shenzhen. I like following a concrete problem wherever it leads, then turning an idea into something that works. My interests span electronic design automation, AI, and robot vision: from optimizing circuit boards to reconstructing 3D scenes at Berkeley and working on robots with the RoboMaster team. Outside research and coding, I introduce open-source creators on Douyin through 每天认识一个Github用户, play table tennis, and write stories. This is where I keep my projects and the things I try along the way."
 };
 
 export const ui = {
@@ -12,28 +13,29 @@ export const ui = {
 };
 
 const englishProjects = {
-  grace: { subtitle: "Co-designing ground-plane generation and PCB rerouting", statement: "Treating ground-plane generation as a joint optimization problem with rerouting, rather than a passive fill after routing.", detail: "Independently developed a KiCad 7.0 PCB layout parser, local region partitioning, and rerouting modules, and integrated parsing, optimization, write-back, and evaluation into a single pipeline.", result: "Average ground-plane area increased by 33.06%; fragmented polygon count decreased by 54.34%." },
-  "llm-pcb": { subtitle: "LLM-driven PCB placement and routing optimization", statement: "Exploring how large language models can participate in engineering optimization and be evaluated under real placement and routing constraints.", detail: "Built the complete LoRA / QLoRA supervised fine-tuning workflow; studied the training mechanisms and applicability of PPO, GRPO, and GSPO.", result: "Established a research workflow covering data preparation, training configuration, and experimental validation." },
+  threadline: { title: "Threadline · Tasks and time, together", subtitle: "A personal workspace for tasks, daily habits and time planning", statement: "Connect plans with actual effort: organize today's work and review where the time went.", detail: "Built daily workflows for tasks, recurring checklists, unscheduled work and end-of-day review, alongside calendars, habit tracking and time insights. One frontend serves browsers, iPhone PWA and Windows, with business data synchronized through Supabase.", result: "A downloadable Windows app with a compact desktop workspace and automatic updates. The public repository includes instructions for deploying the web version." },
+  grace: { title: "PCB ground-plane and rerouting optimization", subtitle: "Co-designing ground-plane generation and PCB rerouting", statement: "Treating ground-plane generation as a joint optimization problem with rerouting, rather than a passive fill after routing.", detail: "Independently developed a KiCad 7.0 PCB layout parser, local region partitioning, and rerouting modules, and integrated parsing, optimization, write-back, and evaluation into a single pipeline.", result: "Average ground-plane area increased by 33.06%; fragmented polygon count decreased by 54.34%." },
+  "llm-pcb": { title: "Language models for PCB placement and routing", subtitle: "LLM-driven PCB placement and routing optimization", statement: "Exploring how large language models can participate in engineering optimization and be evaluated under real placement and routing constraints.", detail: "Built the complete LoRA / QLoRA supervised fine-tuning workflow; studied the training mechanisms and applicability of PPO, GRPO, and GSPO.", result: "Established a research workflow covering data preparation, training configuration, and experimental validation." },
   robomaster: { subtitle: "Robot vision and real-time status overlays", statement: "Keeping perception, transmission, and status displays in sync in a fast-moving competition environment.", detail: "Built a ROS2 video transmission and processing pipeline with OpenCV object recognition; improved serial communication between the vision module and controller and implemented real-time status overlays.", result: "Resolved packet loss issues and improved the reliability of status-data transmission." },
   vrgs: { subtitle: "Realtime VR Gaming based on 3D Gaussian Splatting", statement: "Reconstructing a real scene as an explorable 3D space using multi-view images and reproducible experiment settings.", detail: "Configured GPU training and resolved Nerfstudio / Splatfacto dependencies. Trained on approximately 1,000 multi-view screenshots with COLMAP camera poses and exported a scene point cloud.", result: "Preserved checkpoints and configurations for a reproducible 3D scene reconstruction workflow." }
 };
 
 export const projectStatus = {
+  threadline: { zh: "个人软件作品 · Web / PWA / Windows", en: "Personal software project · Web / PWA / Windows" },
   grace: { zh: "DAC 2026 论文录用 · 第 5 作者", en: "Paper accepted at DAC 2026 · Fifth author" },
-  "llm-pcb": { zh: "研究进行中", en: "Research in progress" },
+  "llm-pcb": { zh: "AAAI 2027 在投", en: "Submitted to AAAI 2027" },
   robomaster: { zh: "RoboMaster 视觉组 · 工程实践", en: "RoboMaster vision team · Engineering practice" },
   vrgs: { zh: "UC Berkeley CS184 · Showcase Winner", en: "UC Berkeley CS184 · Showcase Winner" }
 };
 
 const englishJourney = [
-  { title: "Student Assistant · CUHK-Shenzhen ITSO", text: "Tested campus AI platform APIs, covering /chat/completions, /responses, streaming, and authorization. Verified compatibility across 64 parameter fields and tested multi-model access in Cherry Studio." },
-  { title: "Research · LLM-driven PCB optimization", text: "Built a complete LoRA / QLoRA SFT workflow and investigated reinforcement learning methods for engineering optimization." },
-  { title: "Research · GRACE", text: "Accepted at DAC 2026, fifth author. Developed PCB parsing, local rerouting, and optimization write-back modules." },
+  { title: "Research · LLM-driven PCB optimization", text: "Submitted to AAAI 2027. Built a complete LoRA / QLoRA SFT workflow and investigated reinforcement learning methods for engineering optimization." },
+  { title: "Research · PCB ground-plane and rerouting optimization", text: "Accepted at DAC 2026, fifth author. Developed PCB parsing, local rerouting, and optimization write-back modules." },
   { title: "RoboMaster Vision Team · CUHK-Shenzhen", text: "Worked on ROS2 video pipelines, OpenCV recognition, serial communication reliability, and real-time status overlays." },
   { title: "Instructor · Shengtu Education Technology", text: "Taught senior high-school physics and coached English debate, including argument building, structured expression, and impromptu speaking." }
 ];
 const englishEducation = [
-  { title: "The Chinese University of Hong Kong, Shenzhen", detail: "Computer Engineering · GPA 3.571" },
+  { title: "The Chinese University of Hong Kong, Shenzhen", detail: "Electronic and Computer Engineering (Computer Engineering track)" },
   { title: "UC Berkeley Summer Session", detail: "CS70 Discrete Mathematics and Probability Theory · CS184 Computer Graphics" }
 ];
 
@@ -44,7 +46,7 @@ export function localizedProjects(lang) {
 
 /** Localize dates and prose while retaining the supplied chronology, including ongoing work. */
 export function localizedJourney(lang) {
-  return journey.map((item, index) => ({ ...item, ...(lang === "en" ? englishJourney[index] : {}), time: lang === "en" ? item.time.replace("至今", "present") : item.time }));
+  return [...localizedExperience(lang), ...journey.map((item, index) => ({ ...item, ...(lang === "en" ? englishJourney[index] : {}), time: lang === "en" ? item.time.replace("至今", "present") : item.time }))];
 }
 
 /** Return education records without inferring graduation dates or degree achievements. */
@@ -59,6 +61,7 @@ export function localizedNote(lang) {
 
 // 类型与成果分开表达，读者无需先认识项目缩写。
 export const projectContext = {
+  threadline: { zh: "产品开发 · 效率工具", en: "Product development · Productivity" },
   grace: { zh: "科研 · 电子设计自动化", en: "Research · Electronic design automation" },
   "llm-pcb": { zh: "科研 · 人工智能", en: "Research · Artificial intelligence" },
   robomaster: { zh: "竞赛工程 · 机器人视觉", en: "Competition engineering · Robot vision" },

@@ -1,5 +1,6 @@
-// 文件用途：增强静态页面的主题、手机菜单、语言定位及旧链接兼容，不负责渲染正文。
+// 文件用途：增强静态页面的主题、手机菜单、语言定位、磁吸鼠标及旧链接兼容，不负责渲染正文。
 import { legacyDestination } from "./src/routes.js";
+import { initPointerMotion } from "./src/motion.js";
 
 const legacy = legacyDestination(new URL(window.location.href));
 if (legacy) window.location.replace(legacy);
@@ -74,6 +75,7 @@ function syncLanguageAnchor() {
 function onViewportChange() { setMenu(false); }
 
 syncTheme();
+initPointerMotion();
 syncLanguageAnchor();
 themeButton?.addEventListener("click", toggleTheme);
 menuButton?.addEventListener("click", toggleMenu);
