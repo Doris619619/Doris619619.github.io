@@ -19,7 +19,7 @@ const englishProjects = {
 };
 
 export const projectStatus = {
-  grace: { zh: "DAC 2026 录用 · 第 5 作者", en: "Accepted at DAC 2026 · Fifth author" },
+  grace: { zh: "DAC 2026 论文录用 · 第 5 作者", en: "Paper accepted at DAC 2026 · Fifth author" },
   "llm-pcb": { zh: "研究进行中", en: "Research in progress" },
   robomaster: { zh: "RoboMaster 视觉组 · 工程实践", en: "RoboMaster vision team · Engineering practice" },
   vrgs: { zh: "UC Berkeley CS184 · Showcase Winner", en: "UC Berkeley CS184 · Showcase Winner" }
@@ -56,14 +56,6 @@ export function localizedEducation(lang) {
 export function localizedNote(lang) {
   return { ...notes[0], title: ui[lang].original, summary: ui[lang].originalSummary };
 }
-
-// 项目索引交代具体问题；完整贡献与指标仍在原始项目数据中。
-export const projectSummaries = {
-    grace: { zh: "研究如何协同调整电路板布线与地平面生成，让接地铜面更完整、减少碎片。", en: "Research on jointly optimizing PCB routing and ground-plane generation for larger, less fragmented ground planes." },
-    "llm-pcb": { zh: "用大语言模型探索 PCB 布局布线优化", en: "Exploring PCB optimization with language models" },
-    robomaster: { zh: "机器人视觉、视频传输与实时状态显示", en: "Robot vision, video pipelines, and live status overlays" },
-    vrgs: { zh: "基于 3D Gaussian Splatting 的场景重建", en: "3D scene reconstruction with Gaussian Splatting" }
-  };
 
 // 类型与成果分开表达，读者无需先认识项目缩写。
 export const projectContext = {

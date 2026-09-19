@@ -2,9 +2,11 @@
 import { site, projects, skills } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
 import { introduction, ui, localizedProjects, localizedJourney, localizedEducation, localizedNote } from "../content/locales.js";
+import { portfolioCopy } from "../content/portfolio.js";
+import { profileIntroduction, editorialSection, projectGroup } from "./portfolio.js";
 import { hero } from "./hero.js";
 import { pathFor } from "./routes.js";
-import { escape, date, sectionHeading, projectRow, projectPeriod, noteEntry, awardLine } from "./components.js";
+import { escape, date, sectionHeading, projectPeriod, noteEntry, awardLine } from "./components.js";
 
 export const pageKeys = ["", "projects", ...projects.map((item) => `projects/${item.id}`), "notes", "notes/unselected-road", "journey", "honors", "about"];
 
@@ -13,10 +15,18 @@ function pageTitle(title, subtitle, index) {
   return `<header class="page-title">${index ? `<p class="eyebrow">${index}</p>` : ""}<h1>${escape(title)}</h1><p>${escape(subtitle)}</p></header>`;
 }
 
-/** Keep the established opening intact, followed by a short research-first editorial selection. */
+/** Preserve the opening, then introduce the person before research evidence and life outside code. */
 function home(lang) {
-  const t = ui[lang];
-  return `${hero(lang)}<div class="content-shell home-content"><section class="intro-section">${sectionHeading(t.intro, pathFor("about", lang), t.about)}<p class="intro-copy">${introduction[lang]}</p></section><section class="content-section">${sectionHeading(t.selected, pathFor("projects", lang), t.all)}<div class="project-list">${localizedProjects(lang).slice(0, 2).map((project) => projectRow(project, lang, "h3")).join("")}</div></section><section class="content-section">${sectionHeading(t.recent, pathFor("notes", lang), t.all)}${noteEntry(lang, "h3")}</section></div>`;
+  const t = portfolioCopy[lang];
+  const profile = editorialSection("profile", t.profile, t.profileNote, profileIntroduction(lang), pathFor("about", lang), t.moreAbout);
+  const writing = editorialSection("writing", t.writing, t.writingNote, `<p class="life-intro">${escape(t.life)}</p>${noteEntry(lang, "h3")}<a class="quiet-link" href="${pathFor("honors", lang)}">${t.honors} <span aria-hidden="true">→</span></a>`, pathFor("notes", lang), t.story);
+  return `${hero(lang)}<div class="content-shell home-content portfolio-layout">${profile}${projectGroup("research", lang, true)}${writing}</div>`;
+}
+
+/** Present research and practice as distinct bodies of work, not an undifferentiated project directory. */
+function projectsPage(lang) {
+  const t = portfolioCopy[lang];
+  return `${pageTitle(t.title, t.introduction)}<div class="portfolio-layout">${projectGroup("research", lang)}${projectGroup("practice", lang)}</div>`;
 }
 
 /** Display one project's evidence and contribution without inventing screenshots or publication claims. */
@@ -24,7 +34,7 @@ function projectDetail(project, lang) {
   const t = ui[lang];
   const reportLabel = project.id === "grace" ? (lang === "en" ? "DAC 2026 presentation" : "DAC 2026 论文页面") : project.id === "robomaster" ? (lang === "en" ? "GitHub profile" : "GitHub 个人主页") : (lang === "en" ? "Project report" : "项目报告");
   const links = project.link ? `<section class="detail-section"><h2>${t.sources}</h2><div class="text-links"><a href="${escape(project.link)}">${reportLabel} ↗</a>${project.secondaryLink ? `<a href="${escape(project.secondaryLink)}">CS184 Showcase ↗</a>` : ""}</div></section>` : "";
-  return `<div class="reading-shell"><a class="back-link" href="${pathFor("projects", lang)}">← ${t.back} ${t.projects}</a><header class="detail-title"><p class="meta">${escape(project.status)}</p><h1>${escape(project.title)}</h1><p>${escape(project.subtitle)}</p><p class="project-period">${lang === "en" ? "Project period" : "项目时间"} · ${projectPeriod(project, lang)}</p></header>${[[t.background, project.statement], [t.contribution, project.detail], [t.outcome, project.result]].map(([title, text]) => `<section class="detail-section"><h2>${title}</h2><p>${escape(text)}</p></section>`).join("")}<section class="detail-section"><h2>${t.tools}</h2><p class="technology-line">${project.stack.map(escape).join(" · ")}</p></section>${links}</div>`;
+  return `<div class="reading-shell"><a class="back-link" href="${pathFor("projects", lang)}">← ${t.back} ${t.projects}</a><header class="detail-title project-detail-title"><h1>${escape(project.title)}</h1><p>${escape(project.subtitle)}</p><p class="project-status">${escape(project.status)}</p><p class="project-period">${lang === "en" ? "Project period" : "项目时间"} · ${projectPeriod(project, lang)}</p></header>${[[t.background, project.statement], [t.contribution, project.detail], [t.outcome, project.result]].map(([title, text]) => `<section class="detail-section"><h2>${title}</h2><p>${escape(text)}</p></section>`).join("")}<section class="detail-section"><h2>${t.tools}</h2><p class="technology-line">${project.stack.map(escape).join(" · ")}</p></section>${links}</div>`;
 }
 
 /** Render original Chinese paragraphs unchanged, with localized navigation and recognition metadata. */
@@ -55,7 +65,7 @@ function honorsPage(lang) {
 function about(lang) {
   const t = ui[lang];
   const en = lang === "en";
-  return `${pageTitle(t.about, en ? "Doris Liang · Computer Engineering" : "梁彦诗 · 计算机工程", "04 / ABOUT")}<p class="intro-copy">${introduction[lang]}</p><section class="content-section">${sectionHeading(t.education)}${localizedEducation(lang).map((item) => `<article class="education-row"><p class="meta">${escape(item.time)}</p><h3>${escape(item.title)}</h3><p>${escape(item.detail)}</p></article>`).join("")}</section><section class="content-section" id="skills">${sectionHeading(t.skills)}${skills.map((item) => `<div class="skill-row"><span>${item.label}</span><p>${escape(en ? item.items.replace("数据合成", "Synthetic data") : item.items)}</p></div>`).join("")}</section><section class="content-section">${sectionHeading(t.activity, pathFor("honors", lang), t.honors)}<p>${en ? "Beyond research, I take part in table tennis, writing, and campus visual storytelling." : "研究之外，我也参加乒乓球比赛、征文和校园影像创作。"}</p><article class="volunteer-row"><p class="meta">2025</p><h3>${en ? "Volunteer · 15th National Games" : "第十五届全运会志愿者"}</h3><p>${en ? "81.50 hours of volunteer service." : "志愿服务 81.50 小时。"}</p><a href="/assets/volunteer-certificate.png" target="_blank" rel="noopener">${t.certificate} ↗</a></article></section><section class="content-section contact-inline" id="contact">${sectionHeading(t.contact)}<a href="mailto:${site.email}">${site.email}</a><a href="${site.github}">GitHub ↗</a></section>`;
+  return `${pageTitle(en ? "Doris Liang" : "梁彦诗", en ? "Computer Engineering · CUHK-Shenzhen" : "计算机工程 · 香港中文大学（深圳）")}<div class="about-profile">${profileIntroduction(lang)}</div><section class="content-section">${sectionHeading(t.education)}${localizedEducation(lang).map((item) => `<article class="education-row"><p class="meta">${escape(item.time)}</p><h3>${escape(item.title)}</h3><p>${escape(item.detail)}</p></article>`).join("")}</section><section class="content-section" id="skills">${sectionHeading(t.skills)}${skills.map((item) => `<div class="skill-row"><span>${item.label}</span><p>${escape(en ? item.items.replace("数据合成", "Synthetic data") : item.items)}</p></div>`).join("")}</section><section class="content-section">${sectionHeading(t.activity, pathFor("honors", lang), t.honors)}<p>${en ? "Beyond research, I take part in table tennis, writing, and campus visual storytelling." : "研究之外，我也参加乒乓球比赛、征文和校园影像创作。"}</p><article class="volunteer-row"><p class="meta">2025</p><h3>${en ? "Volunteer · 15th National Games" : "第十五届全运会志愿者"}</h3><p>${en ? "81.50 hours of volunteer service." : "志愿服务 81.50 小时。"}</p><a href="/assets/volunteer-certificate.png" target="_blank" rel="noopener">${t.certificate} ↗</a></article></section><section class="content-section contact-inline" id="contact">${sectionHeading(t.contact)}<a href="mailto:${site.email}">${site.email}</a><a href="${site.github}">GitHub ↗</a></section>`;
 }
 
 /** Resolve each declared route to a localized title, description, and static body. */
@@ -75,7 +85,7 @@ export function renderPage(key, lang) {
   else if (project) body = projectDetail(project, lang);
   else if (key === "notes/unselected-road") body = article(lang);
   else {
-    const content = key === "projects" ? `${pageTitle(t.projects, lang === "en" ? "Research & engineering." : "研究与工程。", "")}<div class="project-list">${localizedProjects(lang).map((item) => projectRow(item, lang)).join("")}</div>` : key === "notes" ? `${pageTitle(t.notes, description, "02 / WRITING")}${noteEntry(lang)}` : key === "journey" ? timeline(lang) : key === "honors" ? honorsPage(lang) : about(lang);
+    const content = key === "projects" ? projectsPage(lang) : key === "notes" ? `${pageTitle(t.notes, description, "02 / WRITING")}${noteEntry(lang)}` : key === "journey" ? timeline(lang) : key === "honors" ? honorsPage(lang) : about(lang);
     body = `<div class="content-shell inner-page">${content}</div>`;
   }
   return { key, lang, title, description, body };

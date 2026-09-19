@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { execFileSync } from "node:child_process";
 import { notes, projects } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
-import { localizedProjects, localizedJourney, localizedEducation, ui } from "../content/locales.js";
+import { introduction, localizedProjects, localizedJourney, localizedEducation, ui } from "../content/locales.js";
 import { pageKeys } from "../src/pages.js";
 import { origin, pathFor, legacyDestination, languages } from "../src/routes.js";
 import { escape } from "../src/components.js";
@@ -71,8 +71,23 @@ for (const lang of languages) {
   for (const key of ["", "notes", "notes/unselected-road"]) assert.ok(pages.get(pathFor(key, lang)).includes(pathFor("honors", lang) + "#lingyu"));
   assert.ok(pages.get(pathFor("about", lang)).includes("81.50"));
   assert.ok(!awardsHtml.includes("81.50"));
+  const portfolio = pages.get(pathFor("projects", lang));
+  // Separate research evidence from practice without losing any project or the approved introduction.
+  for (const group of ["research", "practice"]) {
+    const section = portfolio.match(new RegExp(`<section class="editorial-section" id="${group}">([\\s\\S]*?)</section>`))?.[1];
+    assert.ok(section, `Portfolio group: ${group} / ${lang}`);
+    for (const project of projects) assert.equal(section.includes(pathFor(`projects/${project.id}`, lang)), project.group === group);
+  }
+  assert.ok(portfolio.includes("33.06%") && portfolio.includes("54.34%"), "Research evidence visible before opening details");
+  for (const key of ["", "about"]) {
+    const profile = pages.get(pathFor(key, lang)).match(/<div class="profile-prose">([\s\S]*?)<div class="profile-links">/)?.[1];
+    assert.ok(profile, `Readable personal introduction: ${key} / ${lang}`);
+    assert.equal(profile.replace(/<[^>]*>/g, "").replace(/\s/g, ""), escape(introduction[lang]).replace(/\s/g, ""));
+  }
   for (const project of projects) {
     const html = pages.get(pathFor(`projects/${project.id}`, lang));
+    assert.ok(html.includes(`datetime="${project.period.start}"`), `Project dates in details: ${project.id}`);
+    assert.ok(portfolio.includes(`datetime="${project.period.start}"`), `Project dates in index: ${project.id}`);
     if (project.link) assert.ok(html.includes(escape(project.link)));
     if (project.secondaryLink) assert.ok(html.includes(escape(project.secondaryLink)));
   }

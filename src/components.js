@@ -1,7 +1,8 @@
 // 文件用途：生成可复用的导航、页脚、项目条目与获奖文章入口。
 import { site } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
-import { ui, localizedNote, projectSummaries, projectContext } from "../content/locales.js";
+import { ui, localizedNote, projectContext } from "../content/locales.js";
+import { portfolioCopy, projectPresentation } from "../content/portfolio.js";
 import { pathFor, origin } from "./routes.js";
 import { icon, arrow } from "./icons.js";
 
@@ -48,15 +49,13 @@ export function projectPeriod(project, lang) {
   return `${beginning}${season === "summer" ? (lang === "en" ? " summer" : " 夏") : ending}`;
 }
 
-/** Explain project type, problem, dates and recognition without confusing work and publication dates. */
+/** Keep dates, authorship, contribution and evidence in one reading column; links have distinct destinations. */
 export function projectRow(project, lang, heading = "h2") {
-  const statuses = {
-    grace: lang === "en" ? "Paper accepted at DAC 2026 · Fifth author" : "DAC 2026 论文录用 · 第 5 作者",
-    "llm-pcb": lang === "en" ? "Research in progress" : "研究进行中",
-    robomaster: lang === "en" ? "RoboMaster vision team" : "RoboMaster 视觉组",
-    vrgs: "UC Berkeley CS184 · Showcase Winner"
-  };
-  return `<article class="project-row"><div class="project-row-heading"><${heading}><a href="${pathFor(`projects/${project.id}`, lang)}">${escape(project.title)}</a></${heading}><span class="project-context">${escape(projectContext[project.id][lang])}</span></div><p class="project-subtitle">${escape(projectSummaries[project.id][lang])}</p><div class="project-meta"><p class="project-period">${projectPeriod(project, lang)}</p><p class="project-status"><span>${escape(statuses[project.id])}</span><span class="project-arrow" aria-hidden="true">↗</span></p></div></article>`;
+  const t = portfolioCopy[lang];
+  const copy = projectPresentation[project.id][lang];
+  const featured = project.id === "grace";
+  const externalLink = featured || project.id === "vrgs" ? `<a href="${escape(project.link)}">${featured ? t.paper : t.report} <span aria-hidden="true">↗</span></a>` : "";
+  return `<article class="project-row${featured ? " project-featured" : ""}"><p class="project-meta"><span>${escape(projectContext[project.id][lang])}</span><span class="project-period">${projectPeriod(project, lang)}</span></p><${heading}><a href="${pathFor(`projects/${project.id}`, lang)}">${escape(copy.title)}</a></${heading}><p class="project-status">${escape(project.status)}</p><p class="project-summary">${escape(copy.text)}</p>${featured ? `<p class="project-result"><span>${t.result}</span>${escape(project.result)}</p>` : ""}<div class="project-links">${externalLink}<a href="${pathFor(`projects/${project.id}`, lang)}">${t.detail} <span aria-hidden="true">→</span></a></div></article>`;
 }
 
 /** Connect the award and the story from every article entry point using one award record. */
@@ -68,5 +67,5 @@ export function awardLine(lang) {
 /** Show the real writing date independently of the later award date. */
 export function noteEntry(lang, heading = "h2") {
   const note = localizedNote(lang);
-  return `<article class="note-entry"><time datetime="2025-01">${note.date}</time><div><${heading}><a href="${pathFor(`notes/${note.slug}`, lang)}">${escape(note.title)} <span aria-hidden="true">↗</span></a></${heading}><p>${escape(note.summary)}</p>${awardLine(lang)}</div></article>`;
+  return `<article class="note-entry"><time datetime="2025-01">${note.date}</time><div><${heading}><a href="${pathFor(`notes/${note.slug}`, lang)}">${escape(note.title)} <span aria-hidden="true">→</span></a></${heading}><p>${escape(note.summary)}</p>${awardLine(lang)}</div></article>`;
 }
