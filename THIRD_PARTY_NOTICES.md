@@ -28,7 +28,7 @@ The website UI uses the unmodified `livenest-sans-sc.woff2` from the user's Live
 
 ## Cursor effect reference
 
-The Fairy Dust effect in [tholman/cursor-effects](https://github.com/tholman/cursor-effects) (declared MIT in the upstream README, inspected 2026-09-19) informed the visual direction of `src/motion.js`. The local code independently implements vector stars, elapsed-time animation, bounded particles, idle shutdown, capability changes, and visibility lifecycle. No upstream source file or runtime package is distributed.
+Historical implementation (no longer shipped): the Fairy Dust effect in [tholman/cursor-effects](https://github.com/tholman/cursor-effects) (declared MIT in the upstream README, inspected 2026-09-19) informed the visual direction of `src/motion.js`. The local code independently implements vector stars, elapsed-time animation, bounded particles, idle shutdown, capability changes, and visibility lifecycle. No upstream source file or runtime package is distributed.
 
 ## Homepage chronology and institution marks
 
@@ -56,4 +56,13 @@ The following original images identify education, activities, and social destina
 - `assets/organizations/douyin.jpg`: image explicitly labelled 抖音logo on the [official mobile download page](https://m.douyin.com/app_download); original image stored unchanged.
 - `assets/lingyu-2025-cover.png`: user-provided Lingyu Summer 2025 cover; no image edits. Shown as magazine artwork, not a certificate.
 
-`assets/cursors/orbit.svg` and `orbit-link.svg` are original local vector cursor drawings, separate from all third-party brand artwork.
+The former local SVG cursor drawings have been removed.
+
+## Cuberto Mouse Follower and GSAP (current)
+
+The site distributes unmodified pinned browser builds, loaded only after eligible desktop mouse input:
+
+- [Cuberto Mouse Follower](https://github.com/Cuberto/mouse-follower), v1.2.1: `assets/vendor/mouse-follower-1.2.1.min.js`, obtained from https://unpkg.com/mouse-follower@1.2.1/dist/mouse-follower.min.js . MIT copyright/permission notice in `assets/licenses/mouse-follower-LICENSE.txt`.
+- [GSAP](https://gsap.com/), v3.15.0: `assets/vendor/gsap-3.15.0.min.js`, obtained from https://unpkg.com/gsap@3.15.0/dist/gsap.min.js . Copyright 2026 GreenSock. Original license header is preserved; governed by the [GSAP Standard No Charge License](https://gsap.com/standard-license/). GSAP is not MIT.
+
+The local adapter and CSS select restrained styling, limit magnetic behavior to social buttons, correct axis-only rendering, and manage capability changes and idle rendering. No tracking or remote runtime CDN requests are added.

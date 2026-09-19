@@ -65,10 +65,12 @@ for (const lang of languages) {
     assert.ok(html.includes("AAAI 2027"), `Submission status: ${key}`);
   }
   const home = pages.get(pathFor("", lang));
+  assert.ok(!home.includes('class="profile-links"'), "No duplicate social row under homepage introduction");
   assert.ok(home.includes('id="life-timeline"') && !home.includes('class="editorial-section"'), "Homepage uses one chronology after the introduction");
   assert.ok(!/^GRACE/i.test(localizedProjects(lang).find((item) => item.id === "grace").title), "Research title explains the topic before the acronym");
   const about = pages.get(pathFor("about", lang));
   for (const value of ["ECE2050", "University Student Teaching Fellow", "2026.09", "92689179314", "2026-09-18", "douyin-profile-code.jpg"]) assert.ok(about.includes(value));
+  assert.ok(about.includes('class="volunteer-certificate"') && about.includes('class="creator-gallery"') && !about.includes("<details"), "Evidence and scan code shown inline");
   assert.ok(about.includes(lang === "en" ? "2026.06 — present" : "2026.06 — 至今"), "Internship remains ongoing");
   assert.ok(home.includes("/assets/organizations/robomaster.png") && home.includes("/assets/organizations/berkeley.png") && home.includes("/assets/organizations/itso.png"), "Official marks in homepage chronology");
   assert.ok(!home.includes('id="writing-award"'), "Writing award lives in recognition archive");
@@ -98,7 +100,7 @@ for (const lang of languages) {
   }
   assert.ok(portfolio.includes("33.06%") && portfolio.includes("54.34%"), "Research evidence visible before opening details");
   for (const key of ["", "about"]) {
-    const profile = pages.get(pathFor(key, lang)).match(/<div class="profile-prose">([\s\S]*?)<div class="profile-links">/)?.[1];
+    const profile = pages.get(pathFor(key, lang)).match(/<div class="profile-prose">((?:<p[^>]*>[\s\S]*?<\/p>)+)/)?.[1];
     assert.ok(profile, `Readable personal introduction: ${key} / ${lang}`);
     assert.equal(profile.replace(/<[^>]*>/g, "").replace(/\s/g, ""), escape(introduction[lang]).replace(/\s/g, ""));
   }

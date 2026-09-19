@@ -7,12 +7,12 @@ import { pathFor } from "./routes.js";
 import { professionalLinks } from "./social.js";
 
 /** Give the introduction three readable paragraphs and contextual links to the person’s work and interests. */
-export function profileIntroduction(lang) {
+export function profileIntroduction(lang, showLinks = true) {
   const t = portfolioCopy[lang];
   const source = introduction[lang];
   const [middle, end] = t.profileBreaks.map((marker) => source.indexOf(marker));
   const paragraphs = [source.slice(0, middle), source.slice(middle, end), source.slice(end)];
-  return `<div class="profile-prose">${paragraphs.map((text, index) => `<p${index === 0 ? ' class="profile-lead"' : ""}>${profileText(text.trim(), lang)}</p>`).join("")}<div class="profile-links"><a href="mailto:${site.email}">${t.contact} <span aria-hidden="true">↗</span></a><a href="${site.github}">GitHub <span aria-hidden="true">↗</span></a>${professionalLinks()}<a href="${pathFor("about", lang)}#creator">${lang === "en" ? "Douyin" : "抖音"} <span aria-hidden="true">↗</span></a></div></div>`;
+  return `<div class="profile-prose">${paragraphs.map((text, index) => `<p${index === 0 ? ' class="profile-lead"' : ""}>${profileText(text.trim(), lang)}</p>`).join("")}${showLinks ? `<div class="profile-links"><a href="mailto:${site.email}">${t.contact} <span aria-hidden="true">↗</span></a><a href="${site.github}">GitHub <span aria-hidden="true">↗</span></a>${professionalLinks()}<a href="${pathFor("about", lang)}#creator">${lang === "en" ? "Douyin" : "抖音"} <span aria-hidden="true">↗</span></a></div>` : ""}</div>`;
 }
 
 /** Render a quiet section label beside its content; collapse into reading order on small screens. */

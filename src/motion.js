@@ -1,136 +1,110 @@
-// 文件用途：以本地 Canvas 实现星光拖尾与点击星芒，管理空闲、触屏和减少动态效果的降级。
-// Visual reference: tholman/cursor-effects Fairy Dust (MIT); independently implemented lifecycle and vector rendering.
-
-/** Enhance fine-pointer visits without replacing the native cursor or intercepting input. */
-export function initPointerMotion() {
+// 文件用途：接入固定版本 Cuberto Mouse Follower，管理磁吸、空闲暂停与系统鼠标降级。
+let libraries;
+/** Load pinned local libraries only after a real desktop mouse is used. */
+function loadLibraries() {
+  if (!libraries) libraries = (async () => {
+    for (const src of ["/assets/vendor/gsap-3.15.0.min.js", "/assets/vendor/mouse-follower-1.2.1.min.js"]) {
+      await new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src; script.onload = resolve; script.onerror = reject;
+        document.head.append(script);
+      });
+    }
+    window.MouseFollower.registerGSAP(window.gsap);
+    return { Follower: window.MouseFollower, gsap: window.gsap };
+  })();
+  return libraries;
+}
+/** Enhance fine mouse input, with native fallback on touch, loading failure and reduced motion. */
+export function initPointerMotion({ load = loadLibraries } = {}) {
+  const fine = matchMedia("(hover: hover) and (pointer: fine)");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-  const pointer = matchMedia("(hover: hover) and (pointer: fine)");
-  const canvas = document.createElement("canvas");
-  canvas.className = "pointer-stars";
-  canvas.setAttribute("aria-hidden", "true");
-  const context = canvas.getContext("2d");
-  if (!context) return;
-  let enabled = false;
-  let frame = 0;
-  let previous = 0;
-  let lastPoint = null;
-  let lastEmission = 0;
-  let particles = [];
-  let palette = [];
-
-  /** Read theme tokens once per theme change, never during animation frames. */
-  function readPalette() {
-    const style = getComputedStyle(document.documentElement);
-    palette = ["--accent", "--hero-accent", "--ink-soft"].map((name) => style.getPropertyValue(name).trim());
-  }
-
-  /** Limit backing-store size on high-DPI screens while retaining CSS-pixel coordinates. */
-  function resize() {
-    const ratio = Math.min(devicePixelRatio || 1, 2);
-    canvas.width = Math.round(innerWidth * ratio);
-    canvas.height = Math.round(innerHeight * ratio);
-    context.setTransform(ratio, 0, 0, ratio, 0, 0);
-  }
-
-  /** Discard transient stars and stop the frame loop on blur, hidden tabs or disabled motion. */
-  function clear() {
-    cancelAnimationFrame(frame);
-    frame = 0;
-    previous = 0;
-    lastPoint = null;
-    particles = [];
-    context.clearRect(0, 0, innerWidth, innerHeight);
-  }
-
-  /** Add a bounded burst; pointer movement cannot grow the particle buffer beyond 64 entries. */
-  function emit(x, y, burst = false) {
-    const count = burst ? 9 : 2;
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = burst ? 55 + Math.random() * 65 : 10 + Math.random() * 22;
-      particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-        age: 0, life: 0.45 + Math.random() * 0.3, size: 3 + Math.random() * 4,
-        angle, color: palette[i % palette.length] });
+  const root = document.documentElement;
+  let cursor, engine, pending, lastEvent, hoverTarget, idleTimer;
+  let ticking = false, generation = 0, focused = true, disposed = false;
+  /** Keep the enhancement off until conditions support a desktop pointer. */
+  function eligible() { return !disposed && focused && fine.matches && !reduced.matches && !document.hidden; }
+  /** Cancel upstream callbacks and remove its ticker before removing the cursor element. */
+  function stop() {
+    generation++; root.classList.remove("cursor-ready"); clearTimeout(idleTimer);
+    if (cursor) {
+      clearTimeout(cursor.visibleInt); clearTimeout(cursor.mediaInt);
+      engine.killTweensOf(cursor.pos); engine.killTweensOf(cursor); cursor.destroy();
     }
-    particles = particles.slice(-64);
-    if (!frame) frame = requestAnimationFrame(draw);
+    cursor = null; ticking = false; hoverTarget = null;
   }
-
-  /** Animate with elapsed time for consistent speed across refresh rates; sleep when the trail fades. */
-  function draw(now) {
-    const delta = previous ? Math.min((now - previous) / 1000, 0.04) : 1 / 60;
-    previous = now;
-    context.clearRect(0, 0, innerWidth, innerHeight);
-    for (const star of particles) {
-      star.age += delta;
-      star.x += star.vx * delta;
-      star.y += star.vy * delta;
-      star.vy += 32 * delta;
-      const remaining = Math.max(0, 1 - star.age / star.life);
-      context.save();
-      context.translate(star.x, star.y);
-      context.rotate(star.angle + star.age);
-      context.globalAlpha = remaining * 0.8;
-      context.fillStyle = star.color;
-      const radius = star.size * remaining;
-      context.beginPath();
-      for (let point = 0; point < 8; point++) {
-        const angle = point * Math.PI / 4;
-        const length = point % 2 ? radius * 0.25 : radius;
-        context.lineTo(Math.cos(angle) * length, Math.sin(angle) * length);
-      }
-      context.closePath();
-      context.fill();
-      context.restore();
+  /** Sleep after easing finishes and remove residual velocity stretch. */
+  function settle() {
+    if (!cursor) return;
+    cursor.vel = { x: 0, y: 0 }; cursor.render(true);
+    engine.ticker.remove(cursor.ticker); ticking = false;
+  }
+  /** Use soft fills on links and magnetic centering only on the small hero social buttons. */
+  function reflectTarget(event) {
+    const native = event.target.closest?.('input,textarea,[contenteditable="true"],iframe');
+    root.classList.toggle("cursor-ready", !native);
+    if (native) { cursor.hide(); return; }
+    cursor.show();
+    const target = event.target.closest?.('a,button,summary,[role="button"]') || null;
+    if (target === hoverTarget) return;
+    cursor.removeState("-pointer -magnetic"); cursor.removeStick(); hoverTarget = target;
+    if (target) cursor.addState("-pointer");
+    if (target?.matches(".social-link")) { cursor.setStick(target); cursor.addState("-magnetic"); }
+  }
+  /** Discard stale async loads and let Cuberto handle easing and velocity deformation. */
+  async function move(event) {
+    if (event.pointerType !== "mouse") { stop(); return; }
+    lastEvent = event;
+    if (!eligible()) return;
+    if (!cursor) {
+      if (pending) return;
+      const token = generation; pending = true;
+      try {
+        const { Follower, gsap } = await load();
+        if (token !== generation || !eligible()) return;
+        engine = gsap;
+        cursor = new Follower({ speed: .18, ease: "power3.out", skewing: .7, skewingDeltaMax: .1,
+          stickDelta: .35, stateDetection: {}, dataAttr: false, showTimeout: 0,
+          initialPos: [lastEvent.clientX, lastEvent.clientY] });
+        cursor.el.setAttribute("aria-hidden", "true");
+        // Force rendering fixes the upstream axis-only movement skip; the adapter pauses this ticker when idle.
+        engine.ticker.remove(cursor.ticker);
+        cursor.ticker = () => cursor?.render(true);
+      } catch { stop(); } finally { pending = false; }
     }
-    particles = particles.filter((star) => star.age < star.life);
-    frame = particles.length ? requestAnimationFrame(draw) : 0;
-    if (!frame) { previous = 0; context.clearRect(0, 0, innerWidth, innerHeight); }
+    if (!cursor) return;
+    reflectTarget(lastEvent);
+    if (!ticking) { engine.ticker.add(cursor.ticker); ticking = true; }
+    clearTimeout(idleTimer); idleTimer = setTimeout(settle, 300);
   }
-
-  /** Sample mouse movement by distance and time; ignore pen/touch events on hybrid devices. */
-  function onMove(event) {
-    if (event.pointerType !== "mouse") return;
-    const now = performance.now();
-    if (now - lastEmission < 24) return;
-    if (lastPoint && Math.hypot(event.clientX - lastPoint.x, event.clientY - lastPoint.y) < 6) return;
-    lastPoint = { x: event.clientX, y: event.clientY };
-    lastEmission = now;
-    emit(event.clientX, event.clientY);
+  /** Refresh hover geometry during scrolling without flashing the system arrow between wheel ticks. */
+  function scroll() {
+    if (!cursor || !lastEvent) return;
+    cursor.removeStick(); hoverTarget = null;
+    const target = document.elementFromPoint(lastEvent.clientX, lastEvent.clientY);
+    if (target) reflectTarget({ target });
   }
-
-  /** Give a short primary-click response without cancelling selection or navigation. */
-  function onPress(event) {
-    if (event.pointerType === "mouse" && event.button === 0) emit(event.clientX, event.clientY, true);
-  }
-
-  /** Mount at most one canvas and detach animation listeners whenever capabilities change. */
-  function sync() {
-    const next = !reduced.matches && pointer.matches && !document.hidden;
-    if (next === enabled) return;
-    enabled = next;
-    if (enabled) {
-      readPalette();
-      resize();
-      document.body.append(canvas);
-      window.addEventListener("pointermove", onMove, { passive: true });
-      window.addEventListener("pointerdown", onPress, { passive: true });
-      window.addEventListener("resize", resize);
-    } else {
-      clear();
-      canvas.remove();
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerdown", onPress);
-      window.removeEventListener("resize", resize);
-    }
-  }
-
-  new MutationObserver(readPalette).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  reduced.addEventListener("change", sync);
-  pointer.addEventListener("change", sync);
-  document.addEventListener("visibilitychange", sync);
-  document.documentElement.addEventListener("pointerleave", clear);
-  window.addEventListener("blur", clear);
-  window.addEventListener("pagehide", clear);
-  sync();
+  /** Immediately restore the native cursor when input capabilities change. */
+  function sync() { if (!eligible()) stop(); }
+  /** Pause when the browser loses focus. */
+  function blur() { focused = false; stop(); }
+  /** Resume on the next real movement after focus returns. */
+  function focus() { focused = true; }
+  /** Touch and pen input must not leave a desktop pointer visible. */
+  function syncInput(event) { if (event.pointerType !== "mouse") stop(); }
+  fine.addEventListener("change", sync); reduced.addEventListener("change", sync);
+  window.addEventListener("pointermove", move, { passive: true });
+  window.addEventListener("pointerdown", syncInput, { passive: true });
+  window.addEventListener("blur", blur); window.addEventListener("focus", focus);
+  window.addEventListener("pagehide", stop); window.addEventListener("scroll", scroll, { passive: true });
+  root.addEventListener("pointerleave", stop); document.addEventListener("visibilitychange", sync);
+  /** Release listeners and the instance when a consumer disposes of this enhancement. */
+  return function dispose() {
+    disposed = true; stop();
+    fine.removeEventListener("change", sync); reduced.removeEventListener("change", sync);
+    window.removeEventListener("pointermove", move); window.removeEventListener("pointerdown", syncInput);
+    window.removeEventListener("blur", blur); window.removeEventListener("focus", focus);
+    window.removeEventListener("pagehide", stop); window.removeEventListener("scroll", scroll);
+    root.removeEventListener("pointerleave", stop); document.removeEventListener("visibilitychange", sync);
+  };
 }
