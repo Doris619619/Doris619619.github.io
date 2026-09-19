@@ -1,3 +1,4 @@
+// 文件用途：保存已经提供的个人资料、项目经历与中文文学原文。
 export const site = {
   name: "梁彦诗",
   englishName: "Doris Liang",
@@ -15,6 +16,8 @@ export const site = {
 export const projects = [
   {
     id: "grace",
+    group: "research",
+    period: { start: "2025-09", end: "2025-12" },
     index: "01",
     eyebrow: "EDA Research · DAC 2026",
     title: "GRACE",
@@ -27,6 +30,8 @@ export const projects = [
   },
   {
     id: "llm-pcb",
+    group: "research",
+    period: { start: "2025-12", ongoing: true },
     index: "02",
     eyebrow: "LLM Research · Ongoing",
     title: "LLM × PCB",
@@ -38,6 +43,8 @@ export const projects = [
   },
   {
     id: "robomaster",
+    group: "practice",
+    period: { start: "2025-07", ongoing: true },
     index: "03",
     eyebrow: "Robotics · ROS2",
     title: "RoboMaster Vision",
@@ -50,6 +57,8 @@ export const projects = [
   },
   {
     id: "vrgs",
+    group: "practice",
+    period: { start: "2025", season: "summer" },
     index: "04",
     eyebrow: "UC Berkeley CS184 · Showcase Winner",
     title: "VR-GS",
@@ -74,18 +83,6 @@ export const journey = [
 export const education = [
   { time: "2024.09 — 至今", title: "香港中文大学（深圳）", detail: "计算机工程 · GPA 3.571" },
   { time: "2025.06 — 2025.08", title: "UC Berkeley Summer Session", detail: "CS70 离散数学与概率论 · CS184 计算机图形学" }
-];
-
-export const highlights = [
-  { value: "DAC '26", label: "GRACE 论文录用" },
-  { value: "33.06%", label: "地平面面积平均提升" },
-  { value: "64", label: "AI 平台参数字段验证" }
-];
-
-export const honors = [
-  { title: "全国大学生数学建模竞赛", meta: "2025 · 广东省一等奖", image: "assets/math-modeling-award.png" },
-  { title: "RoboMaster 高校联盟赛", meta: "2026 · 英雄机器人组二等奖", image: "assets/robomaster-certificate.png" },
-  { title: "第十五届全运会志愿者", meta: "2025 · 服务 81.50 小时", image: "assets/volunteer-certificate.png" }
 ];
 
 export const skills = [
