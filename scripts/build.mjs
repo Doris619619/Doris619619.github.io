@@ -11,7 +11,7 @@ const output = resolve(workspace, "dist");
 if (output !== join(workspace, "dist")) throw new Error("Build output must remain within the workspace dist directory");
 await rm(output, { recursive: true, force: true });
 await mkdir(join(output, "src"), { recursive: true });
-for (const entry of ["styles.css", "app.js", "theme-init.js", "favicon.svg", "assets", "src/routes.js"]) {
+for (const entry of ["styles.css", "app.js", "theme-init.js", "favicon.svg", "assets", "src/routes.js", "src/motion.js"]) {
   await cp(join(workspace, entry), join(output, entry), { recursive: true });
 }
 for (const lang of languages) {

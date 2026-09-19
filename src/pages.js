@@ -5,8 +5,10 @@ import { introduction, ui, localizedProjects, localizedJourney, localizedEducati
 import { portfolioCopy } from "../content/portfolio.js";
 import { profileIntroduction, editorialSection, projectGroup } from "./portfolio.js";
 import { hero } from "./hero.js";
+import { experienceSection } from "./experience.js";
+import { creatorProfile, professionalLinks } from "./social.js";
 import { pathFor } from "./routes.js";
-import { escape, date, sectionHeading, projectPeriod, noteEntry, awardLine } from "./components.js";
+import { escape, date, sectionHeading, projectPeriod, noteEntry, awardLine, paperPdfLink } from "./components.js";
 
 export const pageKeys = ["", "projects", ...projects.map((item) => `projects/${item.id}`), "notes", "notes/unselected-road", "journey", "honors", "about"];
 
@@ -19,7 +21,7 @@ function pageTitle(title, subtitle, index) {
 function home(lang) {
   const t = portfolioCopy[lang];
   const profile = editorialSection("profile", t.profile, t.profileNote, profileIntroduction(lang), pathFor("about", lang), t.moreAbout);
-  const writing = editorialSection("writing", t.writing, t.writingNote, `<p class="life-intro">${escape(t.life)}</p>${noteEntry(lang, "h3")}<a class="quiet-link" href="${pathFor("honors", lang)}">${t.honors} <span aria-hidden="true">→</span></a>`, pathFor("notes", lang), t.story);
+  const writing = editorialSection("writing", t.writing, t.writingNote, `<p class="life-intro">${escape(t.life)}</p>${creatorProfile(lang)}${noteEntry(lang, "h3")}<a class="quiet-link" href="${pathFor("honors", lang)}">${t.honors} <span aria-hidden="true">→</span></a>`, pathFor("notes", lang), t.story);
   return `${hero(lang)}<div class="content-shell home-content portfolio-layout">${profile}${projectGroup("research", lang, true)}${writing}</div>`;
 }
 
@@ -33,7 +35,7 @@ function projectsPage(lang) {
 function projectDetail(project, lang) {
   const t = ui[lang];
   const reportLabel = project.id === "grace" ? (lang === "en" ? "DAC 2026 presentation" : "DAC 2026 论文页面") : project.id === "robomaster" ? (lang === "en" ? "GitHub profile" : "GitHub 个人主页") : (lang === "en" ? "Project report" : "项目报告");
-  const links = project.link ? `<section class="detail-section"><h2>${t.sources}</h2><div class="text-links"><a href="${escape(project.link)}">${reportLabel} ↗</a>${project.secondaryLink ? `<a href="${escape(project.secondaryLink)}">CS184 Showcase ↗</a>` : ""}</div></section>` : "";
+  const links = project.link ? `<section class="detail-section"><h2>${t.sources}</h2><div class="text-links">${paperPdfLink(project, lang)}<a href="${escape(project.link)}">${reportLabel} ↗</a>${project.secondaryLink ? `<a href="${escape(project.secondaryLink)}">CS184 Showcase ↗</a>` : ""}</div></section>` : "";
   return `<div class="reading-shell"><a class="back-link" href="${pathFor("projects", lang)}">← ${t.back} ${t.projects}</a><header class="detail-title project-detail-title"><h1>${escape(project.title)}</h1><p>${escape(project.subtitle)}</p><p class="project-status">${escape(project.status)}</p><p class="project-period">${lang === "en" ? "Project period" : "项目时间"} · ${projectPeriod(project, lang)}</p></header>${[[t.background, project.statement], [t.contribution, project.detail], [t.outcome, project.result]].map(([title, text]) => `<section class="detail-section"><h2>${title}</h2><p>${escape(text)}</p></section>`).join("")}<section class="detail-section"><h2>${t.tools}</h2><p class="technology-line">${project.stack.map(escape).join(" · ")}</p></section>${links}</div>`;
 }
 
@@ -48,8 +50,8 @@ function article(lang) {
 function timeline(lang) {
   const t = ui[lang];
   const en = lang === "en";
-  const events = [...localizedJourney(lang).map((item) => ({ ...item, kind: en ? "Practice & research" : "研究与实践" })), ...localizedEducation(lang).map((item) => ({ ...item, text: item.detail, kind: t.education }))].sort((a, b) => a.time.localeCompare(b.time));
-  const labels = en ? ["University begins", "Research, Berkeley & RoboMaster", "AI platform & ongoing research"] : ["大学启程", "研究、伯克利与 RoboMaster", "AI 平台与持续研究"];
+  const events = [...localizedJourney(lang).map((item) => ({ ...item, kind: item.id === "ustf" ? (en ? "Teaching" : "教学") : (en ? "Practice & research" : "研究与实践") })), ...localizedEducation(lang).map((item) => ({ ...item, text: item.detail, kind: t.education }))].sort((a, b) => a.time.localeCompare(b.time));
+  const labels = en ? ["University begins", "Research, Berkeley & RoboMaster", "Teaching, AI & research"] : ["大学启程", "研究、伯克利与 RoboMaster", "教学、AI 与科研"];
   const overview = `<nav class="year-overview" aria-label="${en ? "Jump to year" : "按年份浏览"}">${[2024, 2025, 2026].map((year, index) => `<a href="#year-${year}"><strong>${year}</strong><span>${labels[index]}</span></a>`).join("")}</nav>`;
   const years = [2024, 2025, 2026].map((year) => `<section class="timeline-year" id="year-${year}"><h2>${year}</h2><div class="timeline-events">${events.filter((item) => item.time.startsWith(String(year))).map((item) => `<article class="timeline-event"><p class="meta">${escape(item.time)} <span> / ${item.kind}</span></p><h3>${escape(item.title)}</h3><p>${escape(item.text)}</p></article>`).join("")}</div></section>`).join("");
   return `${pageTitle(t.journey, en ? "Education, research, and the work along the way." : "学习、研究，以及一路参与的实践。", "03 / JOURNEY")}${overview}${years}<aside class="related-line"><p>${en ? "Milestones beyond the projects" : "项目之外，也有值得记住的时刻"}</p><a href="${pathFor("honors", lang)}">${t.honors} →</a></aside>`;
@@ -65,7 +67,7 @@ function honorsPage(lang) {
 function about(lang) {
   const t = ui[lang];
   const en = lang === "en";
-  return `${pageTitle(en ? "Doris Liang" : "梁彦诗", en ? "Computer Engineering · CUHK-Shenzhen" : "计算机工程 · 香港中文大学（深圳）")}<div class="about-profile">${profileIntroduction(lang)}</div><section class="content-section">${sectionHeading(t.education)}${localizedEducation(lang).map((item) => `<article class="education-row"><p class="meta">${escape(item.time)}</p><h3>${escape(item.title)}</h3><p>${escape(item.detail)}</p></article>`).join("")}</section><section class="content-section" id="skills">${sectionHeading(t.skills)}${skills.map((item) => `<div class="skill-row"><span>${item.label}</span><p>${escape(en ? item.items.replace("数据合成", "Synthetic data") : item.items)}</p></div>`).join("")}</section><section class="content-section">${sectionHeading(t.activity, pathFor("honors", lang), t.honors)}<p>${en ? "Beyond research, I take part in table tennis, writing, and campus visual storytelling." : "研究之外，我也参加乒乓球比赛、征文和校园影像创作。"}</p><article class="volunteer-row"><p class="meta">2025</p><h3>${en ? "Volunteer · 15th National Games" : "第十五届全运会志愿者"}</h3><p>${en ? "81.50 hours of volunteer service." : "志愿服务 81.50 小时。"}</p><a href="/assets/volunteer-certificate.png" target="_blank" rel="noopener">${t.certificate} ↗</a></article></section><section class="content-section contact-inline" id="contact">${sectionHeading(t.contact)}<a href="mailto:${site.email}">${site.email}</a><a href="${site.github}">GitHub ↗</a></section>`;
+  return `${pageTitle(en ? "Doris Liang" : "梁彦诗", en ? "Computer Engineering · CUHK-Shenzhen" : "计算机工程 · 香港中文大学（深圳）")}<div class="about-profile">${profileIntroduction(lang)}</div>${experienceSection(lang)}<section class="content-section">${sectionHeading(t.education)}${localizedEducation(lang).map((item) => `<article class="education-row"><p class="meta">${escape(item.time)}</p><h3>${escape(item.title)}</h3><p>${escape(item.detail)}</p></article>`).join("")}</section><section class="content-section" id="skills">${sectionHeading(t.skills)}${skills.map((item) => `<div class="skill-row"><span>${item.label}</span><p>${escape(en ? item.items.replace("数据合成", "Synthetic data") : item.items)}</p></div>`).join("")}</section><section class="content-section">${sectionHeading(t.activity, pathFor("honors", lang), t.honors)}<p>${en ? "Beyond research, I take part in table tennis, writing, and campus visual storytelling." : "研究之外，我也参加乒乓球比赛、征文和校园影像创作。"}</p><article class="volunteer-row"><p class="meta">2025</p><h3>${en ? "Volunteer · 15th National Games" : "第十五届全运会志愿者"}</h3><p>${en ? "81.50 hours of volunteer service." : "志愿服务 81.50 小时。"}</p><a href="/assets/volunteer-certificate.png" target="_blank" rel="noopener">${t.certificate} ↗</a></article></section><section class="content-section">${sectionHeading(en ? "Open-source storytelling" : "开源内容创作")}${creatorProfile(lang)}</section><section class="content-section contact-inline" id="contact">${sectionHeading(t.contact)}<a href="mailto:${site.email}">${site.email}</a><a href="${site.github}">GitHub ↗</a>${professionalLinks()}</section>`;
 }
 
 /** Resolve each declared route to a localized title, description, and static body. */

@@ -1,9 +1,10 @@
 // 文件用途：为原有事实资料提供英文表达，并维护全站中英文界面和简介。
+import { localizedExperience } from "./experience.js";
 import { projects, journey, education, notes } from "./site-data.js";
 
 export const introduction = {
-  zh: "我是梁彦诗，目前就读于香港中文大学（深圳）计算机工程专业。我关注电子设计自动化、人工智能与机器人视觉，做过 PCB 优化、三维场景重建，也参与 RoboMaster 视觉系统开发。我喜欢顺着一个具体问题钻进去，再把学到的东西用在实际项目里。研究和代码之外，我也打乒乓球、写故事，参加校园活动。这里记录我的作品，也记录这些探索留下的片段。",
-  en: "I’m Doris Liang, a Computer Engineering student at The Chinese University of Hong Kong, Shenzhen. My interests span electronic design automation, AI, and robot vision. I’ve worked on PCB optimization, 3D scene reconstruction, and vision systems for RoboMaster. I enjoy digging into a concrete problem and putting what I learn into practice. Outside research and coding, I play table tennis, write stories, and take part in campus life. This is a place for my projects and the experiences along the way."
+  zh: "我是梁彦诗，目前就读于香港中文大学（深圳）计算机工程专业，自 2025 年 9 月起在陈廷欢教授课题组担任本科生研究助理。我关注电子设计自动化、人工智能与机器人视觉，做过 PCB 优化、三维场景重建，也参与 RoboMaster 视觉系统开发。我喜欢顺着一个具体问题钻进去，再把学到的东西用在实际项目里。研究和代码之外，我也打乒乓球、写故事，参加校园活动。这里记录我的作品，也记录这些探索留下的片段。",
+  en: "I’m Doris Liang, a Computer Engineering student at The Chinese University of Hong Kong, Shenzhen. Since September 2025, I have been an undergraduate research assistant in Prof. Tinghuan Chen’s group. My interests span electronic design automation, AI, and robot vision. I’ve worked on PCB optimization, 3D scene reconstruction, and vision systems for RoboMaster. I enjoy digging into a concrete problem and putting what I learn into practice. Outside research and coding, I play table tennis, write stories, and take part in campus life. This is a place for my projects and the experiences along the way."
 };
 
 export const ui = {
@@ -20,20 +21,19 @@ const englishProjects = {
 
 export const projectStatus = {
   grace: { zh: "DAC 2026 论文录用 · 第 5 作者", en: "Paper accepted at DAC 2026 · Fifth author" },
-  "llm-pcb": { zh: "研究进行中", en: "Research in progress" },
+  "llm-pcb": { zh: "AAAI 2027 在投", en: "Submitted to AAAI 2027" },
   robomaster: { zh: "RoboMaster 视觉组 · 工程实践", en: "RoboMaster vision team · Engineering practice" },
   vrgs: { zh: "UC Berkeley CS184 · Showcase Winner", en: "UC Berkeley CS184 · Showcase Winner" }
 };
 
 const englishJourney = [
-  { title: "Student Assistant · CUHK-Shenzhen ITSO", text: "Tested campus AI platform APIs, covering /chat/completions, /responses, streaming, and authorization. Verified compatibility across 64 parameter fields and tested multi-model access in Cherry Studio." },
-  { title: "Research · LLM-driven PCB optimization", text: "Built a complete LoRA / QLoRA SFT workflow and investigated reinforcement learning methods for engineering optimization." },
+  { title: "Research · LLM-driven PCB optimization", text: "Submitted to AAAI 2027. Built a complete LoRA / QLoRA SFT workflow and investigated reinforcement learning methods for engineering optimization." },
   { title: "Research · GRACE", text: "Accepted at DAC 2026, fifth author. Developed PCB parsing, local rerouting, and optimization write-back modules." },
   { title: "RoboMaster Vision Team · CUHK-Shenzhen", text: "Worked on ROS2 video pipelines, OpenCV recognition, serial communication reliability, and real-time status overlays." },
   { title: "Instructor · Shengtu Education Technology", text: "Taught senior high-school physics and coached English debate, including argument building, structured expression, and impromptu speaking." }
 ];
 const englishEducation = [
-  { title: "The Chinese University of Hong Kong, Shenzhen", detail: "Computer Engineering · GPA 3.571" },
+  { title: "The Chinese University of Hong Kong, Shenzhen", detail: "Electronic and Computer Engineering (Computer Engineering track) · GPA 3.571" },
   { title: "UC Berkeley Summer Session", detail: "CS70 Discrete Mathematics and Probability Theory · CS184 Computer Graphics" }
 ];
 
@@ -44,7 +44,7 @@ export function localizedProjects(lang) {
 
 /** Localize dates and prose while retaining the supplied chronology, including ongoing work. */
 export function localizedJourney(lang) {
-  return journey.map((item, index) => ({ ...item, ...(lang === "en" ? englishJourney[index] : {}), time: lang === "en" ? item.time.replace("至今", "present") : item.time }));
+  return [...localizedExperience(lang), ...journey.map((item, index) => ({ ...item, ...(lang === "en" ? englishJourney[index] : {}), time: lang === "en" ? item.time.replace("至今", "present") : item.time }))];
 }
 
 /** Return education records without inferring graduation dates or degree achievements. */

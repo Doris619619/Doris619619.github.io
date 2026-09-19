@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { execFileSync } from "node:child_process";
+import { social } from "../content/social.js";
 import { notes, projects } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
 import { introduction, localizedProjects, localizedJourney, localizedEducation, ui } from "../content/locales.js";
@@ -49,14 +50,22 @@ assert.equal(createHash("sha256").update(font).digest("hex"), "f1121e7ef2838d3cb
 await access("dist/assets/fonts/OFL.txt");
 assert.equal(honors.length, 8);
 assert.equal(new Set(honors.map((item) => item.id)).size, 8);
-assert.deepEqual(honors.map((item) => item.date).sort(), ["2024-10", "2025-04", "2025-11", "2025-12", "2026-04", "2026-04", "2026-05", "2026-09"]);
+assert.deepEqual(honors.map((item) => item.date).sort(), ["2024-10", "2025-04", "2025-04", "2025-11", "2025-12", "2026-04", "2026-05", "2026-09"]);
 assert.deepEqual(["academic", "creative", "sport"].map((category) => honors.filter((item) => item.category === category).length), [3, 2, 3]);
 assert.equal(createHash("sha256").update(JSON.stringify(notes[0].paragraphs)).digest("hex"), "efc0b689af68ecf9257f3edca852db4a8d6c52b1db5229b6b586f6b89dd749b0", "Chinese literary original must remain unchanged");
 for (const lang of languages) {
   assert.deepEqual(Object.keys(ui[lang]).sort(), Object.keys(ui.zh).sort());
   assert.equal(localizedProjects(lang).length, 4);
-  assert.equal(localizedJourney(lang).length, 5);
+  assert.equal(localizedJourney(lang).length, 8);
   assert.equal(localizedEducation(lang).length, 2);
+  for (const key of ["", "about", "journey", "projects/llm-pcb"]) {
+    const html = pages.get(pathFor(key, lang));
+    assert.ok(html.includes(social.linkedin), `LinkedIn reachable: ${key}`);
+    assert.ok(html.includes("AAAI 2027"), `Submission status: ${key}`);
+  }
+  const about = pages.get(pathFor("about", lang));
+  for (const value of ["ECE2050", "University Student Teaching Fellow", "2026.06 — 2026.08", "92689179314", "2026-09-18", "douyin-profile-code.jpg"]) assert.ok(about.includes(value));
+  assert.ok(!pages.get(pathFor("", lang)).includes("hero-paper-link"), "No new paper button in the opening");
   const awardsHtml = pages.get(pathFor("honors", lang));
   for (const honor of honors) {
     assert.equal((awardsHtml.match(new RegExp(`id="${honor.id}"`, "g")) || []).length, 1);
@@ -66,7 +75,7 @@ for (const lang of languages) {
   const story = pages.get(pathFor("notes/unselected-road", lang));
   for (const paragraph of notes[0].paragraphs) assert.ok(story.includes(`<p>${escape(paragraph)}</p>`));
   assert.ok(story.includes('datetime="2025-01"'));
-  assert.ok(story.includes("2026.04"));
+  assert.ok(story.includes("2025.04"));
   assert.ok(story.includes('lang="zh-CN"'));
   for (const key of ["", "notes", "notes/unselected-road"]) assert.ok(pages.get(pathFor(key, lang)).includes(pathFor("honors", lang) + "#lingyu"));
   assert.ok(pages.get(pathFor("about", lang)).includes("81.50"));
@@ -105,3 +114,5 @@ const sitemap = await readFile("dist/sitemap.xml", "utf8");
 assert.equal((sitemap.match(/<loc>/g) || []).length, 22);
 assert.ok((await readFile("dist/404.html", "utf8")).includes("Page not found"));
 console.log(`tests passed: ${pages.size} static pages, ${checkedLinks} internal references, 8 honors, original-text digest, language parity, and legacy URLs`);
+
+execFileSync(process.execPath, ["scripts/motion-test.mjs"], { stdio: "inherit" });

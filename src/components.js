@@ -1,4 +1,5 @@
 // 文件用途：生成可复用的导航、页脚、项目条目与获奖文章入口。
+import { professionalLinks } from "./social.js";
 import { site } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
 import { ui, localizedNote, projectContext } from "../content/locales.js";
@@ -30,7 +31,7 @@ function header(key, lang) {
 /** Keep contact and secondary destinations reachable without a large marketing footer. */
 function footer(lang) {
   const t = ui[lang];
-  return `<footer class="site-footer"><div><a class="footer-name" href="${pathFor("about", lang)}">${t.rights}</a><p>© 2026 · EDA / AI / Robotics</p></div><nav aria-label="${lang === "en" ? "Footer" : "页脚导航"}"><a href="${pathFor("honors", lang)}">${t.honors}</a><a href="${pathFor("journey", lang)}">${t.journey}</a><a href="mailto:${site.email}">${t.contact}</a><a href="${site.github}">GitHub ${arrow}</a><a href="/rss.xml">RSS</a></nav></footer>`;
+  return `<footer class="site-footer"><div><a class="footer-name" href="${pathFor("about", lang)}">${t.rights}</a><p>© 2026 · EDA / AI / Robotics</p></div><nav aria-label="${lang === "en" ? "Footer" : "页脚导航"}"><a href="${pathFor("honors", lang)}">${t.honors}</a><a href="${pathFor("journey", lang)}">${t.journey}</a><a href="mailto:${site.email}">${t.contact}</a><a href="${site.github}">GitHub ${arrow}</a>${professionalLinks()}<a href="${pathFor("about", lang)}#creator">${lang === "en" ? "Douyin" : "抖音"}</a><a href="/rss.xml">RSS</a></nav></footer>`;
 }
 
 /** Produce a complete static document, including page-specific sharing and language metadata. */
@@ -54,8 +55,9 @@ export function projectRow(project, lang, heading = "h2") {
   const t = portfolioCopy[lang];
   const copy = projectPresentation[project.id][lang];
   const featured = project.id === "grace";
+  const pdfLink = paperPdfLink(project, lang);
   const externalLink = featured || project.id === "vrgs" ? `<a href="${escape(project.link)}">${featured ? t.paper : t.report} <span aria-hidden="true">↗</span></a>` : "";
-  return `<article class="project-row${featured ? " project-featured" : ""}"><p class="project-meta"><span>${escape(projectContext[project.id][lang])}</span><span class="project-period">${projectPeriod(project, lang)}</span></p><${heading}><a href="${pathFor(`projects/${project.id}`, lang)}">${escape(copy.title)}</a></${heading}><p class="project-status">${escape(project.status)}</p><p class="project-summary">${escape(copy.text)}</p>${featured ? `<p class="project-result"><span>${t.result}</span>${escape(project.result)}</p>` : ""}<div class="project-links">${externalLink}<a href="${pathFor(`projects/${project.id}`, lang)}">${t.detail} <span aria-hidden="true">→</span></a></div></article>`;
+  return `<article class="project-row${featured ? " project-featured" : ""}"><p class="project-meta"><span>${escape(projectContext[project.id][lang])}</span><span class="project-period">${projectPeriod(project, lang)}</span></p><${heading}><a href="${pathFor(`projects/${project.id}`, lang)}">${escape(copy.title)}</a></${heading}><p class="project-status">${escape(project.status)}</p><p class="project-summary">${escape(copy.text)}</p>${featured ? `<p class="project-result"><span>${t.result}</span>${escape(project.result)}</p>` : ""}<div class="project-links">${pdfLink}${externalLink}<a href="${pathFor(`projects/${project.id}`, lang)}">${t.detail} <span aria-hidden="true">→</span></a></div></article>`;
 }
 
 /** Connect the award and the story from every article entry point using one award record. */
@@ -68,4 +70,9 @@ export function awardLine(lang) {
 export function noteEntry(lang, heading = "h2") {
   const note = localizedNote(lang);
   return `<article class="note-entry"><time datetime="2025-01">${note.date}</time><div><${heading}><a href="${pathFor(`notes/${note.slug}`, lang)}">${escape(note.title)} <span aria-hidden="true">→</span></a></${heading}><p>${escape(note.summary)}</p>${awardLine(lang)}</div></article>`;
+}
+
+/** Render a direct full-text link only when a verified PDF destination is configured. */
+export function paperPdfLink(project, lang) {
+  return project.pdfUrl ? `<a href="${escape(project.pdfUrl)}" target="_blank" rel="noopener">${lang === "en" ? "Paper PDF" : "论文 PDF"} <span aria-hidden="true">↗</span></a>` : "";
 }

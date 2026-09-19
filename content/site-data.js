@@ -16,6 +16,7 @@ export const site = {
 export const projects = [
   {
     id: "grace",
+    pdfUrl: null, // Set only after the author supplies a public full-text PDF.
     group: "research",
     period: { start: "2025-09", end: "2025-12" },
     index: "01",
@@ -33,7 +34,7 @@ export const projects = [
     group: "research",
     period: { start: "2025-12", ongoing: true },
     index: "02",
-    eyebrow: "LLM Research · Ongoing",
+    eyebrow: "LLM Research · Submitted to AAAI 2027",
     title: "LLM × PCB",
     subtitle: "大语言模型驱动的 PCB 布局布线优化",
     statement: "探索如何让大语言模型进入工程优化流程，并在真实布局布线约束下接受验证。",
@@ -73,15 +74,14 @@ export const projects = [
 ];
 
 export const journey = [
-  { time: "2026.01 — 至今", title: "学生助理 · CUHK-Shenzhen ITSO", text: "参与校内 AI 平台接口测试；完成 /chat/completions、/responses、流式返回与权限校验的覆盖，验证 64 个参数字段兼容性，并测试 Cherry Studio 多模型接入。" },
-  { time: "2025.12 — 至今", title: "研究项目 · LLM 驱动的 PCB 布局布线优化", text: "搭建 LoRA / QLoRA SFT 微调全流程，研究强化学习方法在工程优化任务中的训练机制与潜在效果。" },
+  { time: "2025.12 — 至今", title: "研究项目 · LLM 驱动的 PCB 布局布线优化", text: "AAAI 2027 在投。搭建 LoRA / QLoRA SFT 微调全流程，研究强化学习方法在工程优化任务中的训练机制与潜在效果。" },
   { time: "2025.09 — 2025.12", title: "研究项目 · GRACE", text: "DAC 2026 Accepted，第 5 作者；开发 PCB 解析、局部重布线与优化回写模块。" },
   { time: "2025.07 — 至今", title: "RoboMaster 视觉组 · CUHK-Shenzhen", text: "围绕 ROS2 视频链路、OpenCV 目标识别、串口稳定性和实时画面状态叠加开展工程工作。" },
   { time: "2025.06", title: "讲师 & 授课教师 · 升途教育科技", text: "承担高三物理教学，并围绕观点构建、结构化表达和临场演讲开展英文辩论训练。" }
 ];
 
 export const education = [
-  { time: "2024.09 — 至今", title: "香港中文大学（深圳）", detail: "计算机工程 · GPA 3.571" },
+  { time: "2024.09 — 至今", title: "香港中文大学（深圳）", detail: "电子与计算机工程（计算机方向） · GPA 3.571" },
   { time: "2025.06 — 2025.08", title: "UC Berkeley Summer Session", detail: "CS70 离散数学与概率论 · CS184 计算机图形学" }
 ];
 

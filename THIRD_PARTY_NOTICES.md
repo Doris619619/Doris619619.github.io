@@ -25,3 +25,7 @@ the linked additional terms with the copyright holder or qualified counsel.
 ## LiveNest Sans SC web font
 
 The website UI uses the unmodified `livenest-sans-sc.woff2` from the user's LivePilot-v2 web application. It is a subset of Noto Sans SC distributed under SIL Open Font License 1.1, copyright 2014–2021 Adobe, with Reserved Font Name Source. The font and license are distributed together under `assets/fonts/`. This reuse does not include the application's code, data, or desktop typography.
+
+## Cursor effect reference
+
+The Fairy Dust effect in [tholman/cursor-effects](https://github.com/tholman/cursor-effects) (declared MIT in the upstream README, inspected 2026-09-19) informed the visual direction of `src/motion.js`. The local code independently implements vector stars, elapsed-time animation, bounded particles, idle shutdown, capability changes, and visibility lifecycle. No upstream source file or runtime package is distributed.

@@ -1,4 +1,4 @@
-/* 文件用途：全站主题与共享布局；保留既有首页开场的尺寸及动画。 */
+/* 文件用途：全站主题、共享布局和创作经历展示；为本地鼠标动效提供不拦截交互的装饰层。 */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap');
 
 /* 与 LivePilot-v2 网页端使用完全相同的本地字体文件和可变字重。 */
@@ -259,3 +259,41 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
  .skill-row { grid-template-columns: 1fr; gap: 4px; }.site-footer { flex-direction: column; gap: 16px; }.site-footer nav { gap: 8px 20px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+
+/* Social and experience content stays readable with motion disabled or JavaScript unavailable. */
+.creator-profile { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; border-block: 1px solid var(--line); margin: 26px 0 36px; padding: 28px 0; }
+.creator-profile h3 { font-size: 21px; line-height: 1.55; margin: 0 0 12px; overflow-wrap: anywhere; }
+.creator-copy > p { margin: 0 0 14px; }
+.creator-copy .eyebrow { color: var(--accent); font-size: 11px; }
+.creator-handle { color: var(--ink-soft); font-size: 13px; }
+.creator-audience { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding-top: 16px; }
+.creator-audience strong { color: var(--accent); font-size: clamp(32px, 4vw, 48px); font-weight: 500; letter-spacing: -.05em; line-height: 1.2; white-space: nowrap; }
+.creator-audience span { font-size: 13px; }
+.creator-audience time { color: var(--ink-soft); font-size: 11px; }
+.creator-audience a { font-size: 12px; margin-top: 10px; }
+.creator-code summary { cursor: pointer; min-height: 44px; padding: 10px 0; width: fit-content; font-size: 14px; }
+.creator-code summary:hover { color: var(--accent); }
+.creator-code figure { margin: 12px 0 0; max-width: 270px; }
+.creator-code img { display: block; height: auto; width: 100%; border-radius: 8px; }
+.creator-code figcaption { color: var(--ink-soft); font-size: 12px; margin-top: 10px; }
+.experience-row { display: grid; grid-template-columns: 145px minmax(0, 1fr); gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--line); }
+.experience-row h3 { font-size: 19px; line-height: 1.55; margin: 0 0 8px; }
+.experience-row p { margin: 0 0 10px; }
+.experience-row .meta { padding-top: 4px; }
+.experience-row a { font-size: 13px; }
+.pointer-stars { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30; }
+.profile-links, .site-footer nav { flex-wrap: wrap; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .social-link { transition: transform .22s var(--ease), color .22s, background .22s; }
+  .social-link:hover { transform: translateY(-4px) rotate(-6deg); }
+  .quiet-link > span, .profile-links a > span { display: inline-block; transition: transform .2s var(--ease); }
+  .quiet-link:hover > span, .profile-links a:hover > span { transform: translate(3px, -2px); }
+}
+@media (max-width: 600px) {
+  .creator-profile { grid-template-columns: 1fr; gap: 16px; }
+  .creator-audience { align-items: flex-start; padding-top: 0; }
+  .experience-row { grid-template-columns: 1fr; gap: 6px; }
+}
+@media (prefers-reduced-motion: reduce), (pointer: coarse), (hover: none) {
+  .pointer-stars { display: none; }
+}
