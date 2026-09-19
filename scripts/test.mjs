@@ -25,6 +25,7 @@ for (const lang of languages) {
     assert.ok(html.includes(`<html lang="${lang === "en" ? "en" : "zh-CN"}">`));
     assert.ok(html.includes(`rel="canonical" href="${origin}${route}"`));
     assert.ok(html.includes(`href="${pathFor(key, lang === "en" ? "zh" : "en")}"`), `Language counterpart: ${route}`);
+    assert.ok(!/GPA|3\.571/i.test(html), `No GPA published: ${route}`);
     assert.ok(!html.includes("undefined"), `No missing translated values: ${route}`);
     assert.ok(html.includes("/assets/fonts/livenest-sans-sc.woff2"), `Self-hosted UI font: ${route}`);
     assert.ok(!html.includes("work-card"), `No old project cards: ${route}`);
@@ -63,6 +64,9 @@ for (const lang of languages) {
     assert.ok(html.includes(social.linkedin), `LinkedIn reachable: ${key}`);
     assert.ok(html.includes("AAAI 2027"), `Submission status: ${key}`);
   }
+  const home = pages.get(pathFor("", lang));
+  assert.ok(home.includes('id="life-timeline"') && !home.includes('class="editorial-section"'), "Homepage uses one chronology after the introduction");
+  assert.ok(!/^GRACE/i.test(localizedProjects(lang).find((item) => item.id === "grace").title), "Research title explains the topic before the acronym");
   const about = pages.get(pathFor("about", lang));
   for (const value of ["ECE2050", "University Student Teaching Fellow", "2026.06 — 2026.08", "92689179314", "2026-09-18", "douyin-profile-code.jpg"]) assert.ok(about.includes(value));
   assert.ok(!pages.get(pathFor("", lang)).includes("hero-paper-link"), "No new paper button in the opening");

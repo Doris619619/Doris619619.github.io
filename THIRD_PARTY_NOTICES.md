@@ -29,3 +29,20 @@ The website UI uses the unmodified `livenest-sans-sc.woff2` from the user's Live
 ## Cursor effect reference
 
 The Fairy Dust effect in [tholman/cursor-effects](https://github.com/tholman/cursor-effects) (declared MIT in the upstream README, inspected 2026-09-19) informed the visual direction of `src/motion.js`. The local code independently implements vector stars, elapsed-time animation, bounded particles, idle shutdown, capability changes, and visibility lifecycle. No upstream source file or runtime package is distributed.
+
+## Homepage chronology and institution marks
+
+The date / icon / prose layout references the user's screenshot and [Andrej Karpathy's homepage](https://karpathy.ai/), inspected 2026-09-19. The timeline implementation and subject SVG icons are original; no biography or source code was copied.
+
+Institution marks are used to identify the user's education and experience. Ownership remains with the respective institutions; they are not covered by this project's code license. Original files are stored without image editing; CSS displays the university crest from the wide official mark.
+
+- CUHK-Shenzhen: `assets/organizations/cuhk.png`, from [official university mark](https://www.cuhk.edu.cn/sites/webmaster.prod1.dpsite04.cuhk.edu.cn/files/zh-hans_logo.png).
+- Shenzhen Research Institute of Big Data: `assets/organizations/sribd.png`, from [official institute mark](https://www.sribd.cn/sites/default/files/logo%2B_0.png).
+
+## LinkedIn and Douyin entry icons
+
+`src/icons.js` embeds the LinkedIn and musical-note brand SVGs from [Bootstrap Icons](https://icons.getbootstrap.com/). Source geometry is unchanged, while dimensions and accessibility attributes are adapted for the local buttons. The musical-note asset is named `tiktok.svg` upstream and represents the shared note mark used for the Douyin entry.
+
+- [LinkedIn source](https://github.com/twbs/icons/blob/main/icons/linkedin.svg)
+- [Musical-note source](https://github.com/twbs/icons/blob/main/icons/tiktok.svg)
+- MIT license and copyright notice: `assets/licenses/bootstrap-icons-LICENSE.txt`. Retrieved 2026-09-19; no runtime package dependency.

@@ -2,8 +2,8 @@
 export const experience = [
   {
     id: "ra", time: "2025.09 — 至今", source: "https://mypage.cuhk.edu.cn/academics/chentinghuan/team.html",
-    zh: { title: "本科生研究助理 · 陈廷欢教授课题组", text: "香港中文大学（深圳）。参与电子设计自动化与 PCB 优化研究，研究工作包括 GRACE（DAC 2026 录用，第 5 作者）和 LLM × PCB（AAAI 2027 在投）。" },
-    en: { title: "Undergraduate Research Assistant · Prof. Tinghuan Chen", text: "The Chinese University of Hong Kong, Shenzhen. Research in electronic design automation and PCB optimization, including GRACE (accepted at DAC 2026, fifth author) and LLM × PCB (submitted to AAAI 2027)." }
+    zh: { title: "本科生研究助理 · 陈廷欢教授课题组", text: "香港中文大学（深圳）。参与电子设计自动化与 PCB 优化研究，研究电路板接地铜面与布线的协同优化（GRACE，DAC 2026 录用，第 5 作者），以及大语言模型辅助电路板布局布线（AAAI 2027 在投）。" },
+    en: { title: "Undergraduate Research Assistant · Prof. Tinghuan Chen", text: "The Chinese University of Hong Kong, Shenzhen. Research in electronic design automation and PCB optimization, including ground-plane and rerouting co-design (GRACE, accepted at DAC 2026, fifth author) and language-model-assisted PCB design (submitted to AAAI 2027)." }
   },
   {
     id: "itso", time: "2026.01 — 至今", source: "https://www.linkedin.com/in/yanshi-liang-015052430/",

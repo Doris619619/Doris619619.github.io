@@ -21,7 +21,7 @@ export const projects = [
     period: { start: "2025-09", end: "2025-12" },
     index: "01",
     eyebrow: "EDA Research · DAC 2026",
-    title: "GRACE",
+    title: "电路板接地铜面与布线协同优化",
     subtitle: "面向地平面生成与重布线协同设计引擎",
     statement: "让地平面生成不再只是布线后的被动填充，而成为与重布线共同求解的优化问题。",
     detail: "独立开发 KiCad 7.0 PCB 布局解析器、局部区域切分和重布线模块，并封装从解析、优化到回写评测的一键流水线。",
@@ -35,7 +35,7 @@ export const projects = [
     period: { start: "2025-12", ongoing: true },
     index: "02",
     eyebrow: "LLM Research · Submitted to AAAI 2027",
-    title: "LLM × PCB",
+    title: "大语言模型辅助电路板布局布线",
     subtitle: "大语言模型驱动的 PCB 布局布线优化",
     statement: "探索如何让大语言模型进入工程优化流程，并在真实布局布线约束下接受验证。",
     detail: "完成 LoRA / QLoRA 大模型 SFT 微调全流程；研究 PPO、GRPO、GSPO 在训练机制与适用场景上的差异。",
@@ -75,13 +75,13 @@ export const projects = [
 
 export const journey = [
   { time: "2025.12 — 至今", title: "研究项目 · LLM 驱动的 PCB 布局布线优化", text: "AAAI 2027 在投。搭建 LoRA / QLoRA SFT 微调全流程，研究强化学习方法在工程优化任务中的训练机制与潜在效果。" },
-  { time: "2025.09 — 2025.12", title: "研究项目 · GRACE", text: "DAC 2026 Accepted，第 5 作者；开发 PCB 解析、局部重布线与优化回写模块。" },
+  { time: "2025.09 — 2025.12", title: "研究项目 · 电路板接地铜面与布线协同优化", text: "DAC 2026 Accepted，第 5 作者；开发 PCB 解析、局部重布线与优化回写模块。" },
   { time: "2025.07 — 至今", title: "RoboMaster 视觉组 · CUHK-Shenzhen", text: "围绕 ROS2 视频链路、OpenCV 目标识别、串口稳定性和实时画面状态叠加开展工程工作。" },
   { time: "2025.06", title: "讲师 & 授课教师 · 升途教育科技", text: "承担高三物理教学，并围绕观点构建、结构化表达和临场演讲开展英文辩论训练。" }
 ];
 
 export const education = [
-  { time: "2024.09 — 至今", title: "香港中文大学（深圳）", detail: "电子与计算机工程（计算机方向） · GPA 3.571" },
+  { time: "2024.09 — 至今", title: "香港中文大学（深圳）", detail: "电子与计算机工程（计算机方向）" },
   { time: "2025.06 — 2025.08", title: "UC Berkeley Summer Session", detail: "CS70 离散数学与概率论 · CS184 计算机图形学" }
 ];
 

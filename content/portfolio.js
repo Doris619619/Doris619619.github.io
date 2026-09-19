@@ -53,12 +53,12 @@ export const portfolioCopy = {
 // 摘要同时交代问题与个人工作，避免读者仅靠项目缩写猜测内容。
 export const projectPresentation = {
   grace: {
-    zh: { title: "GRACE · PCB 地平面与重布线协同优化", text: "研究如何联合优化电路板走线与接地铜面。我独立开发了 KiCad 布局解析、局部区域切分和重布线模块，并完成优化结果回写。" },
-    en: { title: "GRACE · Ground-plane and PCB rerouting co-design", text: "Research on jointly optimizing PCB routing and ground-plane generation. I independently developed the KiCad layout parser, local partitioning and rerouting modules, and integrated optimization write-back." }
+    zh: { title: "电路板接地铜面与布线协同优化", text: "研究如何联合优化电路板走线与接地铜面。我独立开发了 KiCad 布局解析、局部区域切分和重布线模块，并完成优化结果回写。" },
+    en: { title: "PCB ground-plane and rerouting co-design", text: "Research on jointly optimizing PCB routing and ground-plane generation. I independently developed the KiCad layout parser, local partitioning and rerouting modules, and integrated optimization write-back." }
   },
   "llm-pcb": {
-    zh: { title: "LLM × PCB · 大语言模型辅助布局布线", text: "探索大语言模型如何参与 PCB 布局布线优化。我搭建并跑通了 LoRA / QLoRA 监督微调流程，研究强化学习方法在工程优化任务中的适用性。" },
-    en: { title: "LLM × PCB · Language models for placement and routing", text: "Exploring how language models can participate in PCB placement and routing optimization. I built the LoRA / QLoRA supervised fine-tuning workflow and studied reinforcement learning methods for engineering optimization." }
+    zh: { title: "大语言模型辅助电路板布局布线", text: "探索大语言模型如何参与 PCB 布局布线优化。我搭建并跑通了 LoRA / QLoRA 监督微调流程，研究强化学习方法在工程优化任务中的适用性。" },
+    en: { title: "Language models for PCB placement and routing", text: "Exploring how language models can participate in PCB placement and routing optimization. I built the LoRA / QLoRA supervised fine-tuning workflow and studied reinforcement learning methods for engineering optimization." }
   },
   robomaster: {
     zh: { title: "RoboMaster · 机器人视觉系统", text: "在校队视觉组参与视频处理与状态显示开发。我搭建 ROS2 视频链路、使用 OpenCV 实现目标识别，并优化串口通信，解决状态数据传输中的丢包问题。" },

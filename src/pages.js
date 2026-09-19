@@ -3,7 +3,8 @@ import { site, projects, skills } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
 import { introduction, ui, localizedProjects, localizedJourney, localizedEducation, localizedNote } from "../content/locales.js";
 import { portfolioCopy } from "../content/portfolio.js";
-import { profileIntroduction, editorialSection, projectGroup } from "./portfolio.js";
+import { profileIntroduction, projectGroup } from "./portfolio.js";
+import { homeTimeline } from "./timeline.js";
 import { hero } from "./hero.js";
 import { experienceSection } from "./experience.js";
 import { creatorProfile, professionalLinks } from "./social.js";
@@ -17,12 +18,9 @@ function pageTitle(title, subtitle, index) {
   return `<header class="page-title">${index ? `<p class="eyebrow">${index}</p>` : ""}<h1>${escape(title)}</h1><p>${escape(subtitle)}</p></header>`;
 }
 
-/** Preserve the opening, then introduce the person before research evidence and life outside code. */
+/** Follow the opening and a personal introduction with one coherent, illustrated chronology. */
 function home(lang) {
-  const t = portfolioCopy[lang];
-  const profile = editorialSection("profile", t.profile, t.profileNote, profileIntroduction(lang), pathFor("about", lang), t.moreAbout);
-  const writing = editorialSection("writing", t.writing, t.writingNote, `<p class="life-intro">${escape(t.life)}</p>${creatorProfile(lang)}${noteEntry(lang, "h3")}<a class="quiet-link" href="${pathFor("honors", lang)}">${t.honors} <span aria-hidden="true">→</span></a>`, pathFor("notes", lang), t.story);
-  return `${hero(lang)}<div class="content-shell home-content portfolio-layout">${profile}${projectGroup("research", lang, true)}${writing}</div>`;
+  return `${hero(lang)}<div class="content-shell home-content"><section class="home-introduction" id="profile" aria-label="${lang === "en" ? "About me" : "关于我"}">${profileIntroduction(lang)}</section>${homeTimeline(lang)}</div>`;
 }
 
 /** Present research and practice as distinct bodies of work, not an undifferentiated project directory. */
