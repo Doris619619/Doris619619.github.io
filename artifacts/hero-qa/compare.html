@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Hero visual comparison</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { background: #171716; color: #f7f4ef; font: 16px system-ui, sans-serif; margin: 0; padding: 20px; }
+      h1 { font-size: 18px; font-weight: 500; margin: 0 0 16px; }
+      main { display: grid; gap: 18px; grid-template-columns: 1fr 1fr; }
+      figure { margin: 0; }
+      figcaption { color: #d2cbc0; font-size: 14px; margin-bottom: 9px; }
+      img { border: 1px solid #3a3732; display: block; height: auto; width: 100%; }
+    </style>
+  </head>
+  <body>
+    <h1>同一 2048 × 1200 视口：Innei 参考 / 本地 Hero</h1>
+    <main>
+      <figure><figcaption>Reference — innei.in/en</figcaption><img src="reference-innei-2048x1200.png" /></figure>
+      <figure><figcaption id="implementation-caption">Implementation</figcaption><img id="implementation" /></figure>
+    </main>
+    <script>
+      const round = new URLSearchParams(location.search).get("round") || "round1";
+      document.querySelector("#implementation").src = `implementation-${round}-2048x1200.png`;
+      document.querySelector("#implementation-caption").textContent = `Implementation — ${round}`;
+    </script>
+  </body>
+</html>

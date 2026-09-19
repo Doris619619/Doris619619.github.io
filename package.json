@@ -1,0 +1,14 @@
+{
+  "name": "yanshi-liang-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "python -m http.server 4173",
+    "lint": "node scripts/lint.mjs",
+    "test": "node scripts/test.mjs",
+    "typecheck": "node scripts/typecheck.mjs",
+    "build": "node scripts/build.mjs",
+    "screenshots": "node scripts/screenshots.cjs"
+  }
+}

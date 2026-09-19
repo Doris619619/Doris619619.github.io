@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>Typography comparison</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { background: #1f1e1c; color: #f7f3ea; font: 16px/1.4 Arial, sans-serif; margin: 0; padding: 28px; }
+    h1 { font-size: 20px; font-weight: 500; margin: 0 0 20px; }
+    main { display: grid; gap: 18px; grid-template-columns: 1fr 1fr; }
+    figure { margin: 0; }
+    figcaption { color: #d9d1c6; font-size: 14px; margin: 0 0 10px; }
+    img { background: #fdfcf8; display: block; height: auto; width: 100%; }
+  </style>
+</head>
+<body>
+  <h1>同一宽度的字体对比：Innei 参考图 / 本地修复后</h1>
+  <main>
+    <figure><figcaption>Reference — innei.in writing</figcaption><img src="reference-innei-writing.png" alt="Innei reference screenshot" /></figure>
+    <figure><figcaption>Implementation — local portfolio, serif reading region</figcaption><img src="implementation-2048-light.png" alt="Local implementation screenshot" /></figure>
+  </main>
+</body>
+</html>
