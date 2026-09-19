@@ -77,7 +77,7 @@ export const journey = [
   { time: "2025.12 — 至今", title: "研究项目 · LLM 驱动的 PCB 布局布线优化", text: "AAAI 2027 在投。搭建 LoRA / QLoRA SFT 微调全流程，研究强化学习方法在工程优化任务中的训练机制与潜在效果。" },
   { time: "2025.09 — 2025.12", title: "研究项目 · 电路板接地铜面与布线协同优化", text: "DAC 2026 Accepted，第 5 作者；开发 PCB 解析、局部重布线与优化回写模块。" },
   { time: "2025.07 — 至今", title: "RoboMaster 视觉组 · CUHK-Shenzhen", text: "围绕 ROS2 视频链路、OpenCV 目标识别、串口稳定性和实时画面状态叠加开展工程工作。" },
-  { id: "shengtu", time: "2025.06", title: "讲师 & 授课教师 · 升途教育科技", text: "承担高三物理教学，并围绕观点构建、结构化表达和临场演讲开展英文辩论训练。" }
+  { id: "shengtu", time: "2025.06 — 至今", title: "讲师 & 授课教师 · 升途教育科技", text: "承担高三物理教学，并围绕观点构建、结构化表达和临场演讲开展英文辩论训练。" }
 ];
 
 export const education = [

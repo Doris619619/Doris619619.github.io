@@ -1,4 +1,4 @@
-// 文件用途：维护经本人、领英和教授官网确认的双语工作与教学经历，供关于页和时间轴共用。
+// 文件用途：维护经本人、领英和教授官网确认的双语工作与教学经历，供首页时间轴使用。
 export const experience = [
   {
     id: "ra", time: "2025.09 — 至今", source: "https://mypage.cuhk.edu.cn/academics/chentinghuan/team.html",
@@ -6,7 +6,7 @@ export const experience = [
     en: { title: "Undergraduate Research Assistant · Prof. Tinghuan Chen", text: "The Chinese University of Hong Kong, Shenzhen. Research in electronic design automation and PCB optimization, including ground-plane and rerouting co-design (GRACE, accepted at DAC 2026, fifth author) and language-model-assisted PCB design (submitted to AAAI 2027)." }
   },
   {
-    id: "itso", time: "2026.01 — 至今", source: "https://www.linkedin.com/in/yanshi-liang-015052430/",
+    id: "itso", time: "2026.01 — 至今", source: "https://ai.cuhk.edu.cn/chat/about",
     zh: { title: "ITSO 软件工程师 · 香港中文大学（深圳）", text: "参与校内 AI 平台接口测试；覆盖 /chat/completions、/responses、流式返回与权限校验，验证 64 个参数字段兼容性，并测试 Cherry Studio 多模型接入。" },
     en: { title: "Software Engineer · CUHK-Shenzhen ITSO", text: "Tested campus AI platform APIs, including /chat/completions, /responses, streaming and authorization. Verified compatibility across 64 parameter fields and tested multi-model access in Cherry Studio." }
   },

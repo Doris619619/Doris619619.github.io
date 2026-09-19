@@ -443,3 +443,7 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
   .creator-gallery { grid-template-columns: 1fr; gap: 28px; }
   .creator-gallery figure { width: min(280px,100%); }
 }
+
+/* Use the supplied portrait logo, cropping only its empty top and bottom margins. */
+.history-mark-shengtu { display: block; background: #dde2e5; overflow: hidden; }
+.history-mark-shengtu img { width: 100%; height: 100%; object-fit: cover; }

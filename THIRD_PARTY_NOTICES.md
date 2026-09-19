@@ -66,3 +66,7 @@ The site distributes unmodified pinned browser builds, loaded only after eligibl
 - [GSAP](https://gsap.com/), v3.15.0: `assets/vendor/gsap-3.15.0.min.js`, obtained from https://unpkg.com/gsap@3.15.0/dist/gsap.min.js . Copyright 2026 GreenSock. Original license header is preserved; governed by the [GSAP Standard No Charge License](https://gsap.com/standard-license/). GSAP is not MIT.
 
 The local adapter and CSS select restrained styling, limit magnetic behavior to social buttons, correct axis-only rendering, and manage capability changes and idle rendering. No tracking or remote runtime CDN requests are added.
+
+## Shengtu artwork
+
+`assets/organizations/shengtu.png` is the original logo supplied by the user on 2026-09-19 (升途教育 / Ascending Education). The source image is stored unchanged; the square timeline view crops surrounding empty space with CSS. Ownership remains with the organization.
