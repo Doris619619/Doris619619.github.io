@@ -1,6 +1,8 @@
 import { education, highlights, honors, journey, notes, projects, site, skills } from "./content/site-data.js";
 
 const arrow = "<span aria-hidden=\"true\">↗</span>";
+const githubIcon = `<svg class="github-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 8.36 22.91c.58.11.79-.25.79-.56v-2.02c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.57-.29-5.27-1.29-5.27-5.73 0-1.26.45-2.29 1.19-3.1-.12-.3-.52-1.47.11-3.06 0 0 .97-.31 3.17 1.18A10.9 10.9 0 0 1 12 6.07c.97 0 1.95.13 2.87.39 2.19-1.49 3.16-1.18 3.16-1.18.64 1.59.24 2.76.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.45-2.7 5.43-5.28 5.72.41.36.78 1.08.78 2.18v3.24c0 .31.21.68.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>`;
+const dacIcon = `<span class="dac-mark" aria-hidden="true"><span class="dac-tile dac-tile-d">D</span><span class="dac-tile dac-tile-a">A</span><span class="dac-tile dac-tile-c">C</span><span class="dac-tile dac-tile-63">63</span></span>`;
 const icon = (name) => name === "sun"
   ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2.5M12 19.5V22M4.93 4.93 6.7 6.7M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12H22M4.93 19.07 6.7 17.3M17.3 6.7l1.77-1.77"/></svg>`
   : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.7 15.1A8.8 8.8 0 0 1 8.9 3.3 8.8 8.8 0 1 0 20.7 15.1Z"/></svg>`;
@@ -15,14 +17,28 @@ function projectMarkup(project) {
   return `<article class="work-card" id="${project.id}"><div class="work-top"><span>${project.index}</span><span>${project.eyebrow}</span></div><div class="work-body"><h3>${project.title}</h3><p class="work-subtitle">${project.subtitle}</p><p class="work-statement">${project.statement}</p><p class="work-detail">${project.detail}</p><p class="work-result">${project.result}</p>${tags(project.stack)}</div>${links}</article>`;
 }
 
+function noteMarkup(note) {
+  return `<article class="note-card"><time>${note.date}</time><h3><a href="?note=${note.slug}" aria-label="阅读《${note.title}》全文">${note.title}</a></h3></article>`;
+}
+
+function renderNotePage(note) {
+  const paragraphs = note.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("");
+  document.querySelector("main").innerHTML = `<article class="essay-page" aria-labelledby="essay-title"><header class="essay-header"><a class="essay-back" href="./#notes">← 返回手记</a><p class="essay-index">NOTES · ${note.date}</p><h1 id="essay-title">${note.title}</h1><p class="essay-summary">${note.summary}</p></header><div class="essay-rule" aria-hidden="true"></div><div class="essay-reading">${paragraphs}</div><footer class="essay-footer"><a href="./#notes">回到手记</a><span>${note.date}</span></footer></article>`;
+}
+
 function renderMain() {
+  const activeNote = notes.find((note) => note.slug === new URLSearchParams(window.location.search).get("note"));
+  if (activeNote) {
+    renderNotePage(activeNote);
+    return;
+  }
   const projectCards = projects.map(projectMarkup).join("");
   const journeyItems = journey.map((item) => `<article class="journey-item"><time>${item.time}</time><div><h3>${item.title}</h3><p>${item.text}</p></div></article>`).join("");
   const educationItems = education.map((item) => `<article><time>${item.time}</time><h3>${item.title}</h3><p>${item.detail}</p></article>`).join("");
   const highlightsMarkup = highlights.map((item) => `<div><strong>${item.value}</strong><span>${item.label}</span></div>`).join("");
   const honorMarkup = honors.map((item) => `<article class="honor"><img src="${item.image}" alt="${item.title}证书" loading="lazy"/><div><h3>${item.title}</h3><p>${item.meta}</p></div></article>`).join("");
   const skillsMarkup = skills.map((skill) => `<div class="skill-row"><span>${skill.label}</span><p>${skill.items}</p></div>`).join("");
-  const notesMarkup = notes.length ? notes.map((note) => `<article class="note-card"><time>${note.date}</time><h3>${note.title}</h3><p>${note.summary}</p></article>`).join("") : `<div class="notes-empty"><span class="notes-feather" aria-hidden="true">⌁</span><div><p>手记还在等待第一篇真实内容。</p><small>未来可在 <code>content/site-data.js</code> 的 <code>notes</code> 数组中追加标题、日期、摘要与正文链接。</small></div></div>`;
+  const notesMarkup = notes.length ? notes.map(noteMarkup).join("") : `<div class="notes-empty"><span class="notes-feather" aria-hidden="true">⌁</span><div><p>手记还在等待第一篇真实内容。</p><small>未来可在 <code>content/site-data.js</code> 的 <code>notes</code> 数组中追加标题、日期、摘要与正文链接。</small></div></div>`;
 
   document.querySelector("main").innerHTML = `
     <section class="hero" id="top" aria-labelledby="home-title">
@@ -40,7 +56,7 @@ function renderMain() {
           <p class="hero-quote">「把复杂的问题拆开，把模糊的想法做成真正能够运行的系统。」</p>
           <p class="hero-stats"><span>4 projects</span><b>·</b><span>3 honors</span><b>·</b><span>2024–2026</span></p>
         </div>
-        <div class="social-row"><a href="mailto:${site.email}" aria-label="发送邮件">✉</a><a href="${site.github}" target="_blank" rel="noreferrer" aria-label="打开 GitHub">⌘</a><a href="${site.dacUrl}" target="_blank" rel="noreferrer" aria-label="打开 DAC 2026 页面">◌</a></div>
+        <div class="social-row" aria-label="社交链接"><a class="social-link" href="mailto:${site.email}" aria-label="发送邮件" data-tooltip="发送邮件"><span aria-hidden="true">✉</span><span class="social-tooltip" role="tooltip">发送邮件</span></a><a class="social-link social-link-github" href="${site.github}" target="_blank" rel="noreferrer" aria-label="打开 GitHub" data-tooltip="GitHub">${githubIcon}<span class="social-tooltip" role="tooltip">GitHub</span></a><a class="social-link social-link-dac" href="${site.dacUrl}" target="_blank" rel="noreferrer" aria-label="打开 DAC 2026 页面" data-tooltip="DAC 63">${dacIcon}<span class="social-tooltip" role="tooltip">DAC 63</span></a></div>
       </div>
     </section>
 
