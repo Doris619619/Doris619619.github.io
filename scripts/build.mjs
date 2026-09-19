@@ -11,7 +11,7 @@ const output = resolve(workspace, "dist");
 if (output !== join(workspace, "dist")) throw new Error("Build output must remain within the workspace dist directory");
 await rm(output, { recursive: true, force: true });
 await mkdir(join(output, "src"), { recursive: true });
-for (const entry of ["styles.css", "app.js", "theme-init.js", "favicon.svg", "assets", "src/routes.js", "src/motion.js"]) {
+for (const entry of ["styles.css", "app.js", "theme-init.js", "favicon.svg", "assets", "src/routes.js", "src/redirect.js", "src/motion.js"]) {
   await cp(join(workspace, entry), join(output, entry), { recursive: true });
 }
 for (const lang of languages) {
@@ -20,6 +20,13 @@ for (const lang of languages) {
     await mkdir(directory, { recursive: true });
     await writeFile(join(directory, "index.html"), documentPage(renderPage(key, lang)));
   }
+}
+// Keep old bookmarks working without retaining a duplicate page or indexing redirects.
+for (const lang of languages) {
+  const destination = pathFor("", lang) + "#life-timeline";
+  const directory = join(output, pathFor("journey", lang));
+  await mkdir(directory, { recursive: true });
+  await writeFile(join(directory, "index.html"), `<!doctype html><html lang="${lang === "en" ? "en" : "zh-CN"}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><link rel="canonical" href="${origin}${pathFor("", lang)}"><title>${lang === "en" ? "Timeline moved" : "时间线已迁移"}</title><script type="module" src="/src/redirect.js"></script><noscript><meta http-equiv="refresh" content="0;url=${destination}"></noscript></head><body><a href="${destination}">${lang === "en" ? "Continue to the homepage timeline" : "前往首页时间线"}</a></body></html>`);
 }
 const urls = languages.flatMap((lang) => pageKeys.map((key) => `${origin}${pathFor(key, lang)}`));
 await writeFile(join(output, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map((url) => `<url><loc>${url}</loc></url>`).join("")}</urlset>`);

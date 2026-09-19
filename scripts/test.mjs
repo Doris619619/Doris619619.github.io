@@ -1,5 +1,6 @@
 // 文件用途：从全新构建验证静态路由、双语互链、原文完整性、奖项及全部站内链接。
 import assert from "node:assert/strict";
+import vm from "node:vm";
 import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -59,12 +60,22 @@ for (const lang of languages) {
   assert.equal(localizedProjects(lang).length, 4);
   assert.equal(localizedJourney(lang).length, 8);
   assert.equal(localizedEducation(lang).length, 2);
-  for (const key of ["", "journey", "projects/llm-pcb"]) {
+  for (const key of ["", "projects/llm-pcb"]) {
     const html = pages.get(pathFor(key, lang));
     assert.ok(html.includes(social.linkedin), `LinkedIn reachable: ${key}`);
     assert.ok(html.includes("AAAI 2027"), `Submission status: ${key}`);
   }
   const home = pages.get(pathFor("", lang));
+  assert.ok(home.includes('id="shengtu"'), "Teaching experience survives the page merge");
+  for (const year of [2026, 2025, 2024]) assert.ok(home.includes(`id="year-${year}"`) && home.includes(`href="#year-${year}"`));
+  assert.ok(home.indexOf('id="year-2026"') < home.indexOf('id="year-2025"') && home.indexOf('id="year-2025"') < home.indexOf('id="year-2024"'), "Year groups newest first");
+  for (const html of pages.values()) assert.ok(!/href="(?:\/en)?\/journey\//.test(html), "No links to the retired page");
+  const redirect = await readFile(join("dist", pathFor("journey", lang), "index.html"), "utf8");
+  assert.ok(redirect.includes('name="robots" content="noindex"') && redirect.includes(pathFor("", lang) + "#life-timeline") && redirect.includes('/src/redirect.js'));
+  for (const suffix of ["/", "/index.html", ""]) {
+    assert.equal(legacyDestination(new URL(origin + pathFor("journey", lang).replace(/\/$/, "") + suffix)), pathFor("", lang) + "#life-timeline");
+    assert.equal(legacyDestination(new URL(origin + pathFor("journey", lang).replace(/\/$/, "") + suffix + "#year-2025")), pathFor("", lang) + "#year-2025");
+  }
   assert.ok(!home.includes('class="profile-links"'), "No duplicate social row under homepage introduction");
   assert.ok(home.includes('id="life-timeline"') && !home.includes('class="editorial-section"'), "Homepage uses one chronology after the introduction");
   assert.ok(!/^GRACE/i.test(localizedProjects(lang).find((item) => item.id === "grace").title), "Research title explains the topic before the acronym");
@@ -115,15 +126,26 @@ for (const lang of languages) {
 }
 assert.equal(legacyDestination(new URL(`${origin}/?note=unselected-road#top`)), "/notes/unselected-road/");
 assert.equal(legacyDestination(new URL(`${origin}/en/?note=unselected-road#top`)), "/en/notes/unselected-road/");
-for (const [hash, route] of [["work", "projects/"], ["notes", "notes/"], ["journey", "journey/"], ["about", "about/"], ["contact", "about/#contact"], ["grace", "projects/grace/"]]) {
+for (const [hash, route] of [["work", "projects/"], ["notes", "notes/"], ["journey", "#life-timeline"], ["about", "about/"], ["contact", "about/#contact"], ["grace", "projects/grace/"]]) {
   assert.equal(legacyDestination(new URL(`${origin}/#${hash}`)), `/${route}`);
 }
 assert.equal(legacyDestination(new URL(`${origin}/#top`)), null);
 assert.equal(legacyDestination(new URL(`${origin}/honors/#lingyu`)), null);
 assert.equal(legacyDestination(new URL(`${origin}/?note=unknown`)), null);
 assert.ok((await readFile("dist/rss.xml", "utf8")).includes("/notes/unselected-road/"));
+// Exercise the dependency-free redirect that old browsers actually load, not only the shared routing helper.
+const redirectCode = await readFile("dist/src/redirect.js", "utf8");
+for (const lang of languages) {
+  for (const hash of ["", "#year-2024", "#year-2025", "#year-2026", "#unknown"]) {
+    let destination;
+    const location = { pathname: pathFor("journey", lang), hash, replace(value) { destination = value; } };
+    vm.runInNewContext(redirectCode, { location });
+    assert.equal(destination, pathFor("", lang) + (hash.startsWith("#year-") ? hash : "#life-timeline"));
+  }
+}
 const sitemap = await readFile("dist/sitemap.xml", "utf8");
-assert.equal((sitemap.match(/<loc>/g) || []).length, 22);
+assert.ok(!sitemap.includes("/journey/"), "Retired pages excluded from sitemap");
+assert.equal((sitemap.match(/<loc>/g) || []).length, 20);
 assert.ok((await readFile("dist/404.html", "utf8")).includes("Page not found"));
 console.log(`tests passed: ${pages.size} static pages, ${checkedLinks} internal references, 8 honors, original-text digest, language parity, and legacy URLs`);
 

@@ -1,7 +1,7 @@
-// 文件用途：生成首页、作品、文章、轨迹、荣誉与关于页的双语静态内容。
+// 文件用途：生成首页、作品、文章、荣誉与关于页的双语静态内容。
 import { site, projects, skills } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
-import { introduction, ui, localizedProjects, localizedJourney, localizedEducation, localizedNote } from "../content/locales.js";
+import { introduction, ui, localizedProjects, localizedNote } from "../content/locales.js";
 import { portfolioCopy } from "../content/portfolio.js";
 import { profileIntroduction, projectGroup } from "./portfolio.js";
 import { homeTimeline } from "./timeline.js";
@@ -11,7 +11,7 @@ import { creatorProfile, professionalLinks } from "./social.js";
 import { pathFor } from "./routes.js";
 import { escape, date, sectionHeading, projectPeriod, noteEntry, awardLine, paperPdfLink } from "./components.js";
 
-export const pageKeys = ["", "projects", ...projects.map((item) => `projects/${item.id}`), "notes", "notes/unselected-road", "journey", "honors", "about"];
+export const pageKeys = ["", "projects", ...projects.map((item) => `projects/${item.id}`), "notes", "notes/unselected-road", "honors", "about"];
 
 /** Render the quiet title block used on all non-home index pages. */
 function pageTitle(title, subtitle, index) {
@@ -44,17 +44,6 @@ function article(lang) {
   return `<article class="reading-shell essay-page"><a class="back-link" href="${pathFor("notes", lang)}">← ${t.back} ${t.notes}</a><header class="detail-title"><p class="meta">${t.date} <time datetime="2025-01">${note.date}</time></p><h1>${escape(note.title)}</h1><p>${escape(note.summary)}</p>${awardLine(lang)}<p class="language-note">${t.languageNote}</p></header><div class="essay-reading" lang="zh-CN">${note.paragraphs.map((paragraph) => `<p>${escape(paragraph)}</p>`).join("")}</div><a class="back-link essay-end" href="${pathFor("notes", lang)}">← ${t.back} ${t.notes}</a></article>`;
 }
 
-/** Combine dated education and practice records; use source start dates rather than invented milestones. */
-function timeline(lang) {
-  const t = ui[lang];
-  const en = lang === "en";
-  const events = [...localizedJourney(lang).map((item) => ({ ...item, kind: item.id === "ustf" ? (en ? "Teaching" : "教学") : (en ? "Practice & research" : "研究与实践") })), ...localizedEducation(lang).map((item) => ({ ...item, text: item.detail, kind: t.education }))].sort((a, b) => a.time.localeCompare(b.time));
-  const labels = en ? ["University begins", "Research, Berkeley & RoboMaster", "Teaching, AI & research"] : ["大学启程", "研究、伯克利与 RoboMaster", "教学、AI 与科研"];
-  const overview = `<nav class="year-overview" aria-label="${en ? "Jump to year" : "按年份浏览"}">${[2024, 2025, 2026].map((year, index) => `<a href="#year-${year}"><strong>${year}</strong><span>${labels[index]}</span></a>`).join("")}</nav>`;
-  const years = [2024, 2025, 2026].map((year) => `<section class="timeline-year" id="year-${year}"><h2>${year}</h2><div class="timeline-events">${events.filter((item) => item.time.startsWith(String(year))).map((item) => `<article class="timeline-event"><p class="meta">${escape(item.time)} <span> / ${item.kind}</span></p><h3>${escape(item.title)}</h3><p>${escape(item.text)}</p></article>`).join("")}</div></section>`).join("");
-  return `${pageTitle(t.journey, en ? "Education, research, and the work along the way." : "学习、研究，以及一路参与的实践。", "03 / JOURNEY")}${overview}${years}<aside class="related-line"><p>${en ? "Milestones beyond the projects" : "项目之外，也有值得记住的时刻"}</p><a href="${pathFor("honors", lang)}">${t.honors} →</a></aside>`;
-}
-
 /** Give recognition its own chronological path, separate from education and work. */
 function honorsPage(lang) {
   const t = ui[lang];
@@ -76,7 +65,6 @@ export function renderPage(key, lang) {
   const descriptions = {
     projects: lang === "en" ? "Research and engineering across EDA, AI, robotics, and computer graphics." : "电子设计自动化、AI、机器人视觉与计算机图形学中的研究和工程实践。",
     notes: lang === "en" ? "Stories and reflections, starting with The Road Not Chosen." : "故事与思考，从《未选择的路》开始。",
-    journey: lang === "en" ? "Education, research, and practical experience from 2024 to 2026." : "2024—2026 年的教育、研究与实践轨迹。",
     honors: lang === "en" ? "Eight recognitions in academic competitions, writing, film, and table tennis." : "学术与竞赛、写作与影像、乒乓球比赛中的八项荣誉。"
   };
   const description = project ? project.subtitle : key.startsWith("notes/") ? localizedNote(lang).summary : descriptions[key] || introduction[lang];
@@ -85,7 +73,7 @@ export function renderPage(key, lang) {
   else if (project) body = projectDetail(project, lang);
   else if (key === "notes/unselected-road") body = article(lang);
   else {
-    const content = key === "projects" ? projectsPage(lang) : key === "notes" ? `${pageTitle(t.notes, description, "02 / WRITING")}${noteEntry(lang)}` : key === "journey" ? timeline(lang) : key === "honors" ? honorsPage(lang) : about(lang);
+    const content = key === "projects" ? projectsPage(lang) : key === "notes" ? `${pageTitle(t.notes, description, "02 / WRITING")}${noteEntry(lang)}` : key === "honors" ? honorsPage(lang) : about(lang);
     body = `<div class="content-shell inner-page">${content}</div>`;
   }
   return { key, lang, title, description, body };

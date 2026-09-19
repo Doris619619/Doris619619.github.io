@@ -24,14 +24,14 @@ export function sectionHeading(title, link = "", label = "") {
 function header(key, lang) {
   const t = ui[lang];
   const current = key.split("/")[0] || "home";
-  const links = ["home", "projects", "notes", "journey", "honors", "about"].map((name) => `<a href="${pathFor(name === "home" ? "" : name, lang)}"${current === name ? ' aria-current="page"' : ""}>${t[name]}</a>`).join("");
+  const links = ["home", "projects", "notes", "honors", "about"].map((name) => `<a href="${pathFor(name === "home" ? "" : name, lang)}"${current === name ? ' aria-current="page"' : ""}>${t[name]}</a>`).join("");
   return `<header class="site-header" id="top"><a class="wordmark" href="${pathFor("", lang)}"><span>梁彦诗</span><em>Doris Liang</em></a><div class="header-controls"><nav class="nav" id="primary-nav" aria-label="${t.nav}">${links}</nav><a class="language-switch" lang="${lang === "en" ? "zh-CN" : "en"}" hreflang="${lang === "en" ? "zh-CN" : "en"}" href="${pathFor(key, lang === "en" ? "zh" : "en")}">${lang === "en" ? "中文" : "EN"}</a><button class="theme-button" type="button" aria-label="${t.theme}" aria-pressed="false">${icon("moon")}</button><button class="menu-button" type="button" aria-expanded="false" aria-controls="primary-nav">${t.menu}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></header>`;
 }
 
 /** Keep contact and secondary destinations reachable without a large marketing footer. */
 function footer(lang) {
   const t = ui[lang];
-  return `<footer class="site-footer"><div><a class="footer-name" href="${pathFor("about", lang)}">${t.rights}</a><p>© 2026 · EDA / AI / Robotics</p></div><nav aria-label="${lang === "en" ? "Footer" : "页脚导航"}"><a href="${pathFor("honors", lang)}">${t.honors}</a><a href="${pathFor("journey", lang)}">${t.journey}</a><a href="mailto:${site.email}">${t.contact}</a><a href="${site.github}">GitHub ${arrow}</a>${professionalLinks()}<a href="${pathFor("about", lang)}#creator">${lang === "en" ? "Douyin" : "抖音"}</a><a href="/rss.xml">RSS</a></nav></footer>`;
+  return `<footer class="site-footer"><div><a class="footer-name" href="${pathFor("about", lang)}">${t.rights}</a><p>© 2026 · EDA / AI / Robotics</p></div><nav aria-label="${lang === "en" ? "Footer" : "页脚导航"}"><a href="${pathFor("honors", lang)}">${t.honors}</a><a href="mailto:${site.email}">${t.contact}</a><a href="${site.github}">GitHub ${arrow}</a>${professionalLinks()}<a href="${pathFor("about", lang)}#creator">${lang === "en" ? "Douyin" : "抖音"}</a><a href="/rss.xml">RSS</a></nav></footer>`;
 }
 
 /** Produce a complete static document, including page-specific sharing and language metadata. */
