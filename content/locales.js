@@ -57,10 +57,18 @@ export function localizedNote(lang) {
   return { ...notes[0], title: ui[lang].original, summary: ui[lang].originalSummary };
 }
 
-// 项目索引仅提供短介绍，完整贡献与指标仍在原始项目数据中。
+// 项目索引交代具体问题；完整贡献与指标仍在原始项目数据中。
 export const projectSummaries = {
-    grace: { zh: "PCB 地平面生成与重布线协同优化", en: "Ground-plane generation and PCB rerouting" },
+    grace: { zh: "研究如何协同调整电路板布线与地平面生成，让接地铜面更完整、减少碎片。", en: "Research on jointly optimizing PCB routing and ground-plane generation for larger, less fragmented ground planes." },
     "llm-pcb": { zh: "用大语言模型探索 PCB 布局布线优化", en: "Exploring PCB optimization with language models" },
     robomaster: { zh: "机器人视觉、视频传输与实时状态显示", en: "Robot vision, video pipelines, and live status overlays" },
     vrgs: { zh: "基于 3D Gaussian Splatting 的场景重建", en: "3D scene reconstruction with Gaussian Splatting" }
   };
+
+// 类型与成果分开表达，读者无需先认识项目缩写。
+export const projectContext = {
+  grace: { zh: "科研 · 电子设计自动化", en: "Research · Electronic design automation" },
+  "llm-pcb": { zh: "科研 · 人工智能", en: "Research · Artificial intelligence" },
+  robomaster: { zh: "竞赛工程 · 机器人视觉", en: "Competition engineering · Robot vision" },
+  vrgs: { zh: "课程项目 · 计算机图形学", en: "Course project · Computer graphics" }
+};

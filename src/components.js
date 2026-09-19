@@ -1,7 +1,7 @@
 // 文件用途：生成可复用的导航、页脚、项目条目与获奖文章入口。
 import { site } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
-import { ui, localizedNote, projectSummaries } from "../content/locales.js";
+import { ui, localizedNote, projectSummaries, projectContext } from "../content/locales.js";
 import { pathFor, origin } from "./routes.js";
 import { icon, arrow } from "./icons.js";
 
@@ -40,10 +40,15 @@ export function documentPage({ key, lang, title, description, body }) {
 <html lang="${lang === "en" ? "en" : "zh-CN"}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${escape(title)} · ${lang === "en" ? "Doris Liang" : "梁彦诗"}</title><meta name="description" content="${escape(description)}"><meta name="theme-color" content="#fdfcf8"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="zh-CN" href="${origin}${pathFor(key)}"><link rel="alternate" hreflang="en" href="${origin}${pathFor(key, "en")}"><link rel="alternate" hreflang="x-default" href="${origin}${pathFor(key)}"><meta property="og:title" content="${escape(title)} · Doris Liang"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${canonical}"><meta property="og:type" content="${key.startsWith("notes/") ? "article" : "website"}"><meta property="og:locale" content="${lang === "en" ? "en_US" : "zh_CN"}"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" type="application/rss+xml" title="Doris Liang · Writing" href="/rss.xml"><script src="/theme-init.js"></script><link rel="preload" href="/assets/fonts/livenest-sans-sc.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/styles.css"></head><body><a class="skip-link" href="#main">${ui[lang].skip}</a>${header(key, lang)}<main id="main" tabindex="-1">${body}</main>${footer(lang)}<script type="module" src="/app.js"></script></body></html>`;
 }
 
-/** Give the project index only two reading levels; attribution and measurements belong on the detail page. */
+/** Explain project type, problem and recognition at a glance, keeping full technical evidence in details. */
 export function projectRow(project, lang, heading = "h2") {
-  const statuses = { grace: "DAC 2026", "llm-pcb": lang === "en" ? "In progress" : "进行中", robomaster: "RoboMaster", vrgs: "CS184 Showcase" };
-  return `<article class="project-row"><div class="project-row-heading"><${heading}><a href="${pathFor(`projects/${project.id}`, lang)}">${escape(project.title)}</a></${heading}><span class="project-status">${statuses[project.id]}</span></div><p class="project-subtitle">${projectSummaries[project.id][lang]}</p></article>`;
+  const statuses = {
+    grace: lang === "en" ? "Paper accepted at DAC 2026 · Fifth author" : "DAC 2026 论文录用 · 第 5 作者",
+    "llm-pcb": lang === "en" ? "Research in progress" : "研究进行中",
+    robomaster: lang === "en" ? "RoboMaster vision team" : "RoboMaster 视觉组",
+    vrgs: "UC Berkeley CS184 · Showcase Winner"
+  };
+  return `<article class="project-row"><div class="project-row-heading"><${heading}><a href="${pathFor(`projects/${project.id}`, lang)}">${escape(project.title)}</a></${heading}><span class="project-context">${escape(projectContext[project.id][lang])}</span></div><p class="project-subtitle">${escape(projectSummaries[project.id][lang])}</p><p class="project-status"><span>${escape(statuses[project.id])}</span><span class="project-arrow" aria-hidden="true">↗</span></p></article>`;
 }
 
 /** Connect the award and the story from every article entry point using one award record. */
