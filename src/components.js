@@ -2,7 +2,7 @@
 import { professionalLinks } from "./social.js";
 import { site } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
-import { ui, localizedNote, projectContext } from "../content/locales.js";
+import { ui, localizedNote } from "../content/locales.js";
 import { portfolioCopy, projectPresentation } from "../content/portfolio.js";
 import { pathFor, origin } from "./routes.js";
 import { icon, arrow } from "./icons.js";
@@ -51,14 +51,14 @@ export function projectPeriod(project, lang) {
   return `${beginning}${season === "summer" ? (lang === "en" ? " summer" : " 夏") : ending}`;
 }
 
-/** Keep dates, authorship, contribution and evidence in one reading column; links have distinct destinations. */
+/** Lead with the project title, then group status and dates in a readable facts row without duplicate category labels. */
 export function projectRow(project, lang, heading = "h2") {
   const t = portfolioCopy[lang];
   const copy = projectPresentation[project.id][lang];
   const featured = project.id === "grace";
   const pdfLink = paperPdfLink(project, lang);
   const externalLink = project.linkLabel || featured || project.id === "vrgs" ? `<a href="${escape(project.link)}">${project.linkLabel?.[lang] || (featured ? t.paper : t.report)} <span aria-hidden="true">↗</span></a>` : "";
-  return `<article class="project-row${featured ? " project-featured" : ""}"><p class="project-meta"><span>${escape(projectContext[project.id][lang])}</span><span class="project-period">${projectPeriod(project, lang)}</span></p><${heading}><a href="${pathFor(`projects/${project.id}`, lang)}">${escape(copy.title)}</a></${heading}><p class="project-status">${escape(project.status)}</p><p class="project-summary">${escape(copy.text)}</p>${featured ? `<p class="project-result"><span>${t.result}</span>${escape(project.result)}</p>` : ""}<div class="project-links">${pdfLink}${externalLink}<a href="${pathFor(`projects/${project.id}`, lang)}">${t.detail} <span aria-hidden="true">→</span></a></div></article>`;
+  return `<article class="project-row${featured ? " project-featured" : ""}"><${heading}><a href="${pathFor(`projects/${project.id}`, lang)}">${escape(copy.title)}</a></${heading}><div class="project-facts"><p class="project-status">${escape(project.status)}</p><p class="project-period" aria-label="${lang === "en" ? "Project period" : "项目时间"}">${projectPeriod(project, lang)}</p></div><p class="project-summary">${escape(copy.text)}</p>${featured ? `<p class="project-result"><span>${t.result}</span>${escape(project.result)}</p>` : ""}<div class="project-links">${pdfLink}${externalLink}<a href="${pathFor(`projects/${project.id}`, lang)}">${t.detail} <span aria-hidden="true">→</span></a></div></article>`;
 }
 
 /** Connect the award and the story from every article entry point using one award record. */
