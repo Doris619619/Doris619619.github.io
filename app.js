@@ -1,89 +1,84 @@
-import { education, highlights, honors, journey, notes, projects, site, skills } from "./content/site-data.js";
+// 文件用途：增强静态页面的主题、手机菜单、语言定位及旧链接兼容，不负责渲染正文。
+import { legacyDestination } from "./src/routes.js";
 
-const arrow = "<span aria-hidden=\"true\">↗</span>";
-const githubIcon = `<svg class="github-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 8.36 22.91c.58.11.79-.25.79-.56v-2.02c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.57-.29-5.27-1.29-5.27-5.73 0-1.26.45-2.29 1.19-3.1-.12-.3-.52-1.47.11-3.06 0 0 .97-.31 3.17 1.18A10.9 10.9 0 0 1 12 6.07c.97 0 1.95.13 2.87.39 2.19-1.49 3.16-1.18 3.16-1.18.64 1.59.24 2.76.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.45-2.7 5.43-5.28 5.72.41.36.78 1.08.78 2.18v3.24c0 .31.21.68.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>`;
-const dacIcon = `<span class="dac-mark" aria-hidden="true"><span class="dac-tile dac-tile-d">D</span><span class="dac-tile dac-tile-a">A</span><span class="dac-tile dac-tile-c">C</span><span class="dac-tile dac-tile-63">63</span></span>`;
-const icon = (name) => name === "sun"
-  ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2.5M12 19.5V22M4.93 4.93 6.7 6.7M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12H22M4.93 19.07 6.7 17.3M17.3 6.7l1.77-1.77"/></svg>`
-  : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.7 15.1A8.8 8.8 0 0 1 8.9 3.3 8.8 8.8 0 1 0 20.7 15.1Z"/></svg>`;
-const tags = (items) => `<div class="tags">${items.map((item) => `<span>${item}</span>`).join("")}</div>`;
+const legacy = legacyDestination(new URL(window.location.href));
+if (legacy) window.location.replace(legacy);
+const root = document.documentElement;
+const themeButton = document.querySelector(".theme-button");
+const menuButton = document.querySelector(".menu-button");
+const nav = document.querySelector("#primary-nav");
+const media = matchMedia("(prefers-color-scheme: dark)");
+let explicitTheme = false;
+try { explicitTheme = ["light", "dark"].includes(localStorage.getItem("theme")); } catch { /* Storage may be blocked; theme remains usable for this page. */ }
 
-function renderHeader() {
-  document.querySelector(".site-header").innerHTML = `<a class="wordmark" href="#top" aria-label="返回顶部"><span>梁彦诗</span><em>Doris Liang</em></a><nav class="nav" aria-label="主导航"><a href="#top">首页</a><a href="#work">作品</a><a href="#notes">手记</a><a href="#journey">轨迹</a><a href="#about">关于</a><button class="theme-button" type="button" aria-label="切换深浅色模式">${icon("moon")}</button></nav>`;
+/** Reflect theme state in the accessible button and browser chrome. */
+function syncTheme() {
+  const dark = root.dataset.theme === "dark";
+  themeButton?.setAttribute("aria-pressed", String(dark));
+  if (themeButton) themeButton.innerHTML = dark ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.7 15.1A8.8 8.8 0 0 1 8.9 3.3 8.8 8.8 0 1 0 20.7 15.1Z"/></svg>';
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#1b1a18" : "#fdfcf8");
 }
 
-function projectMarkup(project) {
-  const links = project.link ? `<div class="work-links"><a href="${project.link}" target="_blank" rel="noreferrer" class="work-link">项目报告 ${arrow}</a>${project.secondaryLink ? `<a href="${project.secondaryLink}" target="_blank" rel="noreferrer" class="work-link">CS184 Showcase ${arrow}</a>` : ""}</div>` : "";
-  return `<article class="work-card" id="${project.id}"><div class="work-top"><span>${project.index}</span><span>${project.eyebrow}</span></div><div class="work-body"><h3>${project.title}</h3><p class="work-subtitle">${project.subtitle}</p><p class="work-statement">${project.statement}</p><p class="work-detail">${project.detail}</p><p class="work-result">${project.result}</p>${tags(project.stack)}</div>${links}</article>`;
+/** Persist an intentional theme choice; blocked storage must not break navigation. */
+function toggleTheme() {
+  root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+  explicitTheme = true;
+  try { localStorage.setItem("theme", root.dataset.theme); } catch { /* In-memory fallback. */ }
+  syncTheme();
 }
 
-function noteMarkup(note) {
-  return `<article class="note-card"><time>${note.date}</time><h3><a href="?note=${note.slug}" aria-label="阅读《${note.title}》全文">${note.title}</a></h3></article>`;
+/** Keep the OS preference live until the visitor makes an explicit choice. */
+function systemThemeChanged(event) {
+  if (!explicitTheme) { root.dataset.theme = event.matches ? "dark" : "light"; syncTheme(); }
 }
 
-function renderNotePage(note) {
-  const paragraphs = note.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("");
-  document.querySelector("main").innerHTML = `<article class="essay-page" aria-labelledby="essay-title"><header class="essay-header"><a class="essay-back" href="./#notes">← 返回手记</a><p class="essay-index">NOTES · ${note.date}</p><h1 id="essay-title">${note.title}</h1><p class="essay-summary">${note.summary}</p></header><div class="essay-rule" aria-hidden="true"></div><div class="essay-reading">${paragraphs}</div><footer class="essay-footer"><a href="./#notes">回到手记</a><span>${note.date}</span></footer></article>`;
+/** Synchronize menu visibility and ARIA state; Escape returns focus to its trigger. */
+function setMenu(open, restoreFocus = false) {
+  nav?.setAttribute("data-open", String(open));
+  menuButton?.setAttribute("aria-expanded", String(open));
+  if (restoreFocus) menuButton?.focus();
 }
 
-function renderMain() {
-  const activeNote = notes.find((note) => note.slug === new URLSearchParams(window.location.search).get("note"));
-  if (activeNote) {
-    renderNotePage(activeNote);
-    return;
-  }
-  const projectCards = projects.map(projectMarkup).join("");
-  const journeyItems = journey.map((item) => `<article class="journey-item"><time>${item.time}</time><div><h3>${item.title}</h3><p>${item.text}</p></div></article>`).join("");
-  const educationItems = education.map((item) => `<article><time>${item.time}</time><h3>${item.title}</h3><p>${item.detail}</p></article>`).join("");
-  const highlightsMarkup = highlights.map((item) => `<div><strong>${item.value}</strong><span>${item.label}</span></div>`).join("");
-  const honorMarkup = honors.map((item) => `<article class="honor"><img src="${item.image}" alt="${item.title}证书" loading="lazy"/><div><h3>${item.title}</h3><p>${item.meta}</p></div></article>`).join("");
-  const skillsMarkup = skills.map((skill) => `<div class="skill-row"><span>${skill.label}</span><p>${skill.items}</p></div>`).join("");
-  const notesMarkup = notes.length ? notes.map(noteMarkup).join("") : `<div class="notes-empty"><span class="notes-feather" aria-hidden="true">⌁</span><div><p>手记还在等待第一篇真实内容。</p><small>未来可在 <code>content/site-data.js</code> 的 <code>notes</code> 数组中追加标题、日期、摘要与正文链接。</small></div></div>`;
-
-  document.querySelector("main").innerHTML = `
-    <section class="hero" id="top" aria-labelledby="home-title">
-      <div class="hero-glow" aria-hidden="true"></div>
-      <div class="hero-inner">
-        <div class="hero-spacer hero-spacer-top" aria-hidden="true"></div>
-        <div class="portrait-wrap"><img src="${site.avatar}" alt="梁彦诗" class="portrait"/></div>
-        <h1 id="home-title">
-          <span class="hero-muted">Hi, I’m </span><span class="hero-person">${site.englishName}</span><span class="hero-wave" aria-label="挥手"> 👋</span><span class="hero-chinese-name">${site.name}</span><br/>
-          <span class="hero-muted">I turn </span><i>ideas</i><span class="hero-muted"> into working systems with </span><span class="hero-star" aria-hidden="true">✦</span><code class="role-pill">Engineering</code><span class="type-caret" aria-hidden="true"></span>
-        </h1>
-        <p class="hero-intro">A CURIOUS ENGINEER EXPLORING EDA, AI, ROBOTICS, AND THE SPACE BETWEEN SOFTWARE AND HARDWARE.</p>
-        <div class="hero-spacer hero-spacer-bottom" aria-hidden="true"></div>
-        <div class="hero-footer">
-          <p class="hero-quote">「把复杂的问题拆开，把模糊的想法做成真正能够运行的系统。」</p>
-          <p class="hero-stats"><span>4 projects</span><b>·</b><span>3 honors</span><b>·</b><span>2024–2026</span></p>
-        </div>
-        <div class="social-row" aria-label="社交链接"><a class="social-link" href="mailto:${site.email}" aria-label="发送邮件" data-tooltip="发送邮件"><span aria-hidden="true">✉</span><span class="social-tooltip" role="tooltip">发送邮件</span></a><a class="social-link social-link-github" href="${site.github}" target="_blank" rel="noreferrer" aria-label="打开 GitHub" data-tooltip="GitHub">${githubIcon}<span class="social-tooltip" role="tooltip">GitHub</span></a><a class="social-link social-link-dac" href="${site.dacUrl}" target="_blank" rel="noreferrer" aria-label="打开 DAC 2026 页面" data-tooltip="DAC 63">${dacIcon}<span class="social-tooltip" role="tooltip">DAC 63</span></a></div>
-      </div>
-    </section>
-
-    <section class="signal-bar" aria-label="重点成果">${highlightsMarkup}</section>
-
-    <section class="section work-section" id="work" aria-labelledby="work-title"><div class="section-kicker"><span>01</span><div><p>Selected work</p><h2 id="work-title">把研究，变成可运行的系统。</h2></div></div><div class="work-grid">${projectCards}</div></section>
-
-    <section class="section notes-section" id="notes" aria-labelledby="notes-title"><div class="section-kicker"><span>02</span><div><p>Notes</p><h2 id="notes-title">手记，留给正在发生的事。</h2></div></div><div class="notes-nav" aria-label="手记栏目"><span class="active">全部</span><span>学习</span><span>项目</span><span>时光</span><span>思考</span></div><div class="notes-list">${notesMarkup}</div></section>
-
-    <section class="section journey-section" id="journey" aria-labelledby="journey-title"><div class="section-kicker"><span>03</span><div><p>Journey</p><h2 id="journey-title">在研究、工程与赛场之间。</h2></div></div><div class="journey-list">${journeyItems}</div></section>
-
-    <section class="section profile-section" id="about" aria-labelledby="about-title"><div class="section-kicker"><span>04</span><div><p>Profile</p><h2 id="about-title">从基础到现场。</h2></div></div><div class="profile-grid"><div class="education-list">${educationItems}</div><div class="about-copy"><p>我目前就读于香港中文大学（深圳）计算机工程专业。我的学习与实践围绕三个方向展开：电子设计自动化中的优化问题、能够被验证的 AI 系统，以及机器人视觉中的实时链路。</p><p>我喜欢把研究的抽象性带到工程里，也把工程中的真实约束带回研究。</p><a href="mailto:${site.email}" class="text-link">联系我 ${arrow}</a></div></div></section>
-
-    <section class="section honors-section" aria-labelledby="honors-title"><div class="section-kicker"><span>05</span><div><p>Recognition</p><h2 id="honors-title">一些值得记住的节点。</h2></div></div><div class="honor-grid">${honorMarkup}</div></section>
-
-    <section class="section toolbox" aria-labelledby="toolbox-title"><div class="section-kicker"><span>06</span><div><p>Toolbox</p><h2 id="toolbox-title">我常用的工作语言。</h2></div></div><div class="skills-list">${skillsMarkup}</div></section>
-
-    <section class="contact-section" id="contact" aria-labelledby="contact-title"><p class="eyebrow">Open to a thoughtful conversation</p><h2 id="contact-title">让我们聊聊<br/><i>next ideas.</i></h2><div><a href="mailto:${site.email}" class="button primary">发送邮件 ${arrow}</a><a href="${site.github}" target="_blank" rel="noreferrer" class="button">GitHub ${arrow}</a></div></section>`;
+/** Open the nonmodal menu at its first link, so keyboard users can immediately traverse its destinations. */
+function toggleMenu() {
+  const open = menuButton?.getAttribute("aria-expanded") !== "true";
+  setMenu(open);
+  if (open) requestAnimationFrame(queueMenuFocus);
 }
 
-function themeSetup() {
-  const root = document.documentElement;
-  const saved = localStorage.getItem("theme");
-  const apply = (value) => { root.dataset.theme = value; document.querySelector(".theme-button").innerHTML = icon(value === "dark" ? "sun" : "moon"); };
-  apply(saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
-  document.querySelector(".theme-button").addEventListener("click", () => { const next = root.dataset.theme === "dark" ? "light" : "dark"; localStorage.setItem("theme", next); apply(next); });
+/** Wait for the disclosure visibility style to reach a rendered frame before focusing a link. */
+function queueMenuFocus() { requestAnimationFrame(focusFirstMenuLink); }
+
+/** Ignore a queued focus if a rapid second click has already closed the disclosure. */
+function focusFirstMenuLink() {
+  if (nav?.getAttribute("data-open") === "true") nav.querySelector("a")?.focus();
 }
 
-function renderFooter() { document.querySelector(".site-footer").innerHTML = `<p>© 2026 梁彦诗 · Doris Liang</p><p>EDA · AI · Robotics</p>`; }
-renderHeader(); renderMain(); renderFooter(); themeSetup();
+/** Dismiss mobile navigation from Escape, including focus that is inside the menu. */
+function onKeydown(event) {
+  if (event.key === "Escape" && menuButton?.getAttribute("aria-expanded") === "true") setMenu(false, true);
+}
+
+/** Close the menu on outside clicks; preserve normal link navigation. */
+function onDocumentClick(event) {
+  if (!event.target.closest(".header-controls") || event.target.closest("#primary-nav a")) setMenu(false);
+}
+
+/** Preserve an in-page destination when a translated page has the same stable anchor. */
+function syncLanguageAnchor() {
+  const link = document.querySelector(".language-switch");
+  if (link) { const target = new URL(link.href); target.hash = location.hash; link.href = target.href; }
+}
+
+/** Close a previous mobile disclosure when the viewport changes navigation modes. */
+function onViewportChange() { setMenu(false); }
+
+syncTheme();
+syncLanguageAnchor();
+themeButton?.addEventListener("click", toggleTheme);
+menuButton?.addEventListener("click", toggleMenu);
+media.addEventListener("change", systemThemeChanged);
+document.addEventListener("keydown", onKeydown);
+document.addEventListener("click", onDocumentClick);
+window.addEventListener("hashchange", syncLanguageAnchor);
+matchMedia("(min-width: 761px)").addEventListener("change", onViewportChange);

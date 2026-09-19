@@ -1,62 +1,55 @@
-# 梁彦诗 · Doris Liang Portfolio
+<!-- 文件用途：说明双语静态个人站的预览、构建、内容维护与验证方法。 -->
+# 梁彦诗 · Doris Liang
 
-一个以文字、灰阶与留白为主的个人作品集静态站点。视觉系统参考 Yohaku 的公开设计原则，但站点中的个人资料、项目叙述和图片均来自本仓库 `info/` 中的用户资料或用户提供的公开链接。
+一个研究优先的中英文个人站。保留首页开场，作品、文章、成长轨迹、荣誉和关于页面均有独立地址。原生 JavaScript + Node 静态生成，站点无第三方运行时依赖。
 
-## 本地开发
+## 本地预览
 
-本项目不需要安装第三方运行时依赖。
+需要 Node.js 22+、Python 3。运行：
 
 ```powershell
 pnpm dev
 ```
 
-随后访问 <http://127.0.0.1:4173>。
+命令先生成 `dist/`，随后仅在本机启动 <http://127.0.0.1:4173/>。英文版为 <http://127.0.0.1:4173/en/>。修改内容后运行 `pnpm build` 并刷新浏览器；开发服务器不自动构建。也可不用 pnpm，直接执行 `node scripts/build.mjs`，然后执行 `python -m http.server 4173 --bind 127.0.0.1 --directory dist`。
 
-## 检查与构建
+不要在仓库根目录启动静态服务器：页面 HTML、RSS、sitemap 和 robots.txt 均由构建生成到 `dist/`。
+
+## 检查与发布
 
 ```powershell
 pnpm lint
 pnpm typecheck
 pnpm test
-pnpm build
 ```
 
-构建产物位于 `dist/`。要生成 1440 / 1024 / 768 / 390 四个视口的深浅色验收截图，请运行：
+- `lint`：维护中文件的说明、旧卡片样式残留、焦点与减少动效规则。
+- `typecheck`：兼容旧命令名，实际执行 `node --check` 语法检查，不是静态类型检查。
+- `test`：自动重新构建，检查 22 页静态 HTML、全部站内路径与锚点、双语互链、八项荣誉、旧 URL 兼容，以及中文文章 SHA-256 完整性。
+- `build`：单独生成 `dist/`，不启动服务器。
+- `screenshots`：可选的 Playwright 截图脚本，需要开发环境另外提供 `playwright` 及 Chromium；不属于默认构建依赖。本次验收使用 Codex 浏览器，截图见 `artifacts/redesign/`。
 
-```powershell
-pnpm screenshots
-```
+GitHub Pages 工作流发布 `dist/`，对 `main` 的推送会触发部署。分支上的本地构建不会发布网站。
 
-截图保存至 `artifacts/screenshots/`；运行前需先启动本地预览。
+## 页面与内容维护
 
-## 更新个人资料
+中文使用 `/`，英文使用 `/en/`；两种语言均有 `projects/`、四个项目详情、`notes/`、文章详情、`journey/`、`honors/`、`about/`。
 
-所有可公开的个人内容集中在 [content/site-data.js](content/site-data.js)：
+- `content/site-data.js`：已提供的中文个人资料、项目、教育、实践、技能和文学原文。
+- `content/locales.js`：英文事实表述、中英文界面、自我介绍与项目身份；新增内容时同步两个语言版本。
+- `content/honors.js`：荣誉正式名称、年月、类别、证书路径与文章关联。
+- `src/pages.js`、`src/components.js`：静态页面与共享组件；`src/hero.js` 保留原有首页开场。
+- `src/routes.js`：路径约定、生产域名与旧链接兼容。
+- `app.js`、`theme-init.js`：主题、手机导航和语言锚点；正文不依赖浏览器脚本。
 
-- `site`：姓名、联系方式、简介与外部链接；
-- `projects`：项目的背景、行动、结果、技术栈与来源；
-- `experiences` / `education` / `honors` / `skills`：经历、教育、荣誉和技能。
+《未选择的路》写作日期为 2025.01，获奖日期为 2026.04，分别展示。英文页翻译标题、简介与获奖信息，正文保留中文并标明原作语言。文学正文如经作者主动修订，需要同步更新完整性测试的期望摘要。
 
-未提供、不可虚构的资料集中列在 [content/todo.js](content/todo.js)。补充真实头像、公开文章或项目图片后，再将其接入页面；不要用素材网站图片冒充个人经历。
+所有图片均来自已有素材。证书通过文字链接打开查看。全运会志愿服务放在关于页，不纳入八项荣誉。未提供的图片、日期与个人经历不得虚构。
 
-## 添加项目与文章
+旧的 `/?note=unselected-road#top` 和首页栏目锚点仍可访问，由浏览器脚本导向新页面。新页面可直接访问、刷新和分享；没有 JavaScript 时正文及普通链接仍可用，旧链接迁移和交互增强需要 JavaScript。
 
-新增项目时，在 `projects` 中添加一条具有 `problem`、`action`、`result` 和 `source` 的记录。现阶段没有用户提供的公开文章，因此 Writing 入口保持隐藏；文章系统的 RSS 和空 feed 位于 `rss.xml`，在得到真实文章后再公开索引与详情页。
+## 设计与验收
 
-## 替换图片
+内容区最大宽度 1040px，阅读区 700px，使用暖白、柔和玫瑰色和细分隔线。网页界面与大开场统一复用 LivePilot-v2 网页的 LiveNest Sans SC 本地字体，文学原文保留衬线字体。项目列表只展示名称、短说明与右侧短状态；完整身份与指标进入详情页。时间轴桌面展示横向年度导航，手机纵向展开。详细约束和验证记录见 [设计说明](docs/个人站改版.md) 与 [验收记录](docs/改版验收.md)。
 
-公开可用的图片放在 `assets/`，并在 `honors` 或项目数据中引用相对路径。所有图片都应保留准确 `alt` 文案、尺寸和延迟加载。
-
-## 设计 token
-
-设计 token 定义在 [styles.css](styles.css)：
-
-- 仅使用 sans / serif / mono 三类正文角色，以及仅供字标使用的 CJK / Latin 字标字体；
-- 默认正文为 `14px / 22px`，完整字号 token 为 `caption-10` 至 `display-48`；
-- 使用暖灰纸张色和三层 neutral scale；
-- 强调色只用于焦点、CTA 与引用线；
-- 支持深色模式与 `prefers-reduced-motion`。
-
-## 许可证与归属
-
-项目代码以本仓库后续指定的许可证为准。Yohaku 的公开设计语言仅作为视觉参考；本项目未复制 Innei 的个人文案、头像、照片、Logo 或私有代码。若未来直接引入 Yohaku 的公开代码，请依其 MIT 许可证保留 attribution。
+既有 `design-qa.md`、`hero-source-audit.md` 及 font/hero 比较脚本是上一版历史记录，不代表新版结构。参考设计归属见 `THIRD_PARTY_NOTICES.md`；没有复制 Innei 的个人内容或图片。
