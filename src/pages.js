@@ -5,6 +5,7 @@ import { introduction, ui, localizedProjects, localizedJourney, localizedEducati
 import { portfolioCopy } from "../content/portfolio.js";
 import { profileIntroduction, projectGroup } from "./portfolio.js";
 import { homeTimeline } from "./timeline.js";
+import { honorsTimeline, honorsEntry } from "./honors.js";
 import { hero } from "./hero.js";
 import { experienceSection } from "./experience.js";
 import { creatorProfile, professionalLinks } from "./social.js";
@@ -20,7 +21,7 @@ function pageTitle(title, subtitle, index) {
 
 /** Follow the opening and a personal introduction with one coherent, illustrated chronology. */
 function home(lang) {
-  return `${hero(lang)}<div class="content-shell home-content"><section class="home-introduction" id="profile" aria-label="${lang === "en" ? "About me" : "关于我"}">${profileIntroduction(lang)}</section>${homeTimeline(lang)}</div>`;
+  return `${hero(lang)}<div class="content-shell home-content"><section class="home-introduction" id="profile" aria-label="${lang === "en" ? "About me" : "关于我"}">${profileIntroduction(lang)}</section>${homeTimeline(lang)}${honorsEntry(lang)}</div>`;
 }
 
 /** Present research and practice as distinct bodies of work, not an undifferentiated project directory. */
@@ -55,10 +56,10 @@ function timeline(lang) {
   return `${pageTitle(t.journey, en ? "Education, research, and the work along the way." : "学习、研究，以及一路参与的实践。", "03 / JOURNEY")}${overview}${years}<aside class="related-line"><p>${en ? "Milestones beyond the projects" : "项目之外，也有值得记住的时刻"}</p><a href="${pathFor("honors", lang)}">${t.honors} →</a></aside>`;
 }
 
-/** Group all eight honors by discipline, preserving their full names and month-level dates. */
+/** Give recognition its own chronological path, separate from education and work. */
 function honorsPage(lang) {
   const t = ui[lang];
-  return `${pageTitle(t.honors, lang === "en" ? "In research, in writing, and on the court." : "在研究里，在文字里，也在赛场上。", "RECOGNITION / 08")}${["academic", "creative", "sport"].map((category) => `<section class="honor-group">${sectionHeading(t[category])}${honors.filter((item) => item.category === category).sort((a, b) => b.date.localeCompare(a.date)).map((item) => `<article class="honor-row" id="${item.id}"><time datetime="${item.date}">${date(item.date)}</time><div><h3>${escape(item.title[lang])}</h3><p class="honor-result">${escape(item.result[lang])}</p><div class="text-links">${item.image ? `<a href="/${item.image}" target="_blank" rel="noopener">${t.certificate} ↗</a>` : ""}${item.noteSlug ? `<a href="${pathFor(`notes/${item.noteSlug}`, lang)}">${t.read} →</a>` : ""}</div></div></article>`).join("")}</section>`).join("")}`;
+  return `${pageTitle(t.honors, lang === "en" ? "In research, in writing, and on the court." : "在研究里，在文字里，也在赛场上。", "RECOGNITION / 08")}${honorsTimeline(lang)}`;
 }
 
 /** Present personal background and volunteering separately from the formal honors list. */

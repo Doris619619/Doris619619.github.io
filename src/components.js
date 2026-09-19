@@ -24,7 +24,7 @@ export function sectionHeading(title, link = "", label = "") {
 function header(key, lang) {
   const t = ui[lang];
   const current = key.split("/")[0] || "home";
-  const links = ["home", "projects", "notes", "journey", "about"].map((name) => `<a href="${pathFor(name === "home" ? "" : name, lang)}"${current === name ? ' aria-current="page"' : ""}>${t[name]}</a>`).join("");
+  const links = ["home", "projects", "notes", "journey", "honors", "about"].map((name) => `<a href="${pathFor(name === "home" ? "" : name, lang)}"${current === name ? ' aria-current="page"' : ""}>${t[name]}</a>`).join("");
   return `<header class="site-header" id="top"><a class="wordmark" href="${pathFor("", lang)}"><span>梁彦诗</span><em>Doris Liang</em></a><div class="header-controls"><nav class="nav" id="primary-nav" aria-label="${t.nav}">${links}</nav><a class="language-switch" lang="${lang === "en" ? "zh-CN" : "en"}" hreflang="${lang === "en" ? "zh-CN" : "en"}" href="${pathFor(key, lang === "en" ? "zh" : "en")}">${lang === "en" ? "中文" : "EN"}</a><button class="theme-button" type="button" aria-label="${t.theme}" aria-pressed="false">${icon("moon")}</button><button class="menu-button" type="button" aria-expanded="false" aria-controls="primary-nav">${t.menu}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></header>`;
 }
 

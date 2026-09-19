@@ -68,7 +68,10 @@ for (const lang of languages) {
   assert.ok(home.includes('id="life-timeline"') && !home.includes('class="editorial-section"'), "Homepage uses one chronology after the introduction");
   assert.ok(!/^GRACE/i.test(localizedProjects(lang).find((item) => item.id === "grace").title), "Research title explains the topic before the acronym");
   const about = pages.get(pathFor("about", lang));
-  for (const value of ["ECE2050", "University Student Teaching Fellow", "2026.06 — 2026.08", "92689179314", "2026-09-18", "douyin-profile-code.jpg"]) assert.ok(about.includes(value));
+  for (const value of ["ECE2050", "University Student Teaching Fellow", "2026.09", "92689179314", "2026-09-18", "douyin-profile-code.jpg"]) assert.ok(about.includes(value));
+  assert.ok(about.includes(lang === "en" ? "2026.06 — present" : "2026.06 — 至今"), "Internship remains ongoing");
+  assert.ok(home.includes("/assets/organizations/robomaster.png") && home.includes("/assets/organizations/berkeley.png") && home.includes("/assets/organizations/itso.png"), "Official marks in homepage chronology");
+  assert.ok(!home.includes('id="writing-award"'), "Writing award lives in recognition archive");
   assert.ok(!pages.get(pathFor("", lang)).includes("hero-paper-link"), "No new paper button in the opening");
   const awardsHtml = pages.get(pathFor("honors", lang));
   for (const honor of honors) {
@@ -76,6 +79,8 @@ for (const lang of languages) {
     assert.ok(awardsHtml.includes(escape(honor.title[lang])));
     assert.ok(awardsHtml.includes(escape(honor.result[lang])));
   }
+  assert.ok(awardsHtml.includes("lingyu-2025-cover.png"), "Magazine artwork in recognition archive");
+  assert.ok(awardsHtml.indexOf('id="honors-2026"') < awardsHtml.indexOf('id="honors-2025"'), "Recognition ordered newest first");
   const story = pages.get(pathFor("notes/unselected-road", lang));
   for (const paragraph of notes[0].paragraphs) assert.ok(story.includes(`<p>${escape(paragraph)}</p>`));
   assert.ok(story.includes('datetime="2025-01"'));

@@ -1,0 +1,6 @@
+<!-- 文件用途：桌面细环光标，中心热点为 16,16；透明底与暗色细边适配两种主题。 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <circle cx="16" cy="16" r="7" fill="none" stroke="#392c30" stroke-width="2" stroke-opacity=".65"/>
+  <circle cx="16" cy="16" r="7" fill="none" stroke="#d28a99" stroke-width="1"/>
+  <circle cx="16" cy="16" r="1.7" fill="#d28a99" stroke="#392c30" stroke-width=".5"/>
+</svg>

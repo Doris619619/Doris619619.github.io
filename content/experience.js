@@ -11,12 +11,12 @@ export const experience = [
     en: { title: "Software Engineer · CUHK-Shenzhen ITSO", text: "Tested campus AI platform APIs, including /chat/completions, /responses, streaming and authorization. Verified compatibility across 64 parameter fields and tested multi-model access in Cherry Studio." }
   },
   {
-    id: "sribd", time: "2026.06 — 2026.08", source: "https://www.linkedin.com/in/yanshi-liang-015052430/",
+    id: "sribd", time: "2026.06 — 至今", source: "https://www.linkedin.com/in/yanshi-liang-015052430/",
     zh: { title: "AI 智能体开发助理工程师 · 深圳市大数据研究院", text: "实习 · 深圳 · 混合办公。参与 AI 智能体开发。" },
-    en: { title: "Assistant Engineer, AI Agent Development · Shenzhen Research Institute of Big Data", text: "Internship in Shenzhen, with hybrid work. Worked on AI agent development." }
+    en: { title: "Assistant Engineer, AI Agent Development · Shenzhen Research Institute of Big Data", text: "Internship in Shenzhen, with hybrid work. Working on AI agent development." }
   },
   {
-    id: "ustf", time: "2026",
+    id: "ustf", time: "2026.09",
     zh: { title: "USTF · ECE2050 数字电路", text: "University Student Teaching Fellow · 香港中文大学（深圳）。参与 ECE2050 Digital Logic and Systems 课程教学。" },
     en: { title: "USTF · ECE2050 Digital Logic and Systems", text: "University Student Teaching Fellow at The Chinese University of Hong Kong, Shenzhen, supporting teaching for ECE2050." }
   }

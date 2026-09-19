@@ -39,10 +39,21 @@ Institution marks are used to identify the user's education and experience. Owne
 - CUHK-Shenzhen: `assets/organizations/cuhk.png`, from [official university mark](https://www.cuhk.edu.cn/sites/webmaster.prod1.dpsite04.cuhk.edu.cn/files/zh-hans_logo.png).
 - Shenzhen Research Institute of Big Data: `assets/organizations/sribd.png`, from [official institute mark](https://www.sribd.cn/sites/default/files/logo%2B_0.png).
 
-## LinkedIn and Douyin entry icons
+## LinkedIn entry icon
 
-`src/icons.js` embeds the LinkedIn and musical-note brand SVGs from [Bootstrap Icons](https://icons.getbootstrap.com/). Source geometry is unchanged, while dimensions and accessibility attributes are adapted for the local buttons. The musical-note asset is named `tiktok.svg` upstream and represents the shared note mark used for the Douyin entry.
+`src/icons.js` embeds the LinkedIn SVG from [Bootstrap Icons](https://icons.getbootstrap.com/). Source geometry is unchanged, while dimensions and accessibility attributes are adapted for the local buttons. The former musical-note approximation has been replaced by the official Douyin app image.
 
 - [LinkedIn source](https://github.com/twbs/icons/blob/main/icons/linkedin.svg)
-- [Musical-note source](https://github.com/twbs/icons/blob/main/icons/tiktok.svg)
 - MIT license and copyright notice: `assets/licenses/bootstrap-icons-LICENSE.txt`. Retrieved 2026-09-19; no runtime package dependency.
+
+## Additional official artwork (2026-09-19)
+
+The following original images identify education, activities, and social destinations; ownership remains with the respective organizations and is not included in the code license. The Berkeley asset is the official B web icon, not a recreated wordmark. Downloaded copies avoid dependence on expiring image links.
+
+- `assets/organizations/robomaster.png`: [official announcement](https://www.robomaster.com/en-US/resource/pages/announcement/713), [original blue logo](https://rm-static.djicdn.com/robomasters/public/document/RoboMaster-mecha-logo-blue.png).
+- `assets/organizations/berkeley.png`: [official web icon guidance](https://brand.berkeley.edu/visual-identity/icons-secondary-marks/), [official 192px icon](https://brand.berkeley.edu/wp-content/uploads/2024/07/cropped-favicon-192x192.png).
+- `assets/organizations/itso.png`: the user-specified [CUHKSZ-ITSO-Dev profile](https://github.com/CUHKSZ-ITSO-Dev), [avatar](https://avatars.githubusercontent.com/u/180953033?v=4).
+- `assets/organizations/douyin.jpg`: image explicitly labelled 抖音logo on the [official mobile download page](https://m.douyin.com/app_download); original image stored unchanged.
+- `assets/lingyu-2025-cover.png`: user-provided Lingyu Summer 2025 cover; no image edits. Shown as magazine artwork, not a certificate.
+
+`assets/cursors/orbit.svg` and `orbit-link.svg` are original local vector cursor drawings, separate from all third-party brand artwork.
