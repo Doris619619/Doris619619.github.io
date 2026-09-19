@@ -32,9 +32,10 @@ function projectsPage(lang) {
 /** Display one project's evidence and contribution without inventing screenshots or publication claims. */
 function projectDetail(project, lang) {
   const t = ui[lang];
-  const reportLabel = project.id === "grace" ? (lang === "en" ? "DAC 2026 presentation" : "DAC 2026 论文页面") : project.id === "robomaster" ? (lang === "en" ? "GitHub profile" : "GitHub 个人主页") : (lang === "en" ? "Project report" : "项目报告");
-  const links = project.link ? `<section class="detail-section"><h2>${t.sources}</h2><div class="text-links">${paperPdfLink(project, lang)}<a href="${escape(project.link)}">${reportLabel} ↗</a>${project.secondaryLink ? `<a href="${escape(project.secondaryLink)}">CS184 Showcase ↗</a>` : ""}</div></section>` : "";
-  return `<div class="reading-shell"><a class="back-link" href="${pathFor("projects", lang)}">← ${t.back} ${t.projects}</a><header class="detail-title project-detail-title"><h1>${escape(project.title)}</h1><p>${escape(project.subtitle)}</p><p class="project-status">${escape(project.status)}</p><p class="project-period">${lang === "en" ? "Project period" : "项目时间"} · ${projectPeriod(project, lang)}</p></header>${[[t.background, project.statement], [t.contribution, project.detail], [t.outcome, project.result]].map(([title, text]) => `<section class="detail-section"><h2>${title}</h2><p>${escape(text)}</p></section>`).join("")}<section class="detail-section"><h2>${t.tools}</h2><p class="technology-line">${project.stack.map(escape).join(" · ")}</p></section>${links}</div>`;
+  const reportLabel = project.linkLabel?.[lang] || (project.id === "grace" ? (lang === "en" ? "DAC 2026 presentation" : "DAC 2026 论文页面") : project.id === "robomaster" ? (lang === "en" ? "GitHub profile" : "GitHub 个人主页") : (lang === "en" ? "Project report" : "项目报告"));
+  const links = project.link ? `<section class="detail-section"><h2>${t.sources}</h2><div class="text-links">${paperPdfLink(project, lang)}<a href="${escape(project.link)}">${reportLabel} ↗</a>${project.secondaryLink ? `<a href="${escape(project.secondaryLink)}">${escape(project.secondaryLinkLabel?.[lang] || "CS184 Showcase")} ↗</a>` : ""}</div></section>` : "";
+  const preview = project.screenshot ? `<figure class="project-preview"><a href="${escape(project.screenshot)}" aria-label="${lang === "en" ? "Open full-size project screenshot" : "打开完整项目截图"}"><img src="${escape(project.screenshot)}" width="1440" height="900" alt="${escape(project.screenshotCaption[lang])}" loading="lazy"></a><figcaption>${escape(project.screenshotCaption[lang])}</figcaption></figure>` : "";
+  return `<div class="reading-shell"><a class="back-link" href="${pathFor("projects", lang)}">← ${t.back} ${t.projects}</a><header class="detail-title project-detail-title"><h1>${escape(project.title)}</h1><p>${escape(project.subtitle)}</p><p class="project-status">${escape(project.status)}</p><p class="project-period">${lang === "en" ? "Project period" : "项目时间"} · ${projectPeriod(project, lang)}</p></header>${preview}${[[project.group === "research" ? t.background : (lang === "en" ? "Project background" : "项目背景"), project.statement], [t.contribution, project.detail], [t.outcome, project.result]].map(([title, text]) => `<section class="detail-section"><h2>${title}</h2><p>${escape(text)}</p></section>`).join("")}<section class="detail-section"><h2>${t.tools}</h2><p class="technology-line">${project.stack.map(escape).join(" · ")}</p></section>${links}</div>`;
 }
 
 /** Render original Chinese paragraphs unchanged, with localized navigation and recognition metadata. */
@@ -63,7 +64,7 @@ export function renderPage(key, lang) {
   const project = key.startsWith("projects/") ? localizedProjects(lang).find((item) => key === `projects/${item.id}`) : null;
   const title = project ? project.title : key.startsWith("notes/") ? localizedNote(lang).title : t[key || "home"];
   const descriptions = {
-    projects: lang === "en" ? "Research and engineering across EDA, AI, robotics, and computer graphics." : "电子设计自动化、AI、机器人视觉与计算机图形学中的研究和工程实践。",
+    projects: lang === "en" ? "Research and engineering across EDA, AI, personal software, robotics, and computer graphics." : "电子设计自动化、AI、个人软件、机器人视觉与计算机图形学中的研究和工程实践。",
     notes: lang === "en" ? "Stories and reflections, starting with The Road Not Chosen." : "故事与思考，从《未选择的路》开始。",
     honors: lang === "en" ? "Eight recognitions in academic competitions, writing, film, and table tennis." : "学术与竞赛、写作与影像、乒乓球比赛中的八项荣誉。"
   };

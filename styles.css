@@ -447,3 +447,8 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
 /* Use the supplied portrait logo, cropping only its empty top and bottom margins. */
 .history-mark-shengtu { display: block; background: #dde2e5; overflow: hidden; }
 .history-mark-shengtu img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Project imagery uses the real product screenshot with an optional full-size view. */
+.project-preview { margin: 0 0 40px; }
+.project-preview img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; }
+.project-preview figcaption { margin-top: 10px; color: var(--ink-soft); font-size: 12px; }

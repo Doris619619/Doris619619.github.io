@@ -43,6 +43,25 @@ export const projects = [
     stack: ["SFT", "LoRA", "QLoRA", "RL" ]
   },
   {
+    id: "threadline",
+    group: "practice",
+    period: { ongoing: true },
+    index: "05",
+    eyebrow: "Personal software · Web / PWA / Windows",
+    title: "Threadline · 个人任务与时间工作台",
+    subtitle: "把任务、日常习惯与时间规划放在一起",
+    statement: "把待办、日程和实际投入连起来：既能安排今天要做的事，也能回顾时间花在哪里。",
+    detail: "围绕今日执行构建任务、Daily、待安排与每日收尾流程，结合日历、习惯记录和投入洞察；使用同一套前端支持浏览器、iPhone PWA 与 Windows，并通过 Supabase 同步业务数据。",
+    result: "提供可下载的 Windows 版本，支持桌面工作站与自动更新；代码公开维护，可按仓库文档自行部署 Web 版本。",
+    stack: ["Next.js", "React", "TypeScript", "Supabase", "Electron"],
+    link: "https://github.com/Doris619619/Threadline",
+    linkLabel: { zh: "GitHub 仓库", en: "GitHub repository" },
+    secondaryLink: "https://github.com/Doris619619/Threadline/releases/latest",
+    secondaryLinkLabel: { zh: "下载 Windows 版", en: "Download for Windows" },
+    screenshot: "/assets/projects/threadline-workspace.png",
+    screenshotCaption: { zh: "Threadline 今日工作台 · 项目演示数据", en: "Threadline daily workspace · Demo data" }
+  },
+  {
     id: "robomaster",
     group: "practice",
     period: { start: "2025-07", ongoing: true },

@@ -2,16 +2,16 @@
 export const portfolioCopy = {
   zh: {
     title: "研究与作品",
-    introduction: "我的研究围绕 PCB 设计优化展开，也参与机器人视觉系统开发和三维场景重建。这里记录我解决的问题、承担的工作与阶段成果。",
+    introduction: "我的研究围绕 PCB 设计优化展开，也开发个人效率工具、参与机器人视觉系统开发和三维场景重建。这里记录我解决的问题、承担的工作与阶段成果。",
     research: "研究",
     researchNote: "电子设计自动化与人工智能",
-    practice: "工程与课程实践",
-    practiceNote: "机器人视觉与计算机图形学",
+    practice: "产品与工程实践",
+    practiceNote: "个人软件、机器人视觉与计算机图形学",
     profile: "关于我",
     profileNote: "梁彦诗 / Doris Liang",
     moreAbout: "更多关于我",
     allWork: "全部研究与作品",
-    practiceLink: "工程与课程实践",
+    practiceLink: "产品与工程实践",
     writing: "写作与生活",
     writingNote: "研究和代码之外",
     life: "我也打乒乓球、写故事，参加校园活动。这些经历和研究一样，都是大学生活的一部分。",
@@ -26,16 +26,16 @@ export const portfolioCopy = {
   },
   en: {
     title: "Research & projects",
-    introduction: "My research focuses on PCB design optimization. I also work on robot vision and 3D scene reconstruction. These projects document the problems, my contributions, and the results along the way.",
+    introduction: "My research focuses on PCB design optimization. I also build productivity tools and work on robot vision and 3D scene reconstruction. These projects document the problems, my contributions, and the results along the way.",
     research: "Research",
     researchNote: "Electronic design automation & AI",
-    practice: "Engineering & coursework",
-    practiceNote: "Robot vision & computer graphics",
+    practice: "Products & engineering",
+    practiceNote: "Personal software, robot vision & graphics",
     profile: "About me",
     profileNote: "Doris Liang / 梁彦诗",
     moreAbout: "More about me",
     allWork: "All research & projects",
-    practiceLink: "Engineering & coursework",
+    practiceLink: "Products & engineering",
     writing: "Writing & life",
     writingNote: "Beyond research and code",
     life: "I also play table tennis, write stories, and take part in campus activities. These experiences are part of my university life alongside research.",
@@ -52,6 +52,10 @@ export const portfolioCopy = {
 
 // 摘要同时交代问题与个人工作，避免读者仅靠项目缩写猜测内容。
 export const projectPresentation = {
+  threadline: {
+    zh: { title: "Threadline · 个人任务与时间工作台", text: "把任务、日常习惯和时间规划放在同一工作台，从安排今天到回顾实际投入。支持浏览器、iPhone PWA 和 Windows，通过 Supabase 跨设备同步，并提供桌面工作站与自动更新。" },
+    en: { title: "Threadline · Tasks and time, together", text: "A personal workspace that brings tasks, daily habits and time planning together, from planning the day to reviewing actual effort. Available for browsers, iPhone PWA and Windows, with Supabase sync, a compact desktop workspace and automatic updates." }
+  },
   grace: {
     zh: { title: "电路板接地铜面与布线协同优化", text: "研究如何联合优化电路板走线与接地铜面。我独立开发了 KiCad 布局解析、局部区域切分和重布线模块，并完成优化结果回写。" },
     en: { title: "PCB ground-plane and rerouting co-design", text: "Research on jointly optimizing PCB routing and ground-plane generation. I independently developed the KiCad layout parser, local partitioning and rerouting modules, and integrated optimization write-back." }

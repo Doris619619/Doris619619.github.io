@@ -42,9 +42,10 @@ export function documentPage({ key, lang, title, description, body }) {
 <html lang="${lang === "en" ? "en" : "zh-CN"}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${escape(title)} · ${lang === "en" ? "Doris Liang" : "梁彦诗"}</title><meta name="description" content="${escape(description)}"><meta name="theme-color" content="#fdfcf8"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="zh-CN" href="${origin}${pathFor(key)}"><link rel="alternate" hreflang="en" href="${origin}${pathFor(key, "en")}"><link rel="alternate" hreflang="x-default" href="${origin}${pathFor(key)}"><meta property="og:title" content="${escape(title)} · Doris Liang"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${canonical}"><meta property="og:type" content="${key.startsWith("notes/") ? "article" : "website"}"><meta property="og:locale" content="${lang === "en" ? "en_US" : "zh_CN"}"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" type="application/rss+xml" title="Doris Liang · Writing" href="/rss.xml"><script src="/theme-init.js"></script><link rel="preload" href="/assets/fonts/livenest-sans-sc.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/styles.css"></head><body><a class="skip-link" href="#main">${ui[lang].skip}</a>${header(key, lang)}<main id="main" tabindex="-1">${body}</main>${footer(lang)}<script type="module" src="/app.js"></script></body></html>`;
 }
 
-/** Show supplied project dates separately from publication years; summer does not imply exact months. */
+/** Show verified dates separately from publication years; ongoing work may have no confirmed start date. */
 export function projectPeriod(project, lang) {
   const { start, end, ongoing, season } = project.period;
+  if (!start) return lang === "en" ? "In active development" : "持续开发中";
   const beginning = `<time datetime="${start}">${date(start)}</time>`;
   const ending = end ? ` — <time datetime="${end}">${date(end)}</time>` : ongoing ? ` — ${lang === "en" ? "present" : "至今"}` : "";
   return `${beginning}${season === "summer" ? (lang === "en" ? " summer" : " 夏") : ending}`;
@@ -56,7 +57,7 @@ export function projectRow(project, lang, heading = "h2") {
   const copy = projectPresentation[project.id][lang];
   const featured = project.id === "grace";
   const pdfLink = paperPdfLink(project, lang);
-  const externalLink = featured || project.id === "vrgs" ? `<a href="${escape(project.link)}">${featured ? t.paper : t.report} <span aria-hidden="true">↗</span></a>` : "";
+  const externalLink = project.linkLabel || featured || project.id === "vrgs" ? `<a href="${escape(project.link)}">${project.linkLabel?.[lang] || (featured ? t.paper : t.report)} <span aria-hidden="true">↗</span></a>` : "";
   return `<article class="project-row${featured ? " project-featured" : ""}"><p class="project-meta"><span>${escape(projectContext[project.id][lang])}</span><span class="project-period">${projectPeriod(project, lang)}</span></p><${heading}><a href="${pathFor(`projects/${project.id}`, lang)}">${escape(copy.title)}</a></${heading}><p class="project-status">${escape(project.status)}</p><p class="project-summary">${escape(copy.text)}</p>${featured ? `<p class="project-result"><span>${t.result}</span>${escape(project.result)}</p>` : ""}<div class="project-links">${pdfLink}${externalLink}<a href="${pathFor(`projects/${project.id}`, lang)}">${t.detail} <span aria-hidden="true">→</span></a></div></article>`;
 }
 

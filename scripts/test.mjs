@@ -57,7 +57,7 @@ assert.deepEqual(["academic", "creative", "sport"].map((category) => honors.filt
 assert.equal(createHash("sha256").update(JSON.stringify(notes[0].paragraphs)).digest("hex"), "efc0b689af68ecf9257f3edca852db4a8d6c52b1db5229b6b586f6b89dd749b0", "Chinese literary original must remain unchanged");
 for (const lang of languages) {
   assert.deepEqual(Object.keys(ui[lang]).sort(), Object.keys(ui.zh).sort());
-  assert.equal(localizedProjects(lang).length, 4);
+  assert.equal(localizedProjects(lang).length, 5);
   assert.equal(localizedJourney(lang).length, 8);
   assert.equal(localizedEducation(lang).length, 2);
   for (const key of ["", "projects/llm-pcb"]) {
@@ -118,8 +118,8 @@ for (const lang of languages) {
   }
   for (const project of projects) {
     const html = pages.get(pathFor(`projects/${project.id}`, lang));
-    assert.ok(html.includes(`datetime="${project.period.start}"`), `Project dates in details: ${project.id}`);
-    assert.ok(portfolio.includes(`datetime="${project.period.start}"`), `Project dates in index: ${project.id}`);
+    if (project.period.start) assert.ok(html.includes(`datetime="${project.period.start}"`), `Project dates in details: ${project.id}`);
+    if (project.period.start) assert.ok(portfolio.includes(`datetime="${project.period.start}"`), `Project dates in index: ${project.id}`);
     if (project.link) assert.ok(html.includes(escape(project.link)));
     if (project.secondaryLink) assert.ok(html.includes(escape(project.secondaryLink)));
   }
@@ -145,7 +145,7 @@ for (const lang of languages) {
 }
 const sitemap = await readFile("dist/sitemap.xml", "utf8");
 assert.ok(!sitemap.includes("/journey/"), "Retired pages excluded from sitemap");
-assert.equal((sitemap.match(/<loc>/g) || []).length, 20);
+assert.equal((sitemap.match(/<loc>/g) || []).length, 22);
 assert.ok((await readFile("dist/404.html", "utf8")).includes("Page not found"));
 console.log(`tests passed: ${pages.size} static pages, ${checkedLinks} internal references, 8 honors, original-text digest, language parity, and legacy URLs`);
 

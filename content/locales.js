@@ -13,6 +13,7 @@ export const ui = {
 };
 
 const englishProjects = {
+  threadline: { title: "Threadline · Tasks and time, together", subtitle: "A personal workspace for tasks, daily habits and time planning", statement: "Connect plans with actual effort: organize today's work and review where the time went.", detail: "Built daily workflows for tasks, recurring checklists, unscheduled work and end-of-day review, alongside calendars, habit tracking and time insights. One frontend serves browsers, iPhone PWA and Windows, with business data synchronized through Supabase.", result: "A downloadable Windows app with a compact desktop workspace and automatic updates. The public repository includes instructions for deploying the web version." },
   grace: { title: "PCB ground-plane and rerouting optimization", subtitle: "Co-designing ground-plane generation and PCB rerouting", statement: "Treating ground-plane generation as a joint optimization problem with rerouting, rather than a passive fill after routing.", detail: "Independently developed a KiCad 7.0 PCB layout parser, local region partitioning, and rerouting modules, and integrated parsing, optimization, write-back, and evaluation into a single pipeline.", result: "Average ground-plane area increased by 33.06%; fragmented polygon count decreased by 54.34%." },
   "llm-pcb": { title: "Language models for PCB placement and routing", subtitle: "LLM-driven PCB placement and routing optimization", statement: "Exploring how large language models can participate in engineering optimization and be evaluated under real placement and routing constraints.", detail: "Built the complete LoRA / QLoRA supervised fine-tuning workflow; studied the training mechanisms and applicability of PPO, GRPO, and GSPO.", result: "Established a research workflow covering data preparation, training configuration, and experimental validation." },
   robomaster: { subtitle: "Robot vision and real-time status overlays", statement: "Keeping perception, transmission, and status displays in sync in a fast-moving competition environment.", detail: "Built a ROS2 video transmission and processing pipeline with OpenCV object recognition; improved serial communication between the vision module and controller and implemented real-time status overlays.", result: "Resolved packet loss issues and improved the reliability of status-data transmission." },
@@ -20,6 +21,7 @@ const englishProjects = {
 };
 
 export const projectStatus = {
+  threadline: { zh: "个人软件作品 · Web / PWA / Windows", en: "Personal software project · Web / PWA / Windows" },
   grace: { zh: "DAC 2026 论文录用 · 第 5 作者", en: "Paper accepted at DAC 2026 · Fifth author" },
   "llm-pcb": { zh: "AAAI 2027 在投", en: "Submitted to AAAI 2027" },
   robomaster: { zh: "RoboMaster 视觉组 · 工程实践", en: "RoboMaster vision team · Engineering practice" },
@@ -59,6 +61,7 @@ export function localizedNote(lang) {
 
 // 类型与成果分开表达，读者无需先认识项目缩写。
 export const projectContext = {
+  threadline: { zh: "产品开发 · 效率工具", en: "Product development · Productivity" },
   grace: { zh: "科研 · 电子设计自动化", en: "Research · Electronic design automation" },
   "llm-pcb": { zh: "科研 · 人工智能", en: "Research · Artificial intelligence" },
   robomaster: { zh: "竞赛工程 · 机器人视觉", en: "Competition engineering · Robot vision" },

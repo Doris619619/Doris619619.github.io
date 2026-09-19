@@ -70,3 +70,7 @@ The local adapter and CSS select restrained styling, limit magnetic behavior to 
 ## Shengtu artwork
 
 `assets/organizations/shengtu.png` is the original logo supplied by the user on 2026-09-19 (升途教育 / Ascending Education). The source image is stored unchanged; the square timeline view crops surrounding empty space with CSS. Ownership remains with the organization.
+
+## Threadline project preview
+
+`assets/projects/threadline-workspace.png` is copied unchanged from the user’s Threadline repository, `docs/screenshots/readme/blue-light.png`. Its README identifies the screenshot data as fictional demonstration data. Used to illustrate the user’s own software project: https://github.com/Doris619619/Threadline .
