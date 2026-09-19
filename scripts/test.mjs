@@ -59,7 +59,7 @@ for (const lang of languages) {
   assert.equal(localizedProjects(lang).length, 4);
   assert.equal(localizedJourney(lang).length, 8);
   assert.equal(localizedEducation(lang).length, 2);
-  for (const key of ["", "about", "journey", "projects/llm-pcb"]) {
+  for (const key of ["", "journey", "projects/llm-pcb"]) {
     const html = pages.get(pathFor(key, lang));
     assert.ok(html.includes(social.linkedin), `LinkedIn reachable: ${key}`);
     assert.ok(html.includes("AAAI 2027"), `Submission status: ${key}`);
@@ -69,9 +69,10 @@ for (const lang of languages) {
   assert.ok(home.includes('id="life-timeline"') && !home.includes('class="editorial-section"'), "Homepage uses one chronology after the introduction");
   assert.ok(!/^GRACE/i.test(localizedProjects(lang).find((item) => item.id === "grace").title), "Research title explains the topic before the acronym");
   const about = pages.get(pathFor("about", lang));
-  for (const value of ["ECE2050", "University Student Teaching Fellow", "2026.09", "92689179314", "2026-09-18", "douyin-profile-code.jpg"]) assert.ok(about.includes(value));
+  for (const value of ["92689179314", "2026-09-18", "douyin-profile-code.jpg"]) assert.ok(about.includes(value));
+  assert.ok(!about.includes("profile-prose") && !about.includes("experience-row") && !about.includes("education-row"), "About contains supplementary content only");
   assert.ok(about.includes('class="volunteer-certificate"') && about.includes('class="creator-gallery"') && !about.includes("<details"), "Evidence and scan code shown inline");
-  assert.ok(about.includes(lang === "en" ? "2026.06 — present" : "2026.06 — 至今"), "Internship remains ongoing");
+  assert.ok(home.includes(lang === "en" ? "2026.06 — present" : "2026.06 — 至今"), "Internship remains ongoing");
   assert.ok(home.includes("/assets/organizations/robomaster.png") && home.includes("/assets/organizations/berkeley.png") && home.includes("/assets/organizations/itso.png"), "Official marks in homepage chronology");
   assert.ok(!home.includes('id="writing-award"'), "Writing award lives in recognition archive");
   assert.ok(!pages.get(pathFor("", lang)).includes("hero-paper-link"), "No new paper button in the opening");
@@ -99,7 +100,7 @@ for (const lang of languages) {
     for (const project of projects) assert.equal(section.includes(pathFor(`projects/${project.id}`, lang)), project.group === group);
   }
   assert.ok(portfolio.includes("33.06%") && portfolio.includes("54.34%"), "Research evidence visible before opening details");
-  for (const key of ["", "about"]) {
+  for (const key of [""]) {
     const profile = pages.get(pathFor(key, lang)).match(/<div class="profile-prose">((?:<p[^>]*>[\s\S]*?<\/p>)+)/)?.[1];
     assert.ok(profile, `Readable personal introduction: ${key} / ${lang}`);
     assert.equal(profile.replace(/<[^>]*>/g, "").replace(/\s/g, ""), escape(introduction[lang]).replace(/\s/g, ""));
