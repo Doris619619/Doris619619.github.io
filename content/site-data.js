@@ -16,6 +16,7 @@ export const site = {
 export const projects = [
   {
     id: "grace",
+    period: { start: "2025-09", end: "2025-12" },
     index: "01",
     eyebrow: "EDA Research · DAC 2026",
     title: "GRACE",
@@ -28,6 +29,7 @@ export const projects = [
   },
   {
     id: "llm-pcb",
+    period: { start: "2025-12", ongoing: true },
     index: "02",
     eyebrow: "LLM Research · Ongoing",
     title: "LLM × PCB",
@@ -39,6 +41,7 @@ export const projects = [
   },
   {
     id: "robomaster",
+    period: { start: "2025-07", ongoing: true },
     index: "03",
     eyebrow: "Robotics · ROS2",
     title: "RoboMaster Vision",
@@ -51,6 +54,7 @@ export const projects = [
   },
   {
     id: "vrgs",
+    period: { start: "2025", season: "summer" },
     index: "04",
     eyebrow: "UC Berkeley CS184 · Showcase Winner",
     title: "VR-GS",

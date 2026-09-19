@@ -4,7 +4,7 @@ import { honors } from "../content/honors.js";
 import { introduction, ui, localizedProjects, localizedJourney, localizedEducation, localizedNote } from "../content/locales.js";
 import { hero } from "./hero.js";
 import { pathFor } from "./routes.js";
-import { escape, date, sectionHeading, projectRow, noteEntry, awardLine } from "./components.js";
+import { escape, date, sectionHeading, projectRow, projectPeriod, noteEntry, awardLine } from "./components.js";
 
 export const pageKeys = ["", "projects", ...projects.map((item) => `projects/${item.id}`), "notes", "notes/unselected-road", "journey", "honors", "about"];
 
@@ -24,7 +24,7 @@ function projectDetail(project, lang) {
   const t = ui[lang];
   const reportLabel = project.id === "grace" ? (lang === "en" ? "DAC 2026 presentation" : "DAC 2026 论文页面") : project.id === "robomaster" ? (lang === "en" ? "GitHub profile" : "GitHub 个人主页") : (lang === "en" ? "Project report" : "项目报告");
   const links = project.link ? `<section class="detail-section"><h2>${t.sources}</h2><div class="text-links"><a href="${escape(project.link)}">${reportLabel} ↗</a>${project.secondaryLink ? `<a href="${escape(project.secondaryLink)}">CS184 Showcase ↗</a>` : ""}</div></section>` : "";
-  return `<div class="reading-shell"><a class="back-link" href="${pathFor("projects", lang)}">← ${t.back} ${t.projects}</a><header class="detail-title"><p class="meta">${escape(project.status)}</p><h1>${escape(project.title)}</h1><p>${escape(project.subtitle)}</p></header>${[[t.background, project.statement], [t.contribution, project.detail], [t.outcome, project.result]].map(([title, text]) => `<section class="detail-section"><h2>${title}</h2><p>${escape(text)}</p></section>`).join("")}<section class="detail-section"><h2>${t.tools}</h2><p class="technology-line">${project.stack.map(escape).join(" · ")}</p></section>${links}</div>`;
+  return `<div class="reading-shell"><a class="back-link" href="${pathFor("projects", lang)}">← ${t.back} ${t.projects}</a><header class="detail-title"><p class="meta">${escape(project.status)}</p><h1>${escape(project.title)}</h1><p>${escape(project.subtitle)}</p><p class="project-period">${lang === "en" ? "Project period" : "项目时间"} · ${projectPeriod(project, lang)}</p></header>${[[t.background, project.statement], [t.contribution, project.detail], [t.outcome, project.result]].map(([title, text]) => `<section class="detail-section"><h2>${title}</h2><p>${escape(text)}</p></section>`).join("")}<section class="detail-section"><h2>${t.tools}</h2><p class="technology-line">${project.stack.map(escape).join(" · ")}</p></section>${links}</div>`;
 }
 
 /** Render original Chinese paragraphs unchanged, with localized navigation and recognition metadata. */
