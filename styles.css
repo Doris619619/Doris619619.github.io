@@ -418,8 +418,13 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
 .mf-cursor.-hidden::before { transform: scale(0); }
 .mf-cursor-inner { display: none; }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .cursor-ready, .cursor-ready body, .cursor-ready a, .cursor-ready button, .cursor-ready summary, .cursor-ready .creator-code summary { cursor: none; }
-  .cursor-ready input, .cursor-ready textarea, .cursor-ready [contenteditable="true"] { cursor: text; }
+  /* Match the moving dot while scripts load or the browser replaces a document. */
+  :root { --pointer-dot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ccircle cx='8' cy='8' r='3.2' fill='%23514e49'/%3E%3C/svg%3E") 8 8, auto; }
+  :root[data-theme="dark"] { --pointer-dot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ccircle cx='8' cy='8' r='3.2' fill='%23e9e5df'/%3E%3C/svg%3E") 8 8, auto; }
+  html, html body, html body * { cursor: var(--pointer-dot); }
+  html.cursor-ready, html.cursor-ready body, html.cursor-ready body * { cursor: none; }
+  html body input, html body textarea, html body [contenteditable="true"], html body [contenteditable="true"] *,
+  html.cursor-ready body input, html.cursor-ready body textarea, html.cursor-ready body [contenteditable="true"], html.cursor-ready body [contenteditable="true"] * { cursor: text; }
 }
 @media (prefers-reduced-motion: reduce), (pointer: coarse), (hover: none) { .mf-cursor { display: none; } }
 

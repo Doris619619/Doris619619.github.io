@@ -84,12 +84,24 @@ export function initPointerMotion({ load = loadLibraries } = {}) {
     const target = document.elementFromPoint(lastEvent.clientX, lastEvent.clientY);
     if (target) reflectTarget({ target });
   }
+  /** A wheel can be the first input after navigation or re-entry, without a pointermove. */
+  function wheel(event) {
+    if (!eligible()) return;
+    const target = document.elementFromPoint(event.clientX, event.clientY);
+    if (target) return move({ pointerType: "mouse", clientX: event.clientX, clientY: event.clientY, target });
+  }
+  /** Resume at the actual hit target after a focus change, even if the mouse has not moved. */
+  function resume() {
+    if (!eligible() || !lastEvent) return;
+    const target = document.elementFromPoint(lastEvent.clientX, lastEvent.clientY);
+    if (target) return move({ ...lastEvent, pointerType: "mouse", clientX: lastEvent.clientX, clientY: lastEvent.clientY, target });
+  }
   /** Immediately restore the native cursor when input capabilities change. */
   function sync() { if (!eligible()) stop(); }
   /** Pause when the browser loses focus. */
   function blur() { focused = false; stop(); }
-  /** Resume on the next real movement after focus returns. */
-  function focus() { focused = true; }
+  /** Resume without waiting for the next mouse movement after focus returns. */
+  function focus() { focused = true; return resume(); }
   /** Touch and pen input must not leave a desktop pointer visible. */
   function syncInput(event) { if (event.pointerType !== "mouse") stop(); }
   fine.addEventListener("change", sync); reduced.addEventListener("change", sync);
@@ -97,6 +109,8 @@ export function initPointerMotion({ load = loadLibraries } = {}) {
   window.addEventListener("pointerdown", syncInput, { passive: true });
   window.addEventListener("blur", blur); window.addEventListener("focus", focus);
   window.addEventListener("pagehide", stop); window.addEventListener("scroll", scroll, { passive: true });
+  root.addEventListener("pointerenter", move);
+  window.addEventListener("wheel", wheel, { passive: true });
   root.addEventListener("pointerleave", stop); document.addEventListener("visibilitychange", sync);
   /** Release listeners and the instance when a consumer disposes of this enhancement. */
   return function dispose() {
@@ -105,6 +119,8 @@ export function initPointerMotion({ load = loadLibraries } = {}) {
     window.removeEventListener("pointermove", move); window.removeEventListener("pointerdown", syncInput);
     window.removeEventListener("blur", blur); window.removeEventListener("focus", focus);
     window.removeEventListener("pagehide", stop); window.removeEventListener("scroll", scroll);
+    root.removeEventListener("pointerenter", move);
+    window.removeEventListener("wheel", wheel);
     root.removeEventListener("pointerleave", stop); document.removeEventListener("visibilitychange", sync);
   };
 }
