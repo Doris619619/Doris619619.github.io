@@ -180,11 +180,13 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
  .project-row { padding-block: 26px; }
 }
 .meta { color: var(--ink-soft); font-size: 12px; line-height: 1.65; letter-spacing: .02em; margin: 0 0 8px; }
-.note-entry { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 28px 0; }
-.note-entry time, .honor-row time { font: 12px/1.7 var(--font-mono); color: var(--ink-soft); padding-top: 6px; }
+.notes-page { max-width: 760px; }
+.note-entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 24px; align-items: baseline; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 28px 0; }
+.honor-row time { font: 12px/1.7 var(--font-mono); color: var(--ink-soft); padding-top: 6px; }
 .note-entry h2, .note-entry h3 { font-size: 24px; font-weight: 500; margin: 0 0 8px; }
 .note-entry h2 a, .note-entry h3 a { text-decoration: none; display: inline-block; min-height: 44px; }
-.note-entry p { color: var(--ink-soft); margin-bottom: 12px; }
+.note-entry time { font-size: 16px; color: var(--ink-soft); white-space: nowrap; }
+.note-entry > .award-link { grid-column: 1 / -1; font-size: 16px; min-height: 44px; width: fit-content; }
 .award-link { display: inline-block; color: var(--accent); font-size: 13px; line-height: 1.8; text-decoration: none; padding: 8px 0; }
 .award-link:hover { text-decoration: underline; }
 .reading-shell { width: min(700px, calc(100% - 64px)); margin: 0 auto; padding: 56px 0 88px; }
@@ -248,7 +250,7 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
  .content-shell, .site-footer { width: calc(100% - 40px); }.reading-shell { width: calc(100% - 40px); padding-top: 32px; }
  .inner-page { padding-top: 40px; padding-bottom: 64px; }.page-title { margin-bottom: 32px; }.page-title h1 { font-size: 30px; }
  .home-content { padding-bottom: 56px; }.content-section { margin-top: 44px; }.section-heading { gap: 12px; margin-bottom: 18px; }.section-heading h2 { font-size: 20px; }
- .note-entry, .honor-row { grid-template-columns: 1fr; gap: 8px; }.note-entry h2, .note-entry h3 { font-size: 22px; }
+ .honor-row { grid-template-columns: 1fr; gap: 8px; }.note-entry h2, .note-entry h3 { font-size: 22px; }
  .year-overview { grid-template-columns: 1fr; margin-bottom: 32px; padding-left: 8px; }.year-overview a { border-top: 0; border-left: 1px solid var(--line); padding: 0 0 24px 24px; }.year-overview a::before { left: -4px; top: 12px; }.year-overview span { margin-top: 0; }
  .timeline-year { grid-template-columns: 1fr; gap: 20px; }
  .related-line { align-items: start; }.related-line p { font-size: 14px; }

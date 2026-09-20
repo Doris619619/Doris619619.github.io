@@ -13,9 +13,9 @@ import { escape, date, sectionHeading, projectPeriod, noteEntry, awardLine, pape
 
 export const pageKeys = ["", "projects", ...projects.map((item) => `projects/${item.id}`), "notes", "notes/unselected-road", "honors", "about"];
 
-/** Render the quiet title block used on all non-home index pages. */
+/** Render index titles; omit optional supporting copy when the page only needs a heading. */
 function pageTitle(title, subtitle, index) {
-  return `<header class="page-title">${index ? `<p class="eyebrow">${index}</p>` : ""}<h1>${escape(title)}</h1><p>${escape(subtitle)}</p></header>`;
+  return `<header class="page-title">${index ? `<p class="eyebrow">${index}</p>` : ""}<h1>${escape(title)}</h1>${subtitle ? `<p>${escape(subtitle)}</p>` : ""}</header>`;
 }
 
 /** Follow the opening and a personal introduction with one coherent, illustrated chronology. */
@@ -74,8 +74,8 @@ export function renderPage(key, lang) {
   else if (project) body = projectDetail(project, lang);
   else if (key === "notes/unselected-road") body = article(lang);
   else {
-    const content = key === "projects" ? projectsPage(lang) : key === "notes" ? `${pageTitle(t.notes, description, "02 / WRITING")}${noteEntry(lang)}` : key === "honors" ? honorsPage(lang) : about(lang);
-    body = `<div class="content-shell inner-page${key === "about" ? " about-page" : ""}">${content}</div>`;
+    const content = key === "projects" ? projectsPage(lang) : key === "notes" ? `${pageTitle(t.notes)}${noteEntry(lang)}` : key === "honors" ? honorsPage(lang) : about(lang);
+    body = `<div class="content-shell inner-page${key === "about" ? " about-page" : key === "notes" ? " notes-page" : ""}">${content}</div>`;
   }
   return { key, lang, title, description, body };
 }
