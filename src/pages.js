@@ -1,5 +1,5 @@
 // 文件用途：生成首页、作品、文章、荣誉与关于页的双语静态内容。
-import { site, projects, skills } from "../content/site-data.js";
+import { site, projects, skills, notes } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
 import { introduction, ui, localizedProjects, localizedNote } from "../content/locales.js";
 import { portfolioCopy } from "../content/portfolio.js";
@@ -8,10 +8,11 @@ import { homeTimeline } from "./timeline.js";
 import { honorsTimeline, honorsEntry } from "./honors.js";
 import { hero } from "./hero.js";
 import { creatorProfile, professionalLinks } from "./social.js";
+import { notesArchive } from "./notes.js";
 import { pathFor } from "./routes.js";
-import { escape, date, sectionHeading, projectPeriod, noteEntry, awardLine, paperPdfLink } from "./components.js";
+import { escape, date, sectionHeading, projectPeriod, awardLine, paperPdfLink } from "./components.js";
 
-export const pageKeys = ["", "projects", ...projects.map((item) => `projects/${item.id}`), "notes", "notes/unselected-road", "honors", "about"];
+export const pageKeys = ["", "projects", ...projects.map((item) => `projects/${item.id}`), "notes", ...notes.map((note) => `notes/${note.slug}`), "honors", "about"];
 
 /** Render index titles; omit optional supporting copy when the page only needs a heading. */
 function pageTitle(title, subtitle, index) {
@@ -39,10 +40,9 @@ function projectDetail(project, lang) {
 }
 
 /** Render original Chinese paragraphs unchanged, with localized navigation and recognition metadata. */
-function article(lang) {
+function article(lang, note) {
   const t = ui[lang];
-  const note = localizedNote(lang);
-  return `<article class="reading-shell essay-page"><a class="back-link" href="${pathFor("notes", lang)}">← ${t.back} ${t.notes}</a><header class="detail-title"><p class="meta">${t.date} <time datetime="2025-01">${note.date}</time></p><h1>${escape(note.title)}</h1><p>${escape(note.summary)}</p>${awardLine(lang)}<p class="language-note">${t.languageNote}</p></header><div class="essay-reading" lang="zh-CN">${note.paragraphs.map((paragraph) => `<p>${escape(paragraph)}</p>`).join("")}</div><a class="back-link essay-end" href="${pathFor("notes", lang)}">← ${t.back} ${t.notes}</a></article>`;
+  return `<article class="reading-shell essay-page"><a class="back-link" href="${pathFor("notes", lang)}">← ${t.back} ${t.notes}</a><header class="detail-title"><p class="meta">${t.date} <time datetime="${note.date.replaceAll(".", "-")}">${note.date}</time></p><h1>${escape(note.title)}</h1>${note.summary ? `<p>${escape(note.summary)}</p>` : ""}${awardLine(lang, false, note.slug)}<p class="language-note">${t.languageNote}</p></header><div class="essay-reading" lang="zh-CN">${note.paragraphs.map((paragraph) => `<p>${escape(paragraph)}</p>`).join("")}</div><a class="back-link essay-end" href="${pathFor("notes", lang)}">← ${t.back} ${t.notes}</a></article>`;
 }
 
 /** Give recognition its own chronological path, separate from education and work. */
@@ -62,19 +62,20 @@ function about(lang) {
 export function renderPage(key, lang) {
   const t = ui[lang];
   const project = key.startsWith("projects/") ? localizedProjects(lang).find((item) => key === `projects/${item.id}`) : null;
-  const title = project ? project.title : key.startsWith("notes/") ? localizedNote(lang).title : t[key || "home"];
+  const note = key.startsWith("notes/") ? localizedNote(lang, key.slice(6)) : null;
+  const title = project ? project.title : note ? note.title : t[key || "home"];
   const descriptions = {
     projects: lang === "en" ? "Research and engineering across EDA, AI, personal software, robotics, and computer graphics." : "电子设计自动化、AI、个人软件、机器人视觉与计算机图形学中的研究和工程实践。",
-    notes: lang === "en" ? "Stories and reflections, starting with The Road Not Chosen." : "故事与思考，从《未选择的路》开始。",
+    notes: lang === "en" ? "Stories and reflections." : "故事与思考。",
     honors: lang === "en" ? "Eight recognitions in academic competitions, writing, film, and table tennis." : "学术与竞赛、写作与影像、乒乓球比赛中的八项荣誉。"
   };
-  const description = project ? project.subtitle : key.startsWith("notes/") ? localizedNote(lang).summary : descriptions[key] || introduction[lang];
+  const description = project ? project.subtitle : note ? (note.summary || note.title) : descriptions[key] || introduction[lang];
   let body;
   if (!key) body = home(lang);
   else if (project) body = projectDetail(project, lang);
-  else if (key === "notes/unselected-road") body = article(lang);
+  else if (note) body = article(lang, note);
   else {
-    const content = key === "projects" ? projectsPage(lang) : key === "notes" ? `${pageTitle(t.notes)}${noteEntry(lang)}` : key === "honors" ? honorsPage(lang) : about(lang);
+    const content = key === "projects" ? projectsPage(lang) : key === "notes" ? `${pageTitle(t.notes)}${notesArchive(lang)}` : key === "honors" ? honorsPage(lang) : about(lang);
     body = `<div class="content-shell inner-page${key === "about" ? " about-page" : key === "notes" ? " notes-page" : ""}">${content}</div>`;
   }
   return { key, lang, title, description, body };

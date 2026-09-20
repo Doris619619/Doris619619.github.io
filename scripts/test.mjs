@@ -145,8 +145,10 @@ for (const lang of languages) {
 }
 const sitemap = await readFile("dist/sitemap.xml", "utf8");
 assert.ok(!sitemap.includes("/journey/"), "Retired pages excluded from sitemap");
-assert.equal((sitemap.match(/<loc>/g) || []).length, 22);
+assert.equal((sitemap.match(/<loc>/g) || []).length, pageKeys.length * languages.length);
 assert.ok((await readFile("dist/404.html", "utf8")).includes("Page not found"));
 console.log(`tests passed: ${pages.size} static pages, ${checkedLinks} internal references, 8 honors, original-text digest, language parity, and legacy URLs`);
 
 execFileSync(process.execPath, ["scripts/motion-test.mjs"], { stdio: "inherit" });
+
+execFileSync(process.execPath, ["scripts/notes-test.mjs"], { stdio: "inherit" });

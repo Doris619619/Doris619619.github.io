@@ -179,36 +179,29 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
  .project-row { padding-block: 26px; }
 }
 .meta { color: var(--ink-soft); font-size: 12px; line-height: 1.65; letter-spacing: .02em; margin: 0 0 8px; }
-/* Solo-inspired writing feature: one substantial image beside a clear reading invitation. */
-.notes-page { max-width: 960px; }
-.notes-page .page-title { max-width: none; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+/* A cover-free archive scales from one article to multiple years without changing the reading structure. */
+.notes-page { max-width: 860px; }
+.notes-page .page-title { margin-bottom: 40px; }
 .notes-page .page-title h1 { margin: 0; }
-.note-entry { display: grid; grid-template-columns: minmax(0,1fr) 320px; gap: 64px; align-items: center; }
-.note-copy h2, .note-copy h3 { font-size: 42px; font-weight: 550; line-height: 1.3; letter-spacing: -.025em; margin: 0 0 24px; }
-.note-copy h2 a, .note-copy h3 a { text-decoration: none; }
-.note-summary { color: var(--reading-ink); font-size: 20px; line-height: 1.8; margin: 0 0 20px; max-width: 32em; text-wrap: balance; }
-.note-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 20px; font-size: 16px; }
-.note-meta time { color: var(--ink-soft); white-space: nowrap; }
-.note-meta .award-link { font-size: inherit; min-height: 44px; }
-.note-read { display: inline-flex; align-items: center; gap: 16px; min-height: 48px; margin-top: 28px; font-size: 18px; text-decoration: none; border-bottom: 1px solid var(--ink-soft); }
-.note-read span { transition: transform .2s ease; }
-.note-read:hover span { transform: translateX(4px); }
-.note-cover { display: block; outline-offset: 6px; }
-.note-cover img { display: block; width: 100%; height: auto; transition: transform .2s ease; }
-.note-cover:hover img { transform: translateY(-4px); }
-.note-cover:active img { transform: translateY(-1px); }
+.note-year { display: grid; grid-template-columns: 96px minmax(0,1fr); gap: 32px; border-top: 1px solid var(--line); }
+.note-year + .note-year { margin-top: 40px; }
+.note-year > h2 { font-size: 24px; font-weight: 500; color: var(--ink-soft); margin: 28px 0 0; font-variant-numeric: tabular-nums; }
+.note-entry { padding: 28px 0; }
+.note-entry + .note-entry { border-top: 1px solid var(--line); }
+.note-entry-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.note-entry h3 { font-size: 24px; line-height: 1.5; font-weight: 550; margin: 0; }
+.note-entry h3 a { display: inline-block; min-height: 44px; padding: 4px 0; text-decoration: none; }
+.note-entry time { padding-top: 8px; flex-shrink: 0; color: var(--ink-soft); font-size: 16px; font-variant-numeric: tabular-nums; }
+.note-summary { color: var(--reading-ink); font-size: 18px; line-height: 1.8; margin: 12px 0 0; }
+.note-entry .award-link { font-size: 16px; min-height: 44px; margin-top: 8px; }
 .honor-row time { font: 12px/1.7 var(--font-mono); color: var(--ink-soft); padding-top: 6px; }
-@media (max-width: 900px) {
-  .note-entry { grid-template-columns: minmax(0,1fr) 260px; gap: 40px; }
-  .note-copy h2, .note-copy h3 { font-size: 36px; }
-}
 @media (max-width: 600px) {
-  .notes-page .page-title { margin-bottom: 28px; padding-bottom: 20px; }
-  .note-entry { grid-template-columns: 1fr; gap: 28px; }
-  .note-copy h2, .note-copy h3 { font-size: 32px; margin-bottom: 16px; }
-  .note-summary { font-size: 18px; margin-bottom: 12px; }
-  .note-read { margin-top: 12px; }
-  .note-cover { width: min(100%,320px); justify-self: center; }
+  .note-year { grid-template-columns: 1fr; gap: 0; }
+  .note-year > h2 { margin-top: 20px; font-size: 22px; }
+  .note-entry { padding: 20px 0; }
+  .note-entry-header { gap: 16px; }
+  .note-entry h3 { font-size: 22px; }
+  .note-summary { font-size: 17px; }
 }
 .award-link { display: inline-block; color: var(--accent); font-size: 13px; line-height: 1.8; text-decoration: none; padding: 8px 0; }
 .award-link:hover { text-decoration: underline; }

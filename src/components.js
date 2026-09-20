@@ -2,7 +2,7 @@
 import { professionalLinks } from "./social.js";
 import { site } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
-import { ui, localizedNote } from "../content/locales.js";
+import { ui } from "../content/locales.js";
 import { portfolioCopy, projectPresentation } from "../content/portfolio.js";
 import { pathFor, origin } from "./routes.js";
 import { icon, arrow } from "./icons.js";
@@ -62,19 +62,11 @@ export function projectRow(project, lang, heading = "h2") {
 }
 
 /** Link the shared award record; use a short label in the writing index and full facts in the article. */
-export function awardLine(lang, compact = false) {
-  const award = honors.find((item) => item.noteSlug === "unselected-road");
-  if (compact) return `<a class="award-link" href="${pathFor("honors", lang)}#${award.id}">${lang === "en" ? "Lingyu essay contest · Second Prize" : "《灵语》征文二等奖"}</a>`;
+export function awardLine(lang, compact = false, slug = "unselected-road") {
+  const award = honors.find((item) => item.noteSlug === slug);
+  if (!award) return "";
+  if (compact && award.id === "lingyu") return `<a class="award-link" href="${pathFor("honors", lang)}#${award.id}">${lang === "en" ? "Lingyu essay contest · Second Prize" : "《灵语》征文二等奖"}</a>`;
   return `<a class="award-link" href="${pathFor("honors", lang)}#${award.id}">${date(award.date)} · ${escape(award.title[lang])} · ${lang === "en" ? "Second Prize" : "二等奖"}</a>`;
-}
-
-/** Present the story as a Solo-inspired editorial feature using the real magazine cover and concise metadata. */
-export function noteEntry(lang, heading = "h2") {
-  const note = localizedNote(lang);
-  const en = lang === "en";
-  const href = pathFor(`notes/${note.slug}`, lang);
-  const award = honors.find((item) => item.noteSlug === note.slug);
-  return `<article class="note-entry"><div class="note-copy"><${heading}><a href="${href}">${escape(note.title)}</a></${heading}><p class="note-summary">${escape(note.summary)}</p><div class="note-meta"><time datetime="2025-01">${note.date}</time>${awardLine(lang, true)}</div><a class="note-read" href="${href}">${en ? "Read the story" : "阅读全文"} <span aria-hidden="true">→</span></a></div><a class="note-cover" href="${href}" aria-label="${en ? "Read The Road Not Chosen" : "阅读《未选择的路》"}"><img src="/${award.cover}" alt="${en ? "Lingyu magazine, Summer 2025 cover" : "《灵语》2025 夏季刊封面"}" width="1105" height="1500" fetchpriority="high"></a></article>`;
 }
 
 /** Render a direct full-text link only when a verified PDF destination is configured. */

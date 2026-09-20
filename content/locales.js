@@ -54,9 +54,18 @@ export function localizedEducation(lang) {
   return education.map((item, index) => ({ ...item, ...(lang === "en" ? englishEducation[index] : {}), time: lang === "en" ? item.time.replace("至今", "present") : item.time }));
 }
 
-/** Translate only the literary work's introduction; its paragraphs remain the original Chinese. */
-export function localizedNote(lang) {
-  return { ...notes[0], title: ui[lang].original, summary: ui[lang].originalSummary };
+/** Localize article headings and summaries; keep original paragraphs and allow untranslated new entries. */
+export function localizedNotes(lang) {
+  return notes.map((note) => {
+    const legacy = note.slug === "unselected-road" ? { title: ui[lang].original, summary: ui[lang].originalSummary } : {};
+    const translation = note.translations?.[lang] || {};
+    return { ...note, title: translation.title ?? legacy.title ?? note.title, summary: translation.summary ?? legacy.summary ?? note.summary };
+  });
+}
+
+/** Resolve one article by slug instead of assuming every detail page is the first article. */
+export function localizedNote(lang, slug = "unselected-road") {
+  return localizedNotes(lang).find((note) => note.slug === slug);
 }
 
 // 类型与成果分开表达，读者无需先认识项目缩写。
