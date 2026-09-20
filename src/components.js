@@ -68,10 +68,13 @@ export function awardLine(lang, compact = false) {
   return `<a class="award-link" href="${pathFor("honors", lang)}#${award.id}">${date(award.date)} · ${escape(award.title[lang])} · ${lang === "en" ? "Second Prize" : "二等奖"}</a>`;
 }
 
-/** Keep the writing index to title, writing date and a concise recognition link. */
+/** Present the story as a Solo-inspired editorial feature using the real magazine cover and concise metadata. */
 export function noteEntry(lang, heading = "h2") {
   const note = localizedNote(lang);
-  return `<article class="note-entry"><${heading}><a href="${pathFor(`notes/${note.slug}`, lang)}">${escape(note.title)} <span aria-hidden="true">→</span></a></${heading}><time datetime="2025-01">${note.date}</time>${awardLine(lang, true)}</article>`;
+  const en = lang === "en";
+  const href = pathFor(`notes/${note.slug}`, lang);
+  const award = honors.find((item) => item.noteSlug === note.slug);
+  return `<article class="note-entry"><div class="note-copy"><${heading}><a href="${href}">${escape(note.title)}</a></${heading}><p class="note-summary">${escape(note.summary)}</p><div class="note-meta"><time datetime="2025-01">${note.date}</time>${awardLine(lang, true)}</div><a class="note-read" href="${href}">${en ? "Read the story" : "阅读全文"} <span aria-hidden="true">→</span></a></div><a class="note-cover" href="${href}" aria-label="${en ? "Read The Road Not Chosen" : "阅读《未选择的路》"}"><img src="/${award.cover}" alt="${en ? "Lingyu magazine, Summer 2025 cover" : "《灵语》2025 夏季刊封面"}" width="1105" height="1500" fetchpriority="high"></a></article>`;
 }
 
 /** Render a direct full-text link only when a verified PDF destination is configured. */
