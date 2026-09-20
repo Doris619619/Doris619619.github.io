@@ -2,7 +2,7 @@
 import { professionalLinks } from "./social.js";
 import { site } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
-import { ui, localizedNote } from "../content/locales.js";
+import { ui } from "../content/locales.js";
 import { portfolioCopy, projectPresentation } from "../content/portfolio.js";
 import { pathFor, origin } from "./routes.js";
 import { icon, arrow } from "./icons.js";
@@ -31,7 +31,7 @@ function header(key, lang) {
 /** Keep contact and secondary destinations reachable without a large marketing footer. */
 function footer(lang) {
   const t = ui[lang];
-  return `<footer class="site-footer"><div><a class="footer-name" href="${pathFor("about", lang)}">${t.rights}</a><p>© 2026 · EDA / AI / Robotics</p></div><nav aria-label="${lang === "en" ? "Footer" : "页脚导航"}"><a href="${pathFor("honors", lang)}">${t.honors}</a><a href="mailto:${site.email}">${t.contact}</a><a href="${site.github}">GitHub ${arrow}</a>${professionalLinks()}<a href="${pathFor("about", lang)}#creator">${lang === "en" ? "Douyin" : "抖音"}</a><a href="/rss.xml">RSS</a></nav></footer>`;
+  return `<footer class="site-footer"><div><a class="footer-name" href="${pathFor("about", lang)}">${t.rights}</a><p>© 2026 · EDA / AI / Robotics</p></div><nav aria-label="${lang === "en" ? "Footer" : "页脚导航"}"><a href="${pathFor("honors", lang)}">${t.honors}</a><a href="mailto:${site.email}">${t.contact}</a><a href="${site.github}">GitHub ${arrow}</a>${professionalLinks()}<a href="${pathFor("about", lang)}#creator">${lang === "en" ? "Douyin" : "抖音"}</a></nav></footer>`;
 }
 
 /** Produce a complete static document, including page-specific sharing and language metadata. */
@@ -61,16 +61,12 @@ export function projectRow(project, lang, heading = "h2") {
   return `<article class="project-row${featured ? " project-featured" : ""}"><${heading}><a href="${pathFor(`projects/${project.id}`, lang)}">${escape(copy.title)}</a></${heading}><div class="project-facts"><p class="project-status">${escape(project.status)}</p><p class="project-period" aria-label="${lang === "en" ? "Project period" : "项目时间"}">${projectPeriod(project, lang)}</p></div><p class="project-summary">${escape(copy.text)}</p>${featured ? `<p class="project-result"><span>${t.result}</span>${escape(project.result)}</p>` : ""}<div class="project-links">${pdfLink}${externalLink}<a href="${pathFor(`projects/${project.id}`, lang)}">${t.detail} <span aria-hidden="true">→</span></a></div></article>`;
 }
 
-/** Connect the award and the story from every article entry point using one award record. */
-export function awardLine(lang) {
-  const award = honors.find((item) => item.noteSlug === "unselected-road");
+/** Link the shared award record; use a short label in the writing index and full facts in the article. */
+export function awardLine(lang, compact = false, slug = "unselected-road") {
+  const award = honors.find((item) => item.noteSlug === slug);
+  if (!award) return "";
+  if (compact && award.id === "lingyu") return `<a class="award-link" href="${pathFor("honors", lang)}#${award.id}">${lang === "en" ? "Lingyu essay contest · Second Prize" : "《灵语》征文二等奖"}</a>`;
   return `<a class="award-link" href="${pathFor("honors", lang)}#${award.id}">${date(award.date)} · ${escape(award.title[lang])} · ${lang === "en" ? "Second Prize" : "二等奖"}</a>`;
-}
-
-/** Show the real writing date independently of the later award date. */
-export function noteEntry(lang, heading = "h2") {
-  const note = localizedNote(lang);
-  return `<article class="note-entry"><time datetime="2025-01">${note.date}</time><div><${heading}><a href="${pathFor(`notes/${note.slug}`, lang)}">${escape(note.title)} <span aria-hidden="true">→</span></a></${heading}><p>${escape(note.summary)}</p>${awardLine(lang)}</div></article>`;
 }
 
 /** Render a direct full-text link only when a verified PDF destination is configured. */

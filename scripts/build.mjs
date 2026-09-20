@@ -4,7 +4,7 @@ import { resolve, join } from "node:path";
 import { pageKeys, renderPage } from "../src/pages.js";
 import { documentPage, escape } from "../src/components.js";
 import { origin, languages, pathFor } from "../src/routes.js";
-import { localizedNote } from "../content/locales.js";
+import { localizedNotes } from "../content/locales.js";
 
 const workspace = resolve(import.meta.dirname, "..");
 const output = resolve(workspace, "dist");
@@ -30,8 +30,8 @@ for (const lang of languages) {
 }
 const urls = languages.flatMap((lang) => pageKeys.map((key) => `${origin}${pathFor(key, lang)}`));
 await writeFile(join(output, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map((url) => `<url><loc>${url}</loc></url>`).join("")}</urlset>`);
-const note = localizedNote("zh");
-await writeFile(join(output, "rss.xml"), `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>梁彦诗 · Doris Liang</title><link>${origin}/notes/</link><description>故事与思考 · Writing</description><language>zh-CN</language><item><title>${escape(note.title)}</title><link>${origin}/notes/${note.slug}/</link><guid>${origin}/notes/${note.slug}/</guid><description>${escape(note.summary)}</description></item></channel></rss>`);
+const feedNotes = localizedNotes("zh").sort((a, b) => b.date.localeCompare(a.date));
+await writeFile(join(output, "rss.xml"), `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>梁彦诗 · Doris Liang</title><link>${origin}/notes/</link><description>故事与思考 · Writing</description><language>zh-CN</language>${feedNotes.map((note) => `<item><title>${escape(note.title)}</title><link>${origin}/notes/${note.slug}/</link><guid>${origin}/notes/${note.slug}/</guid><description>${escape(note.summary || "")}</description></item>`).join("")}</channel></rss>`);
 await writeFile(join(output, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
 await writeFile(join(output, ".nojekyll"), "");
 await writeFile(join(output, "404.html"), '<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>页面不存在 · Page not found</title><link rel="stylesheet" href="/styles.css"></head><body><main class="reading-shell"><h1>页面不存在</h1><p>Page not found.</p><p><a href="/">返回首页</a> · <a href="/en/">English home</a></p></main></body></html>');

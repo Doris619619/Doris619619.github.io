@@ -3,8 +3,8 @@ import { localizedExperience } from "./experience.js";
 import { projects, journey, education, notes } from "./site-data.js";
 
 export const introduction = {
-  zh: "我是梁彦诗，也可以叫我 Doris。目前在香港中文大学（深圳）学习计算机工程，喜欢顺着一个具体问题钻进去，再把想法做成能运行的东西。我关注电子设计自动化、人工智能与机器人视觉：研究过电路板优化，在伯克利做过三维场景重建，也在 RoboMaster 校队调试机器人。研究和代码之外，我在抖音做「每天认识一个Github用户」，介绍开源世界里的创作者；也打乒乓球、写故事。这里放着我的作品，也记下一路走来的尝试。",
-  en: "I’m Yanshi Liang — you can call me Doris. I study Computer Engineering at CUHK-Shenzhen. I like following a concrete problem wherever it leads, then turning an idea into something that works. My interests span electronic design automation, AI, and robot vision: from optimizing circuit boards to reconstructing 3D scenes at Berkeley and working on robots with the RoboMaster team. Outside research and coding, I introduce open-source creators on Douyin through 每天认识一个Github用户, play table tennis, and write stories. This is where I keep my projects and the things I try along the way."
+  zh: "我是梁彦诗，也可以叫我 Doris。目前在香港中文大学（深圳）学习计算机工程。我热衷于从具体问题出发做深入研究，并把想法实现为可运行的系统。我关注电子设计自动化、人工智能与机器人视觉：研究过电路板优化，在伯克利做过三维场景重建，也在 RoboMaster 校队调试机器人。研究和代码之外，我在抖音做「每天认识一个Github用户」，介绍开源世界里的创作者；也打乒乓球、写故事。这里放着我的作品，也记下一路走来的尝试。",
+  en: "I’m Yanshi Liang — you can call me Doris. I study Computer Engineering at CUHK-Shenzhen. I am passionate about pursuing in-depth research driven by concrete problems and turning ideas into working systems. My interests span electronic design automation, AI, and robot vision: from optimizing circuit boards to reconstructing 3D scenes at Berkeley and working on robots with the RoboMaster team. Outside research and coding, I introduce open-source creators on Douyin through 每天认识一个Github用户, play table tennis, and write stories. This is where I keep my projects and the things I try along the way."
 };
 
 export const ui = {
@@ -54,9 +54,18 @@ export function localizedEducation(lang) {
   return education.map((item, index) => ({ ...item, ...(lang === "en" ? englishEducation[index] : {}), time: lang === "en" ? item.time.replace("至今", "present") : item.time }));
 }
 
-/** Translate only the literary work's introduction; its paragraphs remain the original Chinese. */
-export function localizedNote(lang) {
-  return { ...notes[0], title: ui[lang].original, summary: ui[lang].originalSummary };
+/** Localize article headings and summaries; keep original paragraphs and allow untranslated new entries. */
+export function localizedNotes(lang) {
+  return notes.map((note) => {
+    const legacy = note.slug === "unselected-road" ? { title: ui[lang].original, summary: ui[lang].originalSummary } : {};
+    const translation = note.translations?.[lang] || {};
+    return { ...note, title: translation.title ?? legacy.title ?? note.title, summary: translation.summary ?? legacy.summary ?? note.summary };
+  });
+}
+
+/** Resolve one article by slug instead of assuming every detail page is the first article. */
+export function localizedNote(lang, slug = "unselected-road") {
+  return localizedNotes(lang).find((note) => note.slug === slug);
 }
 
 // 类型与成果分开表达，读者无需先认识项目缩写。
