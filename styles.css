@@ -262,7 +262,6 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
 .creator-profile { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; border-block: 1px solid var(--line); margin: 26px 0 36px; padding: 28px 0; }
 .creator-profile h3 { font-size: 21px; line-height: 1.55; margin: 0 0 12px; overflow-wrap: anywhere; }
 .creator-copy > p { margin: 0 0 14px; }
-.creator-copy .eyebrow { color: var(--accent); font-size: 11px; }
 .creator-handle { color: var(--ink-soft); font-size: 13px; }
 .creator-audience { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding-top: 16px; }
 .creator-audience strong { color: var(--accent); font-size: clamp(32px, 4vw, 48px); font-weight: 500; letter-spacing: -.05em; line-height: 1.2; white-space: nowrap; }
@@ -424,9 +423,10 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
 }
 @media (prefers-reduced-motion: reduce), (pointer: coarse), (hover: none) { .mf-cursor { display: none; } }
 
-/* Show original evidence and scan codes inline, grouped together at readable sizes. */
-.volunteer-row { display: grid; grid-template-columns: minmax(0,1fr) minmax(230px,300px); gap: 40px; align-items: start; }
-.volunteer-certificate { margin: 0; }
+/* Keep the volunteer evidence compact; the thumbnail opens the full-size certificate. */
+.volunteer-row { display: grid; grid-template-columns: minmax(0,420px) 144px; gap: 32px; align-items: start; margin-top: 0; }
+.volunteer-certificate { margin: 0; width: 144px; }
+.volunteer-certificate a { display: block; }
 .volunteer-certificate img { width: 100%; height: auto; display: block; border-radius: 6px; }
 .volunteer-certificate figcaption, .creator-gallery figcaption { color: var(--ink-soft); font-size: 12px; margin-top: 10px; line-height: 1.7; }
 .creator-profile { display: block; scroll-margin-top: 104px; }
@@ -437,7 +437,6 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
 .creator-gallery img { display: block; width: 100%; height: auto; border-radius: 6px; }
 @media (max-width: 760px) {
   .volunteer-row { grid-template-columns: 1fr; gap: 24px; }
-  .volunteer-certificate { max-width: 420px; }
   .creator-summary { grid-template-columns: 1fr; gap: 20px; }
   .creator-audience { display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 16px; width: 100%; }
   .creator-audience time { grid-column: 1 / -1; }
