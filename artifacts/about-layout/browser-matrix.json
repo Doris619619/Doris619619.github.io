@@ -1,0 +1,245 @@
+{
+  "description": "关于页真实浏览器验收：两种语言、五种宽度、深浅主题的边界、原图加载及等高对齐结果。",
+  "cases": [
+    {
+      "aligned": true,
+      "imageHeights": [
+        171,
+        171
+      ],
+      "lang": "zh",
+      "loaded": true,
+      "overflow": false,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        171,
+        171
+      ],
+      "lang": "zh",
+      "loaded": true,
+      "overflow": false,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        220,
+        220
+      ],
+      "lang": "zh",
+      "loaded": true,
+      "overflow": false,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        220,
+        220
+      ],
+      "lang": "zh",
+      "loaded": true,
+      "overflow": false,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        309,
+        309
+      ],
+      "lang": "zh",
+      "loaded": true,
+      "overflow": false,
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        309,
+        309
+      ],
+      "lang": "zh",
+      "loaded": true,
+      "overflow": false,
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        370,
+        370
+      ],
+      "lang": "zh",
+      "loaded": true,
+      "overflow": false,
+      "theme": "dark",
+      "width": 1024
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        370,
+        370
+      ],
+      "lang": "zh",
+      "loaded": true,
+      "overflow": false,
+      "theme": "light",
+      "width": 1024
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        370,
+        370
+      ],
+      "lang": "zh",
+      "loaded": true,
+      "overflow": false,
+      "theme": "dark",
+      "width": 1440
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        370,
+        370
+      ],
+      "lang": "zh",
+      "loaded": true,
+      "overflow": false,
+      "theme": "light",
+      "width": 1440
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        171,
+        171
+      ],
+      "lang": "en",
+      "loaded": true,
+      "overflow": false,
+      "theme": "dark",
+      "width": 320
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        171,
+        171
+      ],
+      "lang": "en",
+      "loaded": true,
+      "overflow": false,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        220,
+        220
+      ],
+      "lang": "en",
+      "loaded": true,
+      "overflow": false,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        220,
+        220
+      ],
+      "lang": "en",
+      "loaded": true,
+      "overflow": false,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        309,
+        309
+      ],
+      "lang": "en",
+      "loaded": true,
+      "overflow": false,
+      "theme": "dark",
+      "width": 768
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        309,
+        309
+      ],
+      "lang": "en",
+      "loaded": true,
+      "overflow": false,
+      "theme": "light",
+      "width": 768
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        370,
+        370
+      ],
+      "lang": "en",
+      "loaded": true,
+      "overflow": false,
+      "theme": "dark",
+      "width": 1024
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        370,
+        370
+      ],
+      "lang": "en",
+      "loaded": true,
+      "overflow": false,
+      "theme": "light",
+      "width": 1024
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        370,
+        370
+      ],
+      "lang": "en",
+      "loaded": true,
+      "overflow": false,
+      "theme": "dark",
+      "width": 1440
+    },
+    {
+      "aligned": true,
+      "imageHeights": [
+        370,
+        370
+      ],
+      "lang": "en",
+      "loaded": true,
+      "overflow": false,
+      "theme": "light",
+      "width": 1440
+    }
+  ]
+}
