@@ -426,11 +426,18 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
 }
 @media (prefers-reduced-motion: reduce), (pointer: coarse), (hover: none) { .mf-cursor { display: none; } }
 
-/* About follows a compact editorial column and adjacent media, inspired by brittanychiang.com. */
-.about-page { max-width: 760px; }
-.about-page .content-section { margin-top: 48px; }
-.about-page .section-heading { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
-.volunteer-row { display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 24px; align-items: start; }
+/* 关于页共用标题侧栏与内容起点；原始图像按实际比例等高排列。 */
+.about-page { max-width: 960px; }
+.about-page .page-title { max-width: none; margin-bottom: 0; }
+.about-page .about-section { display: grid; grid-template-columns: 168px minmax(0,1fr); gap: 48px; margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--line); }
+.about-page .section-heading { display: block; margin: 0; }
+.about-page .section-heading h2 { font-size: 19px; line-height: 1.6; }
+.about-page .section-heading .quiet-link { margin-top: 8px; }
+.about-section-body { min-width: 0; }
+.about-page .skill-row { grid-template-columns: 80px minmax(0,1fr); gap: 24px; padding: 16px 0; }
+.about-page .skill-row:first-child { padding-top: 0; }
+.about-page .skill-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.volunteer-row { display: grid; grid-template-columns: minmax(0,1fr) 152px; gap: 32px; align-items: start; }
 .volunteer-certificate { margin: 0; }
 .volunteer-certificate a { display: block; border-radius: 4px; }
 .volunteer-certificate img { display: block; width: 100%; height: auto; border-radius: 4px; }
@@ -439,28 +446,33 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
 .volunteer-copy > a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--accent); }
 .creator-profile { margin: 0; scroll-margin-top: 104px; }
 .creator-profile h3 { font-size: 21px; line-height: 1.55; margin: 0 0 12px; }
-.creator-copy > p { margin: 0 0 12px; }
+.creator-copy > p { max-width: 40em; margin: 0; }
+.creator-meta { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 16px; }
+.creator-meta p { margin: 0; }
 .creator-handle, .creator-audience { color: var(--ink-soft); font-size: 14px; }
 .creator-audience strong { color: var(--ink); font-weight: 600; }
-.creator-audience time { white-space: nowrap; }
-.creator-gallery { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 24px; }
-.creator-gallery figure { margin: 0; width: 192px; }
-.creator-gallery a { display: flex; align-items: start; justify-content: start; height: 288px; border-radius: 4px; }
-.creator-gallery img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: top left; border-radius: 4px; }
-.creator-gallery figcaption { margin-top: 8px; color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
+/* 列宽为两张原图的宽高比，使图像及说明顶部对齐，右侧纪念图自然更宽。 */
+.creator-gallery { display: grid; grid-template-columns: .669643fr .780702fr; gap: 24px; max-width: 560px; margin-top: 24px; }
+.creator-gallery figure { min-width: 0; margin: 0; }
+.creator-gallery a { display: block; border-radius: 4px; }
+.creator-gallery img { display: block; width: 100%; height: auto; border-radius: 4px; }
+.creator-gallery figcaption { margin-top: 12px; color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
+.about-contact-links { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px 24px; }
+.about-contact-links a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; max-width: 100%; overflow-wrap: anywhere; }
 .volunteer-certificate a, .creator-gallery a { outline-offset: 5px; transition: opacity .18s ease; }
 .volunteer-certificate a:hover, .creator-gallery a:hover { opacity: .82; }
 .volunteer-certificate a:active, .creator-gallery a:active { opacity: .65; }
 @media (max-width: 760px) {
-  .about-page .content-section { margin-top: 40px; }
-  .volunteer-row { grid-template-columns: 96px minmax(0,1fr); gap: 20px; }
+  .about-page .about-section { grid-template-columns: 1fr; gap: 24px; margin-top: 40px; padding-top: 24px; }
+  .about-page .section-heading { display: flex; align-items: baseline; }
+  .about-page .section-heading .quiet-link { margin-top: 0; }
+  .volunteer-row { grid-template-columns: minmax(0,1fr) 112px; gap: 24px; }
   .volunteer-copy h3 { font-size: 18px; }
   .creator-gallery { gap: 16px; }
-  .creator-gallery figure { width: min(192px,calc((100% - 16px) / 2)); }
-  .creator-gallery a { height: auto; aspect-ratio: 2 / 3; }
 }
 @media (max-width: 380px) {
-  .volunteer-row { grid-template-columns: 80px minmax(0,1fr); gap: 16px; }
+  .volunteer-row { grid-template-columns: minmax(0,1fr) 88px; gap: 16px; }
+  .about-page .skill-row { grid-template-columns: 1fr; gap: 4px; }
 }
 
 /* Use the supplied portrait logo, cropping only its empty top and bottom margins. */

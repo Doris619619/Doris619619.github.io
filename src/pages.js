@@ -51,11 +51,22 @@ function honorsPage(lang) {
   return `${pageTitle(t.honors, lang === "en" ? "In research, in writing, and on the court." : "在研究里，在文字里，也在赛场上。", "RECOGNITION / 08")}${honorsTimeline(lang)}`;
 }
 
-/** Keep supplementary skills, volunteering and creator images here; the homepage owns the biography and career. */
+/** Render bilingual supplementary interests with a shared heading rail; the homepage owns the biography and career. */
 function about(lang) {
   const t = ui[lang];
   const en = lang === "en";
-  return `${pageTitle(en ? "Beyond the work" : "关于我", en ? "Tools I use, stories I share, and time spent volunteering." : "常用的工具、分享的故事，以及志愿服务中的时光。")}<section class="content-section" id="skills">${sectionHeading(t.skills)}${skills.map((item) => `<div class="skill-row"><span>${item.label}</span><p>${escape(en ? item.items.replace("数据合成", "Synthetic data") : item.items)}</p></div>`).join("")}</section><section class="content-section">${sectionHeading(t.activity, pathFor("honors", lang), t.honors)}<article class="volunteer-row"><figure class="volunteer-certificate"><a href="/assets/volunteer-certificate.png" target="_blank" rel="noopener" aria-label="${en ? "Open full-size volunteer service certificate" : "查看志愿服务证书原图"}"><img src="/assets/volunteer-certificate.png" width="1637" height="2236" alt="${en ? "Certificate of 81.50 volunteer hours for the 15th National Games" : "第十五届全运会志愿服务 81.50 小时证书"}" loading="lazy"></a></figure><div class="volunteer-copy"><h3>${en ? "Volunteer · 15th National Games" : "第十五届全运会志愿者"}</h3><p>${en ? "81.50 hours of volunteer service" : "志愿服务 81.50 小时"} · <time datetime="2025">2025</time></p><a href="/assets/volunteer-certificate.png" target="_blank" rel="noopener">${en ? "View certificate" : "查看证书"} <span aria-hidden="true">↗</span></a></div></article></section><section class="content-section">${sectionHeading(en ? "Open-source storytelling" : "开源内容创作")}${creatorProfile(lang)}</section><section class="content-section contact-inline" id="contact">${sectionHeading(t.contact)}<a href="mailto:${site.email}">${site.email}</a><a href="${site.github}">GitHub ↗</a>${professionalLinks()}</section>`;
+  return `${pageTitle(en ? "Beyond the work" : "关于我", en ? "Tools I use, stories I share, and time spent volunteering." : "常用的工具、分享的故事，以及志愿服务中的时光。")}
+    <section class="content-section about-section" id="skills">${sectionHeading(t.skills)}
+      <div class="about-section-body">${skills.map((item) => `<div class="skill-row"><span>${item.label}</span><p>${escape(en ? item.items.replace("数据合成", "Synthetic data") : item.items)}</p></div>`).join("")}</div>
+    </section>
+    <section class="content-section about-section">${sectionHeading(t.activity, pathFor("honors", lang), t.honors)}
+      <article class="volunteer-row about-section-body">
+        <div class="volunteer-copy"><h3>${en ? "Volunteer · 15th National Games" : "第十五届全运会志愿者"}</h3><p>${en ? "81.50 hours of volunteer service" : "志愿服务 81.50 小时"} · <time datetime="2025">2025</time></p><a href="/assets/volunteer-certificate.png" target="_blank" rel="noopener">${en ? "View certificate" : "查看证书"} <span aria-hidden="true">↗</span></a></div>
+        <figure class="volunteer-certificate"><a href="/assets/volunteer-certificate.png" target="_blank" rel="noopener" aria-label="${en ? "Open full-size volunteer service certificate" : "查看志愿服务证书原图"}"><img src="/assets/volunteer-certificate.png" width="1637" height="2236" alt="${en ? "Certificate of 81.50 volunteer hours for the 15th National Games" : "第十五届全运会志愿服务 81.50 小时证书"}" loading="lazy"></a></figure>
+      </article>
+    </section>
+    <section class="content-section about-section">${sectionHeading(en ? "Open-source storytelling" : "开源内容创作")}<div class="about-section-body">${creatorProfile(lang)}</div></section>
+    <section class="content-section about-section contact-inline" id="contact">${sectionHeading(t.contact)}<div class="about-contact-links about-section-body"><a href="mailto:${site.email}">${site.email}</a><a href="${site.github}">GitHub <span aria-hidden="true">↗</span></a>${professionalLinks()}</div></section>`;
 }
 
 /** Resolve each declared route to a localized title, description, and static body. */
