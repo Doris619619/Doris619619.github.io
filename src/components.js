@@ -1,4 +1,4 @@
-// 文件用途：生成可复用的导航、页脚、项目条目与获奖文章入口。
+// 文件用途：生成可复用的导航、页脚、项目条目、获奖文章入口与刊登信息。
 import { professionalLinks } from "./social.js";
 import { site } from "../content/site-data.js";
 import { honors } from "../content/honors.js";
@@ -67,6 +67,15 @@ export function awardLine(lang, compact = false, slug = "unselected-road") {
   if (!award) return "";
   if (compact && award.id === "lingyu") return `<a class="award-link" href="${pathFor("honors", lang)}#${award.id}">${lang === "en" ? "Lingyu essay contest · Second Prize" : "《灵语》征文二等奖"}</a>`;
   return `<a class="award-link" href="${pathFor("honors", lang)}#${award.id}">${date(award.date)} · ${escape(award.title[lang])} · ${lang === "en" ? "Second Prize" : "二等奖"}</a>`;
+}
+
+/** Render publication and its release-notice date separately from writing and award dates; unrelated articles have no line. */
+export function publicationLine(lang, slug) {
+  if (!slug) return "";
+  const publication = honors.find((item) => item.noteSlug === slug)?.publication;
+  if (!publication) return "";
+  const en = lang === "en";
+  return `<p class="publication-line">${en ? "Published in" : "刊登于"} <a href="${escape(publication.url)}" target="_blank" rel="noopener">${escape(publication.title[lang])} ↗</a> · ${en ? "Announced" : "发布通知"} <time datetime="${publication.announcementDate}">${date(publication.announcementDate)}</time></p>`;
 }
 
 /** Render a direct full-text link only when a verified PDF destination is configured. */

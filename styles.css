@@ -205,6 +205,9 @@ h1, h2, h3 { color: var(--ink); line-height: 1.4; overflow-wrap: anywhere; }
 }
 .award-link { display: inline-block; color: var(--accent); font-size: 13px; line-height: 1.8; text-decoration: none; padding: 8px 0; }
 .award-link:hover { text-decoration: underline; }
+.publication-line, .detail-title .publication-line { color: var(--ink-soft); font-size: 15px; line-height: 1.9; margin: 12px 0 0; }
+.publication-line a { color: var(--accent); text-decoration: none; }
+.publication-line a:hover { text-decoration: underline; }
 .reading-shell { width: min(700px, calc(100% - 64px)); margin: 0 auto; padding: 56px 0 88px; }
 .back-link { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; color: var(--ink-soft); font-size: 14px; margin-bottom: 28px; }
 .detail-title { padding-bottom: 32px; border-bottom: 1px solid var(--line); }

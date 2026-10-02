@@ -54,7 +54,8 @@ The following original images identify education, activities, and social destina
 - `assets/organizations/berkeley.png`: [official web icon guidance](https://brand.berkeley.edu/visual-identity/icons-secondary-marks/), [official 192px icon](https://brand.berkeley.edu/wp-content/uploads/2024/07/cropped-favicon-192x192.png).
 - `assets/organizations/itso.png`: the user-specified [CUHKSZ-ITSO-Dev profile](https://github.com/CUHKSZ-ITSO-Dev), [avatar](https://avatars.githubusercontent.com/u/180953033?v=4).
 - `assets/organizations/douyin.jpg`: image explicitly labelled 抖音logo on the [official mobile download page](https://m.douyin.com/app_download); original image stored unchanged.
-- `assets/lingyu-2025-cover.png`: user-provided Lingyu Summer 2025 cover; no image edits. Shown as magazine artwork, not a certificate.
+- `assets/lingyu-2025-cover.png`: former user-provided Summer 2025 cover, retained as historical material; no longer used on the site after the publication correction on 2026-10-02.
+- `assets/lingyu-2026-autumn-cover.jpg`: unmodified original cover image from [The Voice of Ling Vol. 3 electronic magazine](https://book.yunzhan365.com/cnngp/peoq/mobile/index.html), [source image](https://book.yunzhan365.com/cnngp/peoq/files/shot.jpg), retrieved 2026-10-02. Cover explicitly reads 2026 秋季刊. Used as publication artwork, not award-certificate evidence; ownership remains with Ling College and the respective creators.
 
 The former local SVG cursor drawings have been removed.
 
