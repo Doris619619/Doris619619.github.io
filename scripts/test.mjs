@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { execFileSync } from "node:child_process";
 import { social } from "../content/social.js";
 import { notes, projects } from "../content/site-data.js";
-import { honors } from "../content/honors.js";
+import { honors, lingyuPublication } from "../content/honors.js";
 import { introduction, localizedProjects, localizedJourney, localizedEducation, ui } from "../content/locales.js";
 import { pageKeys } from "../src/pages.js";
 import { origin, pathFor, legacyDestination, languages } from "../src/routes.js";
@@ -93,12 +93,21 @@ for (const lang of languages) {
     assert.ok(awardsHtml.includes(escape(honor.title[lang])));
     assert.ok(awardsHtml.includes(escape(honor.result[lang])));
   }
-  assert.ok(awardsHtml.includes("lingyu-2025-cover.png"), "Magazine artwork in recognition archive");
+  for (const html of [home, awardsHtml]) {
+    assert.ok(html.includes(lingyuPublication.cover), "Correct Autumn 2026 magazine artwork");
+    assert.ok(!html.includes("lingyu-2025-cover.png") && !/Summer 2025|2025 夏季刊/.test(html), "Retired issue is not presented as the story's publication");
+  }
   assert.ok(awardsHtml.indexOf('id="honors-2026"') < awardsHtml.indexOf('id="honors-2025"'), "Recognition ordered newest first");
   const story = pages.get(pathFor("notes/unselected-road", lang));
   for (const paragraph of notes[0].paragraphs) assert.ok(story.includes(`<p>${escape(paragraph)}</p>`));
   assert.ok(story.includes('datetime="2025-01"'));
   assert.ok(story.includes("2025.04"));
+  for (const html of [story, awardsHtml]) {
+    assert.ok(html.includes(escape(lingyuPublication.title[lang])), "Publication issue localized on article and recognition page");
+    assert.ok(html.includes('datetime="2026-09-22"'), "Release-notice date distinct from writing and award dates");
+    assert.ok(html.includes(`href="${lingyuPublication.url}"`), "Original electronic magazine reachable");
+    assert.ok(!html.includes("Diligentia College"), "Ling College has the correct English name");
+  }
   assert.ok(story.includes('lang="zh-CN"'));
   for (const key of ["", "notes", "notes/unselected-road"]) assert.ok(pages.get(pathFor(key, lang)).includes(pathFor("honors", lang) + "#lingyu"));
   assert.ok(pages.get(pathFor("about", lang)).includes("81.50"));

@@ -10,7 +10,7 @@ import { hero } from "./hero.js";
 import { creatorProfile, professionalLinks } from "./social.js";
 import { notesArchive } from "./notes.js";
 import { pathFor } from "./routes.js";
-import { escape, date, sectionHeading, projectPeriod, awardLine, paperPdfLink } from "./components.js";
+import { escape, date, sectionHeading, projectPeriod, awardLine, publicationLine, paperPdfLink } from "./components.js";
 
 export const pageKeys = ["", "projects", ...projects.map((item) => `projects/${item.id}`), "notes", ...notes.map((note) => `notes/${note.slug}`), "honors", "about"];
 
@@ -39,10 +39,10 @@ function projectDetail(project, lang) {
   return `<div class="reading-shell"><a class="back-link" href="${pathFor("projects", lang)}">← ${t.back} ${t.projects}</a><header class="detail-title project-detail-title"><h1>${escape(project.title)}</h1><p>${escape(project.subtitle)}</p><p class="project-status">${escape(project.status)}</p><p class="project-period">${lang === "en" ? "Project period" : "项目时间"} · ${projectPeriod(project, lang)}</p></header>${preview}${[[project.group === "research" ? t.background : (lang === "en" ? "Project background" : "项目背景"), project.statement], [t.contribution, project.detail], [t.outcome, project.result]].map(([title, text]) => `<section class="detail-section"><h2>${title}</h2><p>${escape(text)}</p></section>`).join("")}<section class="detail-section"><h2>${t.tools}</h2><p class="technology-line">${project.stack.map(escape).join(" · ")}</p></section>${links}</div>`;
 }
 
-/** Render original Chinese paragraphs unchanged, with localized navigation and recognition metadata. */
+/** Render original Chinese paragraphs unchanged, with writing, recognition and publication dates kept distinct. */
 function article(lang, note) {
   const t = ui[lang];
-  return `<article class="reading-shell essay-page"><a class="back-link" href="${pathFor("notes", lang)}">← ${t.back} ${t.notes}</a><header class="detail-title"><p class="meta">${t.date} <time datetime="${note.date.replaceAll(".", "-")}">${note.date}</time></p><h1>${escape(note.title)}</h1>${note.summary ? `<p>${escape(note.summary)}</p>` : ""}${awardLine(lang, false, note.slug)}<p class="language-note">${t.languageNote}</p></header><div class="essay-reading" lang="zh-CN">${note.paragraphs.map((paragraph) => `<p>${escape(paragraph)}</p>`).join("")}</div><a class="back-link essay-end" href="${pathFor("notes", lang)}">← ${t.back} ${t.notes}</a></article>`;
+  return `<article class="reading-shell essay-page"><a class="back-link" href="${pathFor("notes", lang)}">← ${t.back} ${t.notes}</a><header class="detail-title"><p class="meta">${t.date} <time datetime="${note.date.replaceAll(".", "-")}">${note.date}</time></p><h1>${escape(note.title)}</h1>${note.summary ? `<p>${escape(note.summary)}</p>` : ""}${awardLine(lang, false, note.slug)}${publicationLine(lang, note.slug)}<p class="language-note">${t.languageNote}</p></header><div class="essay-reading" lang="zh-CN">${note.paragraphs.map((paragraph) => `<p>${escape(paragraph)}</p>`).join("")}</div><a class="back-link essay-end" href="${pathFor("notes", lang)}">← ${t.back} ${t.notes}</a></article>`;
 }
 
 /** Give recognition its own chronological path, separate from education and work. */
